@@ -49,7 +49,7 @@
 					duration: 0.6,
 					stagger: 0.008,
 					ease: 'power3.out',
-					scrollTrigger: { trigger: '.cb-wrap', start: 'top 88%', once: true }
+					scrollTrigger: { trigger: '.cb-wrap', start: 'top 95%', once: true }
 				}
 			);
 
