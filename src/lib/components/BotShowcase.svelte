@@ -174,32 +174,53 @@
 	onMount(() => {
 		if (!sectionEl || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 		let rafId = 0;
+		let targetX = 0;
+		let targetY = 0;
+		let currentX = 0;
+		let currentY = 0;
 
-		const updateParallax = () => {
-			rafId = 0;
+		const tick = () => {
 			if (!sectionEl || dragEnabled) {
-				sectionEl?.style.setProperty('--p', '0');
+				currentX = 0;
+				currentY = 0;
+				sectionEl?.style.setProperty('--mx', '0');
+				sectionEl?.style.setProperty('--my', '0');
+				rafId = 0;
 				return;
 			}
+			currentX += (targetX - currentX) * 0.1;
+			currentY += (targetY - currentY) * 0.1;
+			sectionEl.style.setProperty('--mx', currentX.toFixed(4));
+			sectionEl.style.setProperty('--my', currentY.toFixed(4));
+
+			if (Math.abs(targetX - currentX) > 0.001 || Math.abs(targetY - currentY) > 0.001) {
+				rafId = requestAnimationFrame(tick);
+			} else {
+				rafId = 0;
+			}
+		};
+
+		const onPointerMove = (e: PointerEvent) => {
+			if (!sectionEl || dragEnabled) return;
 			const rect = sectionEl.getBoundingClientRect();
-			const vh = window.innerHeight || 1;
-			const centerOffset = (rect.top + rect.height / 2 - vh / 2) / vh;
-			const clamped = Math.max(-1.2, Math.min(1.2, centerOffset));
-			sectionEl.style.setProperty('--p', clamped.toFixed(4));
+			targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
+			targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+			if (!rafId) rafId = requestAnimationFrame(tick);
 		};
 
-		const onScroll = () => {
-			if (!rafId) rafId = requestAnimationFrame(updateParallax);
+		const onPointerLeave = () => {
+			targetX = 0;
+			targetY = 0;
+			if (!rafId) rafId = requestAnimationFrame(tick);
 		};
 
-		updateParallax();
-		window.addEventListener('scroll', onScroll, { passive: true });
-		window.addEventListener('resize', onScroll, { passive: true });
+		sectionEl.addEventListener('pointermove', onPointerMove);
+		sectionEl.addEventListener('pointerleave', onPointerLeave);
 
 		return () => {
 			if (rafId) cancelAnimationFrame(rafId);
-			window.removeEventListener('scroll', onScroll);
-			window.removeEventListener('resize', onScroll);
+			sectionEl?.removeEventListener('pointermove', onPointerMove);
+			sectionEl?.removeEventListener('pointerleave', onPointerLeave);
 		};
 	});
 </script>
@@ -327,13 +348,14 @@
 			<div
 				class="muse-icon-item draggable"
 				class:is-selected={dragEnabled && selectedIconId === icon.id}
-				style:--parallax-y="{((i % 2 === 0 ? 1 : -1) * (3.2 + (i % 3) * 1.4)).toFixed(1)}vw"
+				style:--depth-x="{((i % 2 === 0 ? 1 : -1) * (1.2 + (i % 3) * 0.55)).toFixed(2)}vw"
+				style:--depth-y="{((i % 3 === 0 ? -1 : 1) * (1.0 + (i % 2) * 0.65)).toFixed(2)}vw"
 				style:left="{icon.x}vw"
 				style:top="{icon.y}vw"
 				style:width="{icon.width}vw"
 				style:height="{icon.height}vw"
 				style:scale={icon.scale}
-				style:transform="translate3d(0, calc(var(--p, 0) * var(--parallax-y, 0vw)), 0) rotate({icon.rotate}deg)"
+				style:transform="translate3d(calc(var(--mx, 0) * var(--depth-x, 0vw)), calc(var(--my, 0) * var(--depth-y, 0vw)), 0) rotate({icon.rotate}deg)"
 				onpointerdown={(e) => startIconDrag(icon.id, e)}
 				onpointermove={onDragMove}
 				onpointerup={endDrag}
