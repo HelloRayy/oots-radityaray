@@ -19,38 +19,16 @@
 
 html {
 	-webkit-text-size-adjust: 100%;
-	scrollbar-gutter: stable;
 	overflow-x: clip;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
 }
 
-::-webkit-scrollbar {
-	width: 12px;
-	height: 12px;
-}
-
-::-webkit-scrollbar-track {
-	background: var(--sb-track);
-}
-
-::-webkit-scrollbar-thumb {
-	background: var(--sb-thumb);
-	border: 3px solid var(--sb-track);
-	background-clip: padding-box;
-	border-radius: 999px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-	border-width: 2px;
-}
-
-::-webkit-scrollbar-corner {
-	background: var(--sb-track);
-}
-
-@supports not selector(::-webkit-scrollbar) {
-	html {
-		scrollbar-color: var(--sb-thumb) var(--sb-track);
-	}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+	display: none;
+	width: 0;
+	height: 0;
 }
 
 body {
@@ -211,16 +189,12 @@ html[data-loading] {
 	mask-repeat: no-repeat;
 }
 
-/* Hero Section */
-.hero-section {
-	background: #034102;
-	width: 100%;
-	min-height: 100svh;
+main#main {
 	position: relative;
-	overflow-x: clip;
+	background: #034102;
 }
 
-.hero-section::before {
+main#main::before {
 	content: '';
 	opacity: 0.2;
 	pointer-events: none;
@@ -229,6 +203,16 @@ html[data-loading] {
 	background-size: 100%;
 	position: absolute;
 	inset: 0;
+	z-index: 0;
+}
+
+/* Hero Section */
+.hero-section {
+	background: transparent;
+	width: 100%;
+	min-height: 100svh;
+	position: relative;
+	overflow-x: clip;
 }
 
 .hero-section .hero-wrapper {
