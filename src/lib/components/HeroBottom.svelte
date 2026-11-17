@@ -41,17 +41,15 @@
 		}
 
 		const ctx = gsap.context(() => {
-			gsap.fromTo(
-				chars,
-				{ yPercent: 120 },
-				{
-					yPercent: 0,
-					duration: 0.6,
-					stagger: 0.008,
-					ease: 'power3.out',
-					scrollTrigger: { trigger: '.cb-wrap', start: 'top 95%', once: true }
-				}
-			);
+			gsap.from(chars, {
+				yPercent: 100,
+				opacity: 0,
+				duration: 0.6,
+				stagger: 0.008,
+				ease: 'power3.out',
+				immediateRender: false,
+				scrollTrigger: { trigger: '.cb-wrap', start: 'top 95%', once: true }
+			});
 
 			// Sticky note drops in + subtle hover lift
 			gsap.from('.note', {
@@ -374,7 +372,6 @@
 
 	.cb-copy .char {
 		display: block;
-		transform: translateY(120%);
 	}
 
 	#tape-top {
