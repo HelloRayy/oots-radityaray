@@ -93,20 +93,38 @@ html[data-loading] {
 	z-index: 500;
 	position: fixed;
 	inset: 0;
+	pointer-events: none;
 }
 
 .site-preloader .preloader-sheet,
 .site-preloader .preloader-layer {
 	width: 100%;
 	height: calc(100% + var(--pre-arc));
-	--arc-h: var(--pre-arc);
 	position: absolute;
 	top: 0;
 	left: 0;
+	will-change: transform;
+	transform: translate3d(0, 0, 0);
+	backface-visibility: hidden;
+	contain: layout style;
 }
 
-.site-preloader .preloader-sheet {
-	padding-bottom: var(--pre-arc);
+.site-preloader .preloader-fill {
+	width: 100%;
+	height: calc(100% - var(--pre-arc) + 1px);
+	background: var(--layer-bg);
+}
+
+.site-preloader .preloader-arc {
+	width: 100%;
+	height: var(--pre-arc);
+	display: block;
+	margin-top: -1px;
+}
+
+.site-preloader .preloader-sheet-inner {
+	width: 100%;
+	height: calc(100% - var(--pre-arc) + 1px);
 	background: #b6fe00;
 	align-content: center;
 	justify-items: center;
@@ -125,6 +143,7 @@ html[data-loading] {
 	transform-style: preserve-3d;
 	position: absolute;
 	inset: 0;
+	will-change: transform, opacity;
 }
 
 .site-preloader .preloader-col {
@@ -132,10 +151,10 @@ html[data-loading] {
 	transform-origin: 50%;
 	position: absolute;
 	top: 0;
+	will-change: transform;
 }
 
 .site-preloader .preloader-ink {
-	will-change: filter;
 	background-repeat: no-repeat;
 	position: absolute;
 	inset: 0;
@@ -153,7 +172,6 @@ html[data-loading] {
 .site-preloader .preloader-sheen {
 	mix-blend-mode: screen;
 	pointer-events: none;
-	will-change: background-position;
 	background-repeat: no-repeat;
 	position: absolute;
 	inset: 0;

@@ -62,9 +62,9 @@
 	const SHEEN_WIDTH = 30;
 	const SHEEN_ALPHA = 0.16;
 	const SHEEN_ANGLE = 118;
-	const STICKER_DELAY = 1;
+	const STICKER_DELAY = 0.6;
 	const PEEL_EASE = 'power3.inOut';
-	const STRIPS = 64;
+	const STRIPS = 36;
 
 	let rootEl: HTMLDivElement | null = null;
 	let markEl: HTMLDivElement | null = null;
@@ -160,7 +160,7 @@
 				const pos = `${-(i * colWidth)}px 0`;
 				const col = cols[i];
 				col.style.left = `${i * colWidth}px`;
-				col.style.width = `${colWidth + 1.3}px`;
+				col.style.width = `${colWidth + 1.5}px`;
 				col.style.height = `${height}px`;
 
 				inks[i].style.backgroundSize = fullSize;
@@ -218,17 +218,16 @@
 			}
 
 			const centerShift = (width - accX) / 2;
-			const midZ = zs[STRIPS / 2];
+			const midZ = zs[Math.floor(STRIPS / 2)];
+			const sheenActive = pose.sheen > 0 && pose.sheen < 1;
 
 			for (let i = 0; i < STRIPS; i++) {
 				const dx = xs[i] + centerShift - (i * colWidth + colWidth / 2);
 				cols[i].style.transform = `translate3d(${dx.toFixed(2)}px, 0, ${(zs[i] - midZ).toFixed(2)}px) rotateY(${(-(180 * angles[i]) / Math.PI).toFixed(2)}deg)`;
 
 				const cosA = Math.cos(angles[i]);
-				const frontShade = 1 - 0.48 * (1 - cosA);
-				inks[i].style.filter = `brightness(${(frontShade < 0.2 ? 0.2 : frontShade).toFixed(3)})`;
-
 				const facingFront = cosA >= 0;
+
 				if (frontFlags[i] !== facingFront) {
 					frontFlags[i] = facingFront;
 					inks[i].style.opacity = facingFront ? '1' : '0';
@@ -236,12 +235,9 @@
 					backs[i].style.opacity = facingFront ? '0' : '1';
 				}
 
-				if (!facingFront) {
-					const backShade = 1 - (1 + cosA);
-					backs[i].style.filter = `brightness(${(backShade < 0.2 ? 0.2 : backShade).toFixed(3)})`;
+				if (sheenActive && facingFront) {
+					sheens[i].style.backgroundPosition = `${(-(i * colWidth) + (2 * pose.sheen - 1) * width).toFixed(2)}px 0`;
 				}
-
-				sheens[i].style.backgroundPosition = `${(-(i * colWidth) + (2 * pose.sheen - 1) * width).toFixed(2)}px 0`;
 			}
 		};
 
@@ -281,9 +277,9 @@
 		const stack = [sheet, ...layers].filter((el): el is HTMLElement => el !== null);
 
 		const elapsed = Math.max(performance.now() / 1000 - 1.2, 0);
-		const peelAt = !mark ? 0.3 : Math.max(4.37 - elapsed, 2.9);
+		const peelAt = !mark ? 0.3 : Math.max(3.6 - elapsed, 2.5);
 
-		gsap.ticker.lagSmoothing(250, 120);
+		gsap.ticker.lagSmoothing(0);
 
 		const tl = gsap.timeline();
 		let stopDraw: (() => void) | null = null;
@@ -357,17 +353,29 @@
 
 		const staggered = computeStagger(stack, {
 			at: peelAt,
-			step: 0.09,
-			spread: 0.4,
-			duration: 1.05,
+			step: 0.085,
+			spread: 0.35,
+			duration: 0.95,
 			drag: 0.018
 		});
 
 		for (const item of staggered) {
-			tl.to(item.el, { yPercent: -100, duration: item.duration, ease: PEEL_EASE }, item.at);
+			tl.to(
+				item.el,
+				{
+					yPercent: -100,
+					force3D: true,
+					duration: item.duration,
+					ease: PEEL_EASE,
+					onComplete: () => {
+						item.el.style.visibility = 'hidden';
+					}
+				},
+				item.at
+			);
 		}
 
-		const last = staggered.at(-1) ?? { at: peelAt, duration: 1.05 };
+		const last = staggered.at(-1) ?? { at: peelAt, duration: 0.95 };
 		tl.call(startSweep, undefined, last.at + 0.33 * last.duration);
 		tl.call(release, undefined, last.at + 0.55 * last.duration);
 
@@ -392,17 +400,37 @@
 <div class="site-preloader" bind:this={rootEl} aria-hidden="true">
 	{#each TAPE_LAYERS as layer, i (layer.id)}
 		<div
-			class="preloader-layer arc-cut"
+			class="preloader-layer"
 			data-tape={layer.id}
-			style:background={layer.bg}
+			style:--layer-bg={layer.bg}
 			style:z-index={TAPE_LAYERS.length - i}
-		></div>
+		>
+			<div class="preloader-fill"></div>
+			<svg
+				class="preloader-arc"
+				viewBox="0 0 1456 150.5"
+				preserveAspectRatio="none"
+				aria-hidden="true"
+			>
+				<path d="M1456 0C801.9 272 212.833 113.333 0 0Z" fill={layer.bg} />
+			</svg>
+		</div>
 	{/each}
-	<div class="preloader-sheet arc-cut" style:z-index={TAPE_LAYERS.length + 1}>
-		<div
-			class="preloader-mark"
-			bind:this={markEl}
-			data-sticker="/assets/preloader-image.svg"
-		></div>
+	<div class="preloader-sheet" style:z-index={TAPE_LAYERS.length + 1}>
+		<div class="preloader-sheet-inner">
+			<div
+				class="preloader-mark"
+				bind:this={markEl}
+				data-sticker="/assets/preloader-image.svg"
+			></div>
+		</div>
+		<svg
+			class="preloader-arc"
+			viewBox="0 0 1456 150.5"
+			preserveAspectRatio="none"
+			aria-hidden="true"
+		>
+			<path d="M1456 0C801.9 272 212.833 113.333 0 0Z" fill="#b6fe00" />
+		</svg>
 	</div>
 </div>
