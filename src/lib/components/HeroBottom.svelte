@@ -368,6 +368,7 @@
 		width: 19vw;
 		z-index: 4;
 		rotate: 17deg;
+		filter: drop-shadow(0.18vw 0.38vw 0.22vw rgba(0, 0, 0, 0.35));
 	}
 
 	/* Cardboard */
@@ -427,6 +428,8 @@
 		height: 8.74vw;
 		object-fit: cover;
 		z-index: 10;
+		opacity: 0.82;
+		filter: drop-shadow(0.15vw 0.3vw 0.2vw rgba(0, 0, 0, 0.25));
 	}
 
 	/* Gift */
