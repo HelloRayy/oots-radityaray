@@ -71,12 +71,19 @@
 			gsap.utils.toArray<HTMLElement>('.tape-strip').forEach((el) => {
 				gsap.fromTo(
 					el,
-					{ clipPath: 'inset(0 55% 0 0)', rotateX: -35, transformPerspective: 600 },
+					{
+						clipPath: 'inset(0 100% 0 0)',
+						rotateX: -28,
+						y: -6,
+						transformPerspective: 600,
+						transformOrigin: 'left center'
+					},
 					{
 						clipPath: 'inset(0 0% 0 0)',
 						rotateX: 0,
-						ease: 'none',
-						scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 55%', scrub: 0.8 }
+						y: 0,
+						ease: 'power2.out',
+						scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 58%', scrub: 0.6 }
 					}
 				);
 			});
@@ -282,6 +289,7 @@
 		width: 11vw;
 		z-index: 5;
 		rotate: -2deg;
+		filter: drop-shadow(0.18vw 0.38vw 0.22vw rgba(0, 0, 0, 0.35));
 	}
 
 	#paperclip {
