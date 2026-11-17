@@ -2,6 +2,7 @@
 	import HeroTop from '#lib/components/HeroTop.svelte';
 	import HeroBottom from '#lib/components/HeroBottom.svelte';
 	import WaveBand from '#lib/components/WaveBand.svelte';
+	import BotShowcase from '#lib/components/BotShowcase.svelte';
 </script>
 
 <svelte:head>
@@ -12,4 +13,5 @@
 	<HeroTop />
 	<HeroBottom />
 	<WaveBand />
+	<BotShowcase />
 </main>
