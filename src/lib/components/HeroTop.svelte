@@ -96,10 +96,13 @@
 		const markTween = heroMark
 			? gsap.fromTo(
 					heroMark,
-					isMobile ? { scale: 0 } : { yPercent: -170 },
+					isMobile
+						? { scale: 0, rotateX: -55, transformPerspective: 600 }
+						: { yPercent: -170, rotateX: -65, scale: 0.85, transformPerspective: 600 },
 					{
-						...(isMobile ? { scale: 1 } : { yPercent: 0 }),
-						duration: 0.85,
+						...(isMobile ? { scale: 1 } : { yPercent: 0, scale: 1 }),
+						rotateX: 0,
+						duration: 0.95,
 						ease: 'back.out(1.6)',
 						paused: true
 					}

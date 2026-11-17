@@ -342,21 +342,21 @@ html[data-loading] {
 }
 
 .hero-section .h1 {
-	letter-spacing: -0.015em;
+	letter-spacing: 0.01em;
 	color: #013900;
 	text-align: center;
-	font-size: 18.8vw;
+	font-size: 19.5vw;
 	font-weight: 900;
-	line-height: 0.74;
+	line-height: 0.84;
 	text-transform: uppercase;
 }
 
 .hero-section .hero-image-wrap {
 	position: absolute;
 	left: 50%;
-	bottom: -7.5vw;
+	bottom: -4.5vw;
 	transform: translateX(-50%);
-	width: 27vw;
+	width: 34vw;
 	aspect-ratio: 1666 / 1966;
 	z-index: 3;
 	pointer-events: none;
@@ -445,11 +445,12 @@ html[data-loading] {
 		margin-top: 3vw;
 	}
 	.hero-section .h1 {
-		font-size: 18vw;
-		line-height: 0.82;
+		font-size: 18.5vw;
+		line-height: 0.86;
+		letter-spacing: 0.01em;
 	}
 	.hero-section .hero-image-wrap {
-		width: 48vw;
-		bottom: -12vw;
+		width: 62vw;
+		bottom: -8vw;
 	}
 }
