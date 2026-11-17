@@ -159,6 +159,26 @@
 			}
 		});
 
+		let driftAbort: AbortController | null = null;
+		if (heroImage) {
+			driftAbort = new AbortController();
+			const qx = gsap.quickTo(heroImage, 'x', { duration: 0.8, ease: 'power3.out' });
+			const qy = gsap.quickTo(heroImage, 'y', { duration: 0.8, ease: 'power3.out' });
+			const qr = gsap.quickTo(heroImage, 'rotation', { duration: 0.9, ease: 'power3.out' });
+
+			root.addEventListener(
+				'pointermove',
+				(e: PointerEvent) => {
+					const nx = (e.clientX / window.innerWidth - 0.5) * 2;
+					const ny = (e.clientY / window.innerHeight - 0.5) * 2;
+					qx(nx * 14);
+					qy(ny * 10);
+					qr(nx * 2.2);
+				},
+				{ signal: driftAbort.signal, passive: true }
+			);
+		}
+
 		const unsubReveal = whenRevealed(() => {
 			if (titleTween) {
 				delayedCalls.push(gsap.delayedCall(REVEAL.DELAY, () => titleTween.play()));
@@ -173,6 +193,7 @@
 
 		return () => {
 			hoverAbort.abort();
+			driftAbort?.abort();
 			unsubSweep();
 			unsubReveal();
 			for (const dc of delayedCalls) dc.kill();

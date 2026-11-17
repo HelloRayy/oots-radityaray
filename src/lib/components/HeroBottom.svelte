@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import { whenRevealed } from '#lib/utils/reveal.ts';
 
 	const NOTE_TITLE = 'TO-DO LIST';
 	const NOTE_ITEMS = ['ship new portfolio', 'polish gsap motion', 'reply client emails'];
@@ -41,17 +42,22 @@
 		}
 
 		const ctx = gsap.context(() => {
-			gsap.from(chars, {
-				yPercent: 100,
-				opacity: 0,
-				duration: 0.6,
-				stagger: 0.008,
-				ease: 'power3.out',
-				immediateRender: false,
-				scrollTrigger: { trigger: '.cb-wrap', start: 'top 95%', once: true }
+			// Cardboard headline: scrubbed line-by-line rise
+			const tops = chars.map((c) => (c.parentElement ?? c).offsetTop);
+			const minTop = Math.min(...tops);
+			const span = Math.max(Math.max(...tops) - minTop, 1);
+			const cbTl = gsap.timeline({
+				scrollTrigger: { trigger: '.cb-wrap', start: 'top 90%', end: 'center 60%', scrub: 0.6 }
+			});
+			chars.forEach((c, i) => {
+				cbTl.from(
+					c,
+					{ yPercent: 115, opacity: 0, duration: 0.45, ease: 'power3.out', immediateRender: false },
+					((tops[i] - minTop) / span) * 0.9
+				);
 			});
 
-			// Sticky note drops in + subtle hover lift
+			// Sticky note drops in
 			gsap.from('.note', {
 				yPercent: -18,
 				rotate: -6,
@@ -61,18 +67,18 @@
 				scrollTrigger: { trigger: '.note', start: 'top 85%', once: true }
 			});
 
-			// Tape strips 3D peel-in
+			// Scroll-driven tape peel on note & lemon
 			gsap.utils.toArray<HTMLElement>('.tape-strip').forEach((el) => {
-				gsap.from(el, {
-					rotateX: -65,
-					yPercent: -20,
-					opacity: 0,
-					transformPerspective: 700,
-					transformOrigin: 'top center',
-					duration: 0.85,
-					ease: 'back.out(1.4)',
-					scrollTrigger: { trigger: el, start: 'top 90%', once: true }
-				});
+				gsap.fromTo(
+					el,
+					{ clipPath: 'inset(0 55% 0 0)', rotateX: -35, transformPerspective: 600 },
+					{
+						clipPath: 'inset(0 0% 0 0)',
+						rotateX: 0,
+						ease: 'none',
+						scrollTrigger: { trigger: el, start: 'top 92%', end: 'top 55%', scrub: 0.8 }
+					}
+				);
 			});
 
 			// Hand note rules draw + lines fade up
@@ -110,7 +116,38 @@
 			});
 		}, root);
 
-		return () => ctx.revert();
+		// Tactile hover poke on note, paperclip, and gift
+		const pokeAbort = new AbortController();
+		const pokeTargets = [
+			{ sel: '.note', hover: { rotate: -1, y: -6, scale: 1.02 }, rest: { rotate: 3, y: 0, scale: 1 } },
+			{ sel: '#paperclip', hover: { rotate: -12, scale: 1.1 }, rest: { rotate: 0, scale: 1 } },
+			{ sel: '#gift', hover: { rotate: -2, scale: 1.03 }, rest: { rotate: 0, scale: 1 } }
+		];
+		for (const item of pokeTargets) {
+			const el = root.querySelector<HTMLElement>(item.sel);
+			if (!el) continue;
+			el.style.cursor = 'pointer';
+			el.addEventListener(
+				'pointerenter',
+				() => gsap.to(el, { ...item.hover, duration: 0.45, ease: 'elastic.out(1, 0.45)', overwrite: 'auto' }),
+				{ signal: pokeAbort.signal }
+			);
+			el.addEventListener(
+				'pointerleave',
+				() => gsap.to(el, { ...item.rest, duration: 0.55, ease: 'elastic.out(1, 0.5)', overwrite: 'auto' }),
+				{ signal: pokeAbort.signal }
+			);
+		}
+
+		const unsubReveal = whenRevealed(() => {
+			ScrollTrigger.refresh();
+		});
+
+		return () => {
+			unsubReveal();
+			pokeAbort.abort();
+			ctx.revert();
+		};
 	});
 </script>
 
