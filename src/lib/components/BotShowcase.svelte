@@ -1,143 +1,16 @@
 <script lang="ts">
-	import gsap from 'gsap';
 	import museHi from '#lib/assets/muse-hi.svg';
 	import designerImg from '#lib/assets/bot-avatars-all/Designer.png';
 	import engineerImg from '#lib/assets/bot-avatars-all/Engineer.png';
+	import ideasImg from '#lib/assets/bot-avatars-all/Ideas.png';
 	import pmImg from '#lib/assets/bot-avatars-all/PM.png';
 	import strategyImg from '#lib/assets/bot-avatars-all/Strategy.png';
-	import researchImg from '#lib/assets/bot-avatars-all/Research.png';
-	import ideasImg from '#lib/assets/bot-avatars-all/Ideas.png';
-
-	interface BotItem {
-		id: string;
-		name: string;
-		roleWord: string;
-		avatar: string;
-		bg: string;
-		word: string;
-		tagBg: string;
-		tagInk: string;
-		ring: string;
-		tags: string[];
-		copy: string;
-	}
-
-	const BOTS: BotItem[] = [
-		{
-			id: 'designer',
-			name: 'Designer',
-			roleWord: 'DESIGNER',
-			avatar: designerImg,
-			bg: '#fa8005',
-			word: '#fcd805',
-			tagBg: '#FFDC13',
-			tagInk: '#D7791A',
-			ring: '#fff1a2',
-			tags: ['UI / UX', 'ART DIRECTION', 'PROTOTYPING'],
-			copy: 'Always ready for crisp layouts, playful micro-interactions, and bold visual systems. Easygoing. Pixel-sharp.'
-		},
-		{
-			id: 'engineer',
-			name: 'Engineer',
-			roleWord: 'ENGINEER',
-			avatar: engineerImg,
-			bg: '#50CBFF',
-			word: '#007db2',
-			tagBg: '#1b87b8',
-			tagInk: '#8bd8f5',
-			ring: '#a8dcf0',
-			tags: ['SVELTEKIT', 'TYPESCRIPT', 'GSAP MOTION'],
-			copy: 'The kind of builder that commits. Fast performance, clean architecture, smooth 60fps animations.'
-		},
-		{
-			id: 'pm',
-			name: 'PM',
-			roleWord: 'MANAGER',
-			avatar: pmImg,
-			bg: '#FF7B5F',
-			word: '#a82712',
-			tagBg: '#9e2a12',
-			tagInk: '#f2a08c',
-			ring: '#ffd9c2',
-			tags: ['ROADMAPS', 'SPRINTS', 'SHIPPING'],
-			copy: 'From rough ideas to launched products. Keeps scope tight, momentum high, and deadlines met.'
-		},
-		{
-			id: 'strategy',
-			name: 'Strategy',
-			roleWord: 'STRATEGIST',
-			avatar: strategyImg,
-			bg: '#2E3EAC',
-			word: '#101E83',
-			tagBg: '#172795',
-			tagInk: '#B0B9FA',
-			ring: '#d9d2f7',
-			tags: ['POSITIONING', 'GROWTH', 'SYSTEMS'],
-			copy: 'Doesn’t talk much. Just connects the dots between user needs and product goals.'
-		},
-		{
-			id: 'research',
-			name: 'Research',
-			roleWord: 'RESEARCHER',
-			avatar: researchImg,
-			bg: '#b6fe00',
-			word: '#52AF16',
-			tagBg: '#52AF16',
-			tagInk: '#E7FF8F',
-			ring: '#e4f7a8',
-			tags: ['USER INSIGHTS', 'AUDITS', 'BENCHMARKS'],
-			copy: 'Digs deep into patterns, edge cases, and usability so every decision is backed by real signal.'
-		},
-		{
-			id: 'ideas',
-			name: 'Ideas',
-			roleWord: 'CREATIVE',
-			avatar: ideasImg,
-			bg: '#F7D000',
-			word: '#a88700',
-			tagBg: '#a88700',
-			tagInk: '#ffeda0',
-			ring: '#fff0b0',
-			tags: ['CONCEPTS', 'EXPERIMENTS', 'PLAYFUL'],
-			copy: 'Perfect for wild prototypes, late-night brainstorms, and fresh interactive concepts.'
-		}
-	];
-
-	let activeIndex = $state(0);
-	let active = $derived(BOTS[activeIndex]);
-	let centerEl: HTMLElement | null = null;
-	let copyEl: HTMLElement | null = null;
-
-	function selectBot(idx: number) {
-		if (idx === activeIndex) return;
-		activeIndex = idx;
-
-		if (centerEl) {
-			gsap.fromTo(
-				centerEl,
-				{ scale: 0.9, y: 18 },
-				{ scale: 1, y: 0, duration: 0.55, ease: 'back.out(1.6)', overwrite: 'auto' }
-			);
-		}
-		if (copyEl) {
-			gsap.fromTo(
-				copyEl,
-				{ y: 14, opacity: 0 },
-				{ y: 0, opacity: 1, duration: 0.4, ease: 'power2.out', overwrite: 'auto' }
-			);
-		}
-	}
 </script>
 
-<section
-	class="bot-showcase"
-	style:--bg={active.bg}
-	style:--word={active.word}
-	style:--tag-bg={active.tagBg}
-	style:--tag-ink={active.tagInk}
->
+<section class="bot-showcase">
 	<div class="paper-grain" aria-hidden="true"></div>
 
+	<!-- Top pill -->
 	<div class="subhead-wrap">
 		<span class="subhead-pill">
 			<span class="subhead-dots" aria-hidden="true"></span>
@@ -145,50 +18,54 @@
 		</span>
 	</div>
 
-	<div class="stage">
-		<!-- Left: tags + copy -->
-		<div class="left" bind:this={copyEl}>
-			<div class="tags">
-				{#each active.tags as tag (tag)}
-					<span class="tag">{tag}</span>
-				{/each}
-			</div>
-			<p class="copy">{active.copy}</p>
+	<!-- Left tags & copy -->
+	<div class="left-tags">
+		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>UI / UX DESIGN</span>
+		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>GSAP MOTION</span>
+		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>SYSTEMS</span>
+	</div>
+
+	<p class="left-copy">
+		Always ready for crisp layouts, playful micro-interactions, and bold visual systems.
+		Easygoing. Pixel-sharp. No drama.
+	</p>
+
+	<!-- 2 taped showcase circles (matching target) -->
+	<div class="showcase-circle showcase-left" aria-hidden="true">
+		<img class="showcase-tape" src="/assets/masking-tape-x2.png" alt="" draggable="false" />
+		<img class="showcase-img" src={pmImg} alt="" draggable="false" />
+	</div>
+
+	<div class="showcase-circle showcase-right" aria-hidden="true">
+		<img class="showcase-tape" src="/assets/masking-tape-x2.png" alt="" draggable="false" />
+		<img class="showcase-img" src={strategyImg} alt="" draggable="false" />
+	</div>
+
+	<!-- Center giant typography + Muse + Explore stamp -->
+	<div class="center-stage">
+		<div class="giant-the" aria-hidden="true">THE</div>
+		<div class="giant-creative" aria-hidden="true">CREATIVE</div>
+
+		<img class="muse-center" src={museHi} alt="Raditya Rayhan" draggable="false" />
+
+		<div class="explore-stamp" aria-hidden="true">
+			<span class="explore-ring"></span>
+			<span class="explore-text">EXPLORE</span>
+			<span class="explore-dot">↗</span>
 		</div>
+	</div>
 
-		<!-- Center: Giant role typography + Muse + Explore stamp -->
-		<div class="center" bind:this={centerEl}>
-			<div class="giant-word" aria-hidden="true">
-				<span class="the">THE</span>
-				<span class="role">{active.roleWord}</span>
-			</div>
-
-			<img class="muse-center" src={museHi} alt={active.name} draggable="false" />
-
-			<div class="explore-stamp" aria-hidden="true">
-				<span class="explore-ring"></span>
-				<span class="explore-text">EXPLORE</span>
-				<span class="explore-dot">↗</span>
-			</div>
+	<!-- Right ROLL IT! 3-circle arc -->
+	<span class="roll-it" aria-hidden="true">ROLL IT!</span>
+	<div class="rail-arc" aria-hidden="true">
+		<div class="rail-circle rail-top">
+			<img src={engineerImg} alt="" draggable="false" />
 		</div>
-
-		<!-- Right: Roll It rail of bot avatars -->
-		<div class="rail">
-			<span class="roll-it" aria-hidden="true">ROLL IT!</span>
-			<div class="rail-track">
-				{#each BOTS as bot, i (bot.id)}
-					<button
-						type="button"
-						class="rail-btn"
-						class:is-active={i === activeIndex}
-						style:--ring={bot.ring}
-						aria-label={bot.name}
-						onclick={() => selectBot(i)}
-					>
-						<img src={bot.avatar} alt={bot.name} draggable="false" />
-					</button>
-				{/each}
-			</div>
+		<div class="rail-circle rail-mid is-active">
+			<img src={designerImg} alt="" draggable="false" />
+		</div>
+		<div class="rail-circle rail-bot">
+			<img src={ideasImg} alt="" draggable="false" />
 		</div>
 	</div>
 </section>
@@ -197,10 +74,8 @@
 	.bot-showcase {
 		position: relative;
 		width: 100%;
-		min-height: 56vw;
-		background: var(--bg);
-		transition: background-color 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-		padding: 3vw 3vw 6vw;
+		height: 54vw;
+		background: #fa8005;
 		overflow: clip;
 		z-index: 1;
 	}
@@ -215,136 +90,163 @@
 		background-size: 100%;
 	}
 
+	/* Top pill */
 	.subhead-wrap {
-		position: relative;
-		z-index: 2;
-		display: flex;
-		justify-content: center;
-		margin-bottom: 1.5vw;
+		position: absolute;
+		top: 2vw;
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 5;
 	}
 
 	.subhead-pill {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.5vw;
-		padding: 0.45vw 1vw;
+		gap: 0.45vw;
+		padding: 0.45vw 0.95vw;
 		border-radius: 0.35vw;
-		background: var(--tag-bg);
-		color: var(--tag-ink);
+		background: #ffdc13;
+		color: #d7791a;
 		font-family: var(--font-heading);
 		font-weight: 800;
 		font-size: 1.05vw;
-		letter-spacing: 0.02em;
+		letter-spacing: 0.01em;
 		text-transform: uppercase;
-		transition: background-color 0.45s ease, color 0.45s ease;
 	}
 
-	.subhead-dots {
-		width: 0.22vw;
-		height: 0.9vw;
+	.subhead-dots,
+	.tag-dots {
+		width: 0.2vw;
+		height: 0.85vw;
 		background-image: radial-gradient(circle, currentColor 45%, transparent 50%);
-		background-size: 100% 0.3vw;
+		background-size: 100% 0.28vw;
 	}
 
-	.stage {
-		position: relative;
-		z-index: 2;
-		display: grid;
-		grid-template-columns: 20vw 1fr 18vw;
-		align-items: center;
-		min-height: 44vw;
-	}
-
-	/* Left */
-	.left {
-		display: flex;
-		flex-direction: column;
-		gap: 2.2vw;
-	}
-
-	.tags {
+	/* Left tags & copy */
+	.left-tags {
+		position: absolute;
+		top: 17.5vw;
+		left: 1.2vw;
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
 		gap: 0.5vw;
+		z-index: 5;
 	}
 
 	.tag {
-		display: inline-block;
-		padding: 0.4vw 0.9vw;
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45vw;
+		padding: 0.42vw 0.85vw;
 		border-radius: 0.3vw;
-		background: var(--tag-bg);
-		color: var(--tag-ink);
+		background: #ffdc13;
+		color: #d7791a;
 		font-family: var(--font-heading);
 		font-weight: 800;
-		font-size: 1.15vw;
-		letter-spacing: -0.01em;
-		text-transform: uppercase;
-		transition: background-color 0.45s ease, color 0.45s ease;
-	}
-
-	.copy {
-		font-family: var(--font-body);
 		font-size: 1.1vw;
+		text-transform: uppercase;
+	}
+
+	.left-copy {
+		position: absolute;
+		bottom: 10.5vw;
+		left: 1.2vw;
+		max-width: 16vw;
+		font-family: var(--font-body);
+		font-size: 1.05vw;
 		font-weight: 600;
-		line-height: 1.3;
-		color: var(--word);
-		max-width: 17vw;
-		transition: color 0.45s ease;
+		line-height: 1.25;
+		color: #fff1a2;
+		z-index: 5;
 	}
 
-	/* Center */
-	.center {
-		position: relative;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		height: 42vw;
+	/* 2 taped showcase circles */
+	.showcase-circle {
+		position: absolute;
+		width: 8.2vw;
+		height: 8.2vw;
+		border-radius: 999px;
+		z-index: 4;
+		box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.22);
 	}
 
-	.giant-word {
+	.showcase-left {
+		top: 14vw;
+		left: 17vw;
+	}
+
+	.showcase-right {
+		top: 18vw;
+		right: 17.5vw;
+	}
+
+	.showcase-img {
+		width: 100%;
+		height: 100%;
+		border-radius: 999px;
+		object-fit: cover;
+		background: #fff1a2;
+	}
+
+	.showcase-tape {
+		position: absolute;
+		top: -1.1vw;
+		left: 50%;
+		transform: translateX(-50%) rotate(-3deg);
+		width: 4.5vw;
+		z-index: 2;
+		pointer-events: none;
+	}
+
+	/* Center stage */
+	.center-stage {
 		position: absolute;
 		inset: 0;
 		display: flex;
-		flex-direction: column;
 		align-items: center;
 		justify-content: center;
+		pointer-events: none;
+	}
+
+	.giant-the,
+	.giant-creative {
+		position: absolute;
 		font-family: var(--font-heading);
 		font-weight: 900;
-		color: var(--word);
+		color: #fcd805;
 		line-height: 0.78;
+		letter-spacing: -0.02em;
 		text-transform: uppercase;
-		pointer-events: none;
 		user-select: none;
-		transition: color 0.45s ease;
 	}
 
-	.giant-word .the {
-		font-size: 13vw;
-		letter-spacing: -0.02em;
+	.giant-the {
+		top: 5.5vw;
+		font-size: 16.5vw;
 	}
 
-	.giant-word .role {
-		font-size: 15vw;
-		letter-spacing: -0.02em;
+	.giant-creative {
+		bottom: 2.5vw;
+		font-size: 16.5vw;
 	}
 
 	.muse-center {
 		position: relative;
-		z-index: 2;
+		z-index: 3;
 		width: 24vw;
 		height: auto;
-		pointer-events: none;
-		filter: drop-shadow(0 1.4vw 2.4vw rgba(0, 0, 0, 0.25));
+		margin-top: 2vw;
+		filter: drop-shadow(0 1.2vw 2.2vw rgba(0, 0, 0, 0.24));
 	}
 
 	.explore-stamp {
 		position: absolute;
-		top: 6vw;
-		right: 11vw;
-		z-index: 3;
-		width: 9.5vw;
-		height: 9.5vw;
+		top: 10vw;
+		left: 57.5vw;
+		z-index: 4;
+		width: 11vw;
+		height: 11vw;
 		border-radius: 999px;
 		background: #ffffff;
 		color: #013900;
@@ -358,7 +260,7 @@
 
 	.explore-ring {
 		position: absolute;
-		inset: 0.55vw;
+		inset: 0.6vw;
 		border-radius: 999px;
 		border: 2px dotted #013900;
 	}
@@ -366,140 +268,78 @@
 	.explore-text {
 		font-family: var(--font-heading);
 		font-weight: 900;
-		font-size: 2vw;
+		font-size: 2.3vw;
 		line-height: 1;
 	}
 
 	.explore-dot {
-		margin-top: 0.2vw;
-		width: 1.6vw;
-		height: 1.6vw;
+		margin-top: 0.25vw;
+		width: 1.8vw;
+		height: 1.8vw;
 		border-radius: 999px;
 		background: #b6fe00;
 		display: grid;
 		place-items: center;
-		font-size: 0.9vw;
+		font-size: 1vw;
 		font-weight: 900;
 	}
 
-	/* Right Rail */
-	.rail {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 0.8vw;
-		padding-right: 1vw;
-	}
-
+	/* Right ROLL IT! 3-circle arc */
 	.roll-it {
+		position: absolute;
+		top: 19.5vw;
+		right: 11vw;
 		font-family: var(--font-heading);
 		font-weight: 900;
-		font-size: 1.25vw;
-		color: var(--word);
-		letter-spacing: 0.02em;
-		transform: rotate(-8deg);
-		transition: color 0.45s ease;
+		font-size: 1.2vw;
+		color: #fff1a2;
+		transform: rotate(-10deg);
+		z-index: 5;
 	}
 
-	.rail-track {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 0.9vw;
+	.rail-arc {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
 	}
 
-	.rail-btn {
-		position: relative;
-		width: 6.2vw;
-		height: 6.2vw;
+	.rail-circle {
+		position: absolute;
+		width: 7.4vw;
+		height: 7.4vw;
 		border-radius: 999px;
 		padding: 0.35vw;
-		background: rgba(255, 255, 255, 0.18);
-		border: 2px solid transparent;
-		transition:
-			transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-			border-color 0.3s ease,
-			background-color 0.3s ease;
+		background: rgba(255, 255, 255, 0.2);
+		box-shadow: 0 0.6vw 1.4vw rgba(0, 0, 0, 0.2);
+		z-index: 5;
 	}
 
-	.rail-btn:hover {
-		transform: scale(1.08);
+	.rail-circle.is-active {
+		width: 8.4vw;
+		height: 8.4vw;
+		background: #fff1a2;
+		padding: 0.45vw;
 	}
 
-	.rail-btn.is-active {
-		transform: scale(1.14);
-		border-color: var(--ring);
-		background: var(--ring);
-		box-shadow: 0 0.6vw 1.4vw rgba(0, 0, 0, 0.22);
-	}
-
-	.rail-btn img {
+	.rail-circle img {
 		width: 100%;
 		height: 100%;
 		border-radius: 999px;
 		object-fit: cover;
 	}
 
-	@media (max-width: 743px) {
-		.bot-showcase {
-			min-height: 145vw;
-			padding: 8vw 4vw 12vw;
-		}
-		.subhead-pill {
-			font-size: 3.2vw;
-			padding: 1.4vw 3vw;
-		}
-		.stage {
-			grid-template-columns: 1fr;
-			gap: 6vw;
-		}
-		.left {
-			order: 3;
-		}
-		.copy {
-			font-size: 3.5vw;
-			max-width: 100%;
-		}
-		.tag {
-			font-size: 3.4vw;
-			padding: 1.2vw 2.8vw;
-		}
-		.center {
-			order: 1;
-			height: 75vw;
-		}
-		.giant-word .the {
-			font-size: 24vw;
-		}
-		.giant-word .role {
-			font-size: 22vw;
-		}
-		.muse-center {
-			width: 48vw;
-		}
-		.explore-stamp {
-			width: 22vw;
-			height: 22vw;
-			top: 4vw;
-			right: 4vw;
-		}
-		.explore-text {
-			font-size: 4.5vw;
-		}
-		.rail {
-			order: 2;
-			align-items: center;
-			padding-right: 0;
-		}
-		.roll-it {
-			font-size: 3.8vw;
-		}
-		.rail-track {
-			grid-template-columns: repeat(6, 1fr);
-			gap: 2vw;
-		}
-		.rail-btn {
-			width: 13vw;
-			height: 13vw;
-		}
+	.rail-top {
+		top: 14.5vw;
+		right: 1.2vw;
+	}
+
+	.rail-mid {
+		top: 21.5vw;
+		right: 5vw;
+	}
+
+	.rail-bot {
+		top: 29.5vw;
+		right: 1.2vw;
 	}
 </style>
