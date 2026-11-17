@@ -44,7 +44,11 @@
 	<!-- Center giant typography + Muse + Explore stamp -->
 	<div class="center-stage">
 		<div class="giant-the" aria-hidden="true">THE</div>
-		<div class="giant-creative" aria-hidden="true">CREATIVE</div>
+		<div class="giant-creative" aria-hidden="true">
+			{#each 'CREATIVE'.split('') as ch, i (i)}
+				<span class="c-char" style:--i={i} style:--letters={8}>{ch}</span>
+			{/each}
+		</div>
 
 		<img class="muse-center" src={museHi} alt="Raditya Rayhan" draggable="false" />
 
@@ -104,7 +108,7 @@
 		align-items: center;
 		gap: 0.45vw;
 		padding: 0.45vw 0.95vw;
-		border-radius: 0.35vw;
+		border-radius: 0.45vw;
 		background: #ffdc13;
 		color: #d7791a;
 		font-family: var(--font-heading);
@@ -112,6 +116,7 @@
 		font-size: 1.05vw;
 		letter-spacing: 0.01em;
 		text-transform: uppercase;
+		transform: rotate(-1.5deg);
 	}
 
 	.subhead-dots,
@@ -139,13 +144,14 @@
 		align-items: center;
 		gap: 0.45vw;
 		padding: 0.42vw 0.85vw;
-		border-radius: 0.3vw;
+		border-radius: 0.45vw;
 		background: #ffdc13;
 		color: #d7791a;
 		font-family: var(--font-heading);
 		font-weight: 800;
 		font-size: 1.1vw;
 		text-transform: uppercase;
+		transform: rotate(-1.5deg);
 	}
 
 	.left-copy {
@@ -226,6 +232,16 @@
 	.giant-creative {
 		bottom: 2.5vw;
 		font-size: 16.5vw;
+		display: flex;
+		align-items: flex-end;
+	}
+
+	.c-char {
+		--u: calc(2 * var(--i) / (var(--letters) - 1) - 1);
+		display: inline-block;
+		transform-origin: 50% 100%;
+		transform: translateY(calc(1.3vw * (1 - var(--u) * var(--u))))
+			rotate(calc(-5.5deg * var(--u)));
 	}
 
 	.muse-center {
