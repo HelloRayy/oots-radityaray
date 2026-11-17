@@ -14,6 +14,8 @@
 		| 'showcaseRight'
 		| 'museCenter'
 		| 'exploreStamp'
+		| 'giantThe'
+		| 'giantCreative'
 		| 'rollIt'
 		| 'railTop'
 		| 'railMid'
@@ -29,6 +31,8 @@
 		showcaseRight: { x: 0, y: 0 },
 		museCenter: { x: 0, y: 0 },
 		exploreStamp: { x: 0, y: 0 },
+		giantThe: { x: 0, y: 0 },
+		giantCreative: { x: 0, y: 0 },
 		rollIt: { x: 0, y: 0 },
 		railTop: { x: 0, y: 0 },
 		railMid: { x: 0, y: 0 },
@@ -155,8 +159,24 @@
 
 	<!-- Center giant typography + Muse + Explore stamp -->
 	<div class="center-stage">
-		<div class="giant-the" aria-hidden="true">THE</div>
-		<div class="giant-creative" aria-hidden="true">
+		<div
+			class="giant-the draggable"
+			style:translate="{offsets.giantThe.x}vw {offsets.giantThe.y}vw"
+			onpointerdown={(e) => startDrag('giantThe', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+			aria-hidden="true"
+		>
+			THE
+		</div>
+		<div
+			class="giant-creative draggable"
+			style:translate="{offsets.giantCreative.x}vw {offsets.giantCreative.y}vw"
+			onpointerdown={(e) => startDrag('giantCreative', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+			aria-hidden="true"
+		>
 			{#each 'CREATIVE'.split('') as ch, i (i)}
 				<span class="c-char" style:--i={i} style:--letters={8}>{ch}</span>
 			{/each}
