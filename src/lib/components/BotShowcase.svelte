@@ -1,46 +1,74 @@
 <script lang="ts">
-	import museHi from '#lib/assets/muse-hi.svg';
-	import designerImg from '#lib/assets/bot-avatars-all/Designer.png';
-	import engineerImg from '#lib/assets/bot-avatars-all/Engineer.png';
-	import ideasImg from '#lib/assets/bot-avatars-all/Ideas.png';
-	import pmImg from '#lib/assets/bot-avatars-all/PM.png';
-	import strategyImg from '#lib/assets/bot-avatars-all/Strategy.png';
+	import claudeIcon from '#lib/assets/asset-muse-icon/claude.svg';
+	import figmaIcon from '#lib/assets/asset-muse-icon/figma.svg';
+	import githubIcon from '#lib/assets/asset-muse-icon/github.svg';
+	import jsIcon from '#lib/assets/asset-muse-icon/js.svg';
+	import museIlyIcon from '#lib/assets/asset-muse-icon/muse-ily.svg';
+	import nodejsIcon from '#lib/assets/asset-muse-icon/nodejs.svg';
+	import reactIcon from '#lib/assets/asset-muse-icon/react.svg';
+	import vscoideIcon from '#lib/assets/asset-muse-icon/vscoide.svg';
 
 	type DragKey =
 		| 'subhead'
 		| 'leftTags'
 		| 'leftCopy'
-		| 'showcaseLeft'
-		| 'showcaseRight'
 		| 'museCenter'
 		| 'exploreStamp'
 		| 'giantThe'
 		| 'giantCreative'
-		| 'rollIt'
-		| 'railTop'
-		| 'railMid'
-		| 'railBot';
+		| 'rollIt';
+
+	type MuseIconItem = {
+		id: string;
+		name: string;
+		src: string;
+		x: number;
+		y: number;
+		width: number;
+		height: number;
+		scale: number;
+		rotate: number;
+		deleted: boolean;
+	};
+
+	const INITIAL_MUSE_ICONS: MuseIconItem[] = [
+		{ id: 'claude', name: 'Claude', src: claudeIcon, x: 11.2, y: 15.99, width: 5, height: 5, scale: 1.8, rotate: -4.5, deleted: false },
+		{ id: 'figma', name: 'Figma', src: figmaIcon, x: 78.22, y: 17.35, width: 5, height: 5, scale: 1.8, rotate: 5, deleted: false },
+		{ id: 'github', name: 'GitHub', src: githubIcon, x: 21.75, y: 37.63, width: 5, height: 5, scale: 1.9, rotate: -4, deleted: false },
+		{ id: 'js', name: 'JS', src: jsIcon, x: 20.38, y: 14.51, width: 5, height: 5, scale: 1.8, rotate: 4, deleted: false },
+		{ id: 'nodejs', name: 'Node.js', src: nodejsIcon, x: 65.01, y: 7.58, width: 5, height: 5, scale: 3, rotate: 6, deleted: false },
+		{ id: 'react', name: 'React', src: reactIcon, x: 28.39, y: 41.96, width: 5, height: 5, scale: 1.8, rotate: -12, deleted: false },
+		{ id: 'vscoide', name: 'VS Code', src: vscoideIcon, x: 71.57, y: 39.02, width: 5, height: 5, scale: 1.7, rotate: 8, deleted: false }
+	];
 
 	let dragEnabled = $state(true);
 	let copied = $state(false);
-	let offsets = $state<Record<DragKey, { x: number; y: number }>>({
-		subhead: { x: 0, y: 0 },
-		leftTags: { x: 0, y: 0 },
-		leftCopy: { x: 0, y: 0 },
-		showcaseLeft: { x: 0, y: 0 },
-		showcaseRight: { x: 0, y: 0 },
-		museCenter: { x: 0, y: 0 },
-		exploreStamp: { x: 0, y: 0 },
-		giantThe: { x: 0, y: 0 },
-		giantCreative: { x: 0, y: 0 },
-		rollIt: { x: 0, y: 0 },
-		railTop: { x: 0, y: 0 },
-		railMid: { x: 0, y: 0 },
-		railBot: { x: 0, y: 0 }
+	let selectedIconId = $state<string | null>(null);
+	let selectedDragKey = $state<DragKey | null>(null);
+	let museIcons = $state<MuseIconItem[]>(INITIAL_MUSE_ICONS.map((item) => ({ ...item })));
+
+	const selectedIcon = $derived(
+		museIcons.find((item) => item.id === selectedIconId && !item.deleted) ?? null
+	);
+
+	type OffsetTransform = { x: number; y: number; scale: number; rotate: number };
+
+	const createDefaultOffsets = (): Record<DragKey, OffsetTransform> => ({
+		subhead: { x: 0, y: 0, scale: 1, rotate: 0 },
+		leftTags: { x: 0.32, y: -15.88, scale: 1, rotate: 0 },
+		leftCopy: { x: 0.85, y: 5.09, scale: 1, rotate: 0 },
+		museCenter: { x: -0.81, y: 7.57, scale: 1.2, rotate: 0 },
+		exploreStamp: { x: 0.49, y: 30.31, scale: 1, rotate: 0 },
+		giantThe: { x: 0, y: 3, scale: 1.3, rotate: 0 },
+		giantCreative: { x: 0, y: -11.9, scale: 1.3, rotate: 0 },
+		rollIt: { x: -4.02, y: -6.87, scale: 1, rotate: 0 }
 	});
 
+	let offsets = $state<Record<DragKey, OffsetTransform>>(createDefaultOffsets());
+
 	let activeDrag: {
-		key: DragKey;
+		kind: 'offset' | 'icon';
+		key: string;
 		startX: number;
 		startY: number;
 		origX: number;
@@ -50,8 +78,11 @@
 	function startDrag(key: DragKey, e: PointerEvent) {
 		if (!dragEnabled) return;
 		e.preventDefault();
+		selectedIconId = null;
+		selectedDragKey = key;
 		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
 		activeDrag = {
+			kind: 'offset',
 			key,
 			startX: e.clientX,
 			startY: e.clientY,
@@ -60,36 +91,83 @@
 		};
 	}
 
+	function startIconDrag(id: string, e: PointerEvent) {
+		if (!dragEnabled) return;
+		e.preventDefault();
+		e.stopPropagation();
+		selectedIconId = id;
+		selectedDragKey = null;
+		const item = museIcons.find((icon) => icon.id === id);
+		if (!item) return;
+		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+		activeDrag = {
+			kind: 'icon',
+			key: id,
+			startX: e.clientX,
+			startY: e.clientY,
+			origX: item.x,
+			origY: item.y
+		};
+	}
+
 	function onDragMove(e: PointerEvent) {
 		if (!activeDrag) return;
 		const vw = window.innerWidth / 100;
 		const dx = Number(((e.clientX - activeDrag.startX) / vw).toFixed(2));
 		const dy = Number(((e.clientY - activeDrag.startY) / vw).toFixed(2));
-		offsets[activeDrag.key] = {
-			x: Number((activeDrag.origX + dx).toFixed(2)),
-			y: Number((activeDrag.origY + dy).toFixed(2))
-		};
+		const nextX = Number((activeDrag.origX + dx).toFixed(2));
+		const nextY = Number((activeDrag.origY + dy).toFixed(2));
+		if (activeDrag.kind === 'offset') {
+			const k = activeDrag.key as DragKey;
+			offsets[k].x = nextX;
+			offsets[k].y = nextY;
+		} else {
+			const target = museIcons.find((icon) => icon.id === activeDrag?.key);
+			if (target) {
+				target.x = nextX;
+				target.y = nextY;
+			}
+		}
 	}
 
 	function endDrag() {
 		activeDrag = null;
 	}
 
+	function deleteSelectedIcon() {
+		if (!selectedIconId) return;
+		const target = museIcons.find((icon) => icon.id === selectedIconId);
+		if (target) target.deleted = true;
+		selectedIconId = null;
+	}
+
 	function copyLayout() {
-		const changed = Object.entries(offsets)
-			.filter(([, v]) => v.x !== 0 || v.y !== 0)
-			.map(([k, v]) => `${k}: x=${v.x}vw, y=${v.y}vw`)
-			.join('\n');
-		const out = changed || 'no changes yet (all 0vw)';
+		const changedOffsets = Object.entries(offsets)
+			.filter(([, v]) => v.x !== 0 || v.y !== 0 || v.scale !== 1 || v.rotate !== 0)
+			.map(([k, v]) => `${k}: x=${v.x}vw, y=${v.y}vw, scale=${v.scale}, rotate=${v.rotate}deg`);
+
+		const iconLines = museIcons
+			.filter((icon) => !icon.deleted)
+			.map(
+				(icon) =>
+					`icon[${icon.id}]: x=${icon.x}vw, y=${icon.y}vw, width=${icon.width}vw, height=${icon.height}vw, scale=${icon.scale}, rotate=${icon.rotate}deg`
+			);
+
+		const deletedLines = museIcons
+			.filter((icon) => icon.deleted)
+			.map((icon) => `icon[${icon.id}]: deleted`);
+
+		const out = [...changedOffsets, ...iconLines, ...deletedLines].join('\n') || 'no changes yet';
 		navigator.clipboard?.writeText(out);
 		copied = true;
 		setTimeout(() => (copied = false), 1500);
 	}
 
 	function resetLayout() {
-		for (const k of Object.keys(offsets) as DragKey[]) {
-			offsets[k] = { x: 0, y: 0 };
-		}
+		offsets = createDefaultOffsets();
+		museIcons = INITIAL_MUSE_ICONS.map((item) => ({ ...item }));
+		selectedIconId = null;
+		selectedDragKey = null;
 	}
 </script>
 
@@ -100,6 +178,8 @@
 	<div
 		class="subhead-wrap draggable"
 		style:translate="{offsets.subhead.x}vw {offsets.subhead.y}vw"
+		style:scale={offsets.subhead.scale}
+		style:rotate="{offsets.subhead.rotate}deg"
 		onpointerdown={(e) => startDrag('subhead', e)}
 		onpointermove={onDragMove}
 		onpointerup={endDrag}
@@ -114,6 +194,8 @@
 	<div
 		class="left-tags draggable"
 		style:translate="{offsets.leftTags.x}vw {offsets.leftTags.y}vw"
+		style:scale={offsets.leftTags.scale}
+		style:rotate="{offsets.leftTags.rotate}deg"
 		onpointerdown={(e) => startDrag('leftTags', e)}
 		onpointermove={onDragMove}
 		onpointerup={endDrag}
@@ -126,6 +208,8 @@
 	<p
 		class="left-copy draggable"
 		style:translate="{offsets.leftCopy.x}vw {offsets.leftCopy.y}vw"
+		style:scale={offsets.leftCopy.scale}
+		style:rotate="{offsets.leftCopy.rotate}deg"
 		onpointerdown={(e) => startDrag('leftCopy', e)}
 		onpointermove={onDragMove}
 		onpointerup={endDrag}
@@ -134,34 +218,13 @@
 		Easygoing. Pixel-sharp. No drama.
 	</p>
 
-	<!-- 2 taped showcase avatars -->
-	<div
-		class="showcase-circle showcase-left draggable"
-		style:translate="{offsets.showcaseLeft.x}vw {offsets.showcaseLeft.y}vw"
-		onpointerdown={(e) => startDrag('showcaseLeft', e)}
-		onpointermove={onDragMove}
-		onpointerup={endDrag}
-	>
-		<img class="showcase-tape" src="/assets/masking-tape-x2.png" alt="" draggable="false" />
-		<img class="showcase-img" src={pmImg} alt="" draggable="false" />
-	</div>
-
-	<div
-		class="showcase-circle showcase-right draggable"
-		style:translate="{offsets.showcaseRight.x}vw {offsets.showcaseRight.y}vw"
-		onpointerdown={(e) => startDrag('showcaseRight', e)}
-		onpointermove={onDragMove}
-		onpointerup={endDrag}
-	>
-		<img class="showcase-tape" src="/assets/masking-tape-x2.png" alt="" draggable="false" />
-		<img class="showcase-img" src={strategyImg} alt="" draggable="false" />
-	</div>
-
 	<!-- Center giant typography + Muse + Explore stamp -->
 	<div class="center-stage">
 		<div
 			class="giant-the draggable"
 			style:translate="{offsets.giantThe.x}vw {offsets.giantThe.y}vw"
+		style:scale={offsets.giantThe.scale}
+		style:rotate="{offsets.giantThe.rotate}deg"
 			onpointerdown={(e) => startDrag('giantThe', e)}
 			onpointermove={onDragMove}
 			onpointerup={endDrag}
@@ -172,6 +235,8 @@
 		<div
 			class="giant-creative draggable"
 			style:translate="{offsets.giantCreative.x}vw {offsets.giantCreative.y}vw"
+		style:scale={offsets.giantCreative.scale}
+		style:rotate="{offsets.giantCreative.rotate}deg"
 			onpointerdown={(e) => startDrag('giantCreative', e)}
 			onpointermove={onDragMove}
 			onpointerup={endDrag}
@@ -185,10 +250,12 @@
 		<img
 			class="muse-center draggable"
 			style:translate="{offsets.museCenter.x}vw {offsets.museCenter.y}vw"
+		style:scale={offsets.museCenter.scale}
+		style:rotate="{offsets.museCenter.rotate}deg"
 			onpointerdown={(e) => startDrag('museCenter', e)}
 			onpointermove={onDragMove}
 			onpointerup={endDrag}
-			src={museHi}
+			src={museIlyIcon}
 			alt="Raditya Rayhan"
 			draggable="false"
 		/>
@@ -196,6 +263,8 @@
 		<div
 			class="explore-stamp draggable"
 			style:translate="{offsets.exploreStamp.x}vw {offsets.exploreStamp.y}vw"
+		style:scale={offsets.exploreStamp.scale}
+		style:rotate="{offsets.exploreStamp.rotate}deg"
 			onpointerdown={(e) => startDrag('exploreStamp', e)}
 			onpointermove={onDragMove}
 			onpointerup={endDrag}
@@ -210,6 +279,8 @@
 	<span
 		class="roll-it draggable"
 		style:translate="{offsets.rollIt.x}vw {offsets.rollIt.y}vw"
+		style:scale={offsets.rollIt.scale}
+		style:rotate="{offsets.rollIt.rotate}deg"
 		onpointerdown={(e) => startDrag('rollIt', e)}
 		onpointermove={onDragMove}
 		onpointerup={endDrag}
@@ -217,50 +288,105 @@
 		ROLL IT!
 	</span>
 
-	<div class="rail-arc">
-		<div
-			class="rail-circle rail-top draggable"
-			style:translate="{offsets.railTop.x}vw {offsets.railTop.y}vw"
-			onpointerdown={(e) => startDrag('railTop', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
-		>
-			<img src={engineerImg} alt="" draggable="false" />
-		</div>
-		<div
-			class="rail-circle rail-mid is-active draggable"
-			style:translate="{offsets.railMid.x}vw {offsets.railMid.y}vw"
-			onpointerdown={(e) => startDrag('railMid', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
-		>
-			<img src={designerImg} alt="" draggable="false" />
-		</div>
-		<div
-			class="rail-circle rail-bot draggable"
-			style:translate="{offsets.railBot.x}vw {offsets.railBot.y}vw"
-			onpointerdown={(e) => startDrag('railBot', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
-		>
-			<img src={ideasImg} alt="" draggable="false" />
-		</div>
-	</div>
+	<!-- Muse Icons (draggable, resizable, rotatable, deletable) -->
+	{#each museIcons as icon (icon.id)}
+		{#if !icon.deleted}
+			<div
+				class="muse-icon-item draggable"
+				class:is-selected={dragEnabled && selectedIconId === icon.id}
+				style:left="{icon.x}vw"
+				style:top="{icon.y}vw"
+				style:width="{icon.width}vw"
+				style:height="{icon.height}vw"
+				style:scale={icon.scale}
+				style:transform="rotate({icon.rotate}deg)"
+				onpointerdown={(e) => startIconDrag(icon.id, e)}
+				onpointermove={onDragMove}
+				onpointerup={endDrag}
+			>
+				<img src={icon.src} alt={icon.name} draggable="false" />
+			</div>
+		{/if}
+	{/each}
 
 	<!-- Drag Mode Toolbar -->
-	<div class="drag-toolbar">
-		<button
-			type="button"
-			class="tb-btn"
-			class:is-on={dragEnabled}
-			onclick={() => (dragEnabled = !dragEnabled)}
-		>
-			Drag: {dragEnabled ? 'ON' : 'OFF'}
-		</button>
-		<button type="button" class="tb-btn tb-copy" onclick={copyLayout}>
-			{copied ? 'Copied!' : 'Copy Layout'}
-		</button>
-		<button type="button" class="tb-btn" onclick={resetLayout}>Reset</button>
+	<div class="drag-toolbar-wrap">
+		{#if dragEnabled && selectedIcon}
+			<div class="icon-inspector">
+				<span class="inspector-title">{selectedIcon.name}</span>
+				<label class="inspector-field">
+					<span>X</span>
+					<input type="range" min="-20" max="100" step="0.05" bind:value={selectedIcon.x} />
+					<input class="num-input" type="number" step="0.05" bind:value={selectedIcon.x} />
+				</label>
+				<label class="inspector-field">
+					<span>Y</span>
+					<input type="range" min="-20" max="60" step="0.05" bind:value={selectedIcon.y} />
+					<input class="num-input" type="number" step="0.05" bind:value={selectedIcon.y} />
+				</label>
+				<label class="inspector-field">
+					<span>W</span>
+					<input type="range" min="0" max="100" step="0.05" bind:value={selectedIcon.width} />
+					<input class="num-input" type="number" min="0" step="0.05" bind:value={selectedIcon.width} />
+				</label>
+				<label class="inspector-field">
+					<span>H</span>
+					<input type="range" min="0" max="100" step="0.05" bind:value={selectedIcon.height} />
+					<input class="num-input" type="number" min="0" step="0.05" bind:value={selectedIcon.height} />
+				</label>
+				<label class="inspector-field">
+					<span>Size</span>
+					<input type="range" min="0.2" max="3" step="0.01" bind:value={selectedIcon.scale} />
+					<input class="num-input" type="number" min="0.1" step="0.01" bind:value={selectedIcon.scale} />
+				</label>
+				<label class="inspector-field">
+					<span>Angle</span>
+					<input type="range" min="-180" max="180" step="0.5" bind:value={selectedIcon.rotate} />
+					<input class="num-input" type="number" step="0.5" bind:value={selectedIcon.rotate} />
+				</label>
+				<button type="button" class="tb-btn tb-delete" onclick={deleteSelectedIcon}>
+					Delete
+				</button>
+			</div>
+		{:else if dragEnabled && selectedDragKey}
+			<div class="icon-inspector">
+				<span class="inspector-title">{selectedDragKey}</span>
+				<label class="inspector-field">
+					<span>X</span>
+					<input type="range" min="-50" max="50" step="0.05" bind:value={offsets[selectedDragKey].x} />
+					<input class="num-input" type="number" step="0.05" bind:value={offsets[selectedDragKey].x} />
+				</label>
+				<label class="inspector-field">
+					<span>Y</span>
+					<input type="range" min="-50" max="50" step="0.05" bind:value={offsets[selectedDragKey].y} />
+					<input class="num-input" type="number" step="0.05" bind:value={offsets[selectedDragKey].y} />
+				</label>
+				<label class="inspector-field">
+					<span>Size</span>
+					<input type="range" min="0.2" max="3" step="0.01" bind:value={offsets[selectedDragKey].scale} />
+					<input class="num-input" type="number" min="0.1" step="0.01" bind:value={offsets[selectedDragKey].scale} />
+				</label>
+				<label class="inspector-field">
+					<span>Angle</span>
+					<input type="range" min="-180" max="180" step="0.5" bind:value={offsets[selectedDragKey].rotate} />
+					<input class="num-input" type="number" step="0.5" bind:value={offsets[selectedDragKey].rotate} />
+				</label>
+			</div>
+		{/if}
+		<div class="drag-toolbar">
+			<button
+				type="button"
+				class="tb-btn"
+				class:is-on={dragEnabled}
+				onclick={() => (dragEnabled = !dragEnabled)}
+			>
+				Drag: {dragEnabled ? 'ON' : 'OFF'}
+			</button>
+			<button type="button" class="tb-btn tb-copy" onclick={copyLayout}>
+				{copied ? 'Copied!' : 'Copy Layout'}
+			</button>
+			<button type="button" class="tb-btn" onclick={resetLayout}>Reset</button>
+		</div>
 	</div>
 </section>
 
@@ -287,17 +413,105 @@
 		outline-color: #b6fe00;
 	}
 
-	.drag-toolbar {
+	.muse-icon-item {
+		position: absolute;
+		z-index: 12;
+		user-select: none;
+	}
+
+	.muse-icon-item img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		display: block;
+		pointer-events: none;
+	}
+
+	.drag-mode .muse-icon-item.is-selected {
+		outline: 2px solid #b6fe00;
+		outline-offset: 4px;
+	}
+
+	.drag-toolbar-wrap {
 		position: absolute;
 		bottom: 1.5vw;
 		left: 1.5vw;
 		z-index: 50;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4vw;
+		align-items: flex-start;
+	}
+
+	.icon-inspector {
+		display: flex;
+		align-items: center;
+		gap: 0.6vw;
+		background: rgba(1, 41, 0, 0.94);
+		padding: 0.45vw 0.7vw;
+		border-radius: 0.6vw;
+		border: 1px solid rgba(182, 254, 0, 0.45);
+		color: #fff;
+		font-size: 12px;
+	}
+
+	.inspector-title {
+		font-weight: 700;
+		color: #b6fe00;
+		margin-right: 0.2vw;
+	}
+
+	.inspector-field {
+		display: flex;
+		align-items: center;
+		gap: 0.3vw;
+		font-weight: 600;
+	}
+
+	.inspector-field span {
+		min-width: 34px;
+		white-space: nowrap;
+	}
+
+	.inspector-field input[type='range'] {
+		width: 110px;
+		accent-color: #b6fe00;
+		cursor: pointer;
+	}
+
+	.num-input {
+		width: auto;
+		min-width: 38px;
+		field-sizing: content;
+		padding: 2px 5px;
+		border-radius: 4px;
+		border: 1px solid rgba(255, 255, 255, 0.25);
+		background: rgba(255, 255, 255, 0.1);
+		color: #fff;
+		font-size: 12px;
+		font-variant-numeric: tabular-nums;
+		appearance: textfield;
+		-moz-appearance: textfield;
+	}
+
+	.num-input::-webkit-outer-spin-button,
+	.num-input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+
+	.drag-toolbar {
 		display: flex;
 		gap: 0.5vw;
 		background: rgba(1, 41, 0, 0.92);
 		padding: 0.5vw;
 		border-radius: 0.6vw;
 		border: 1px solid rgba(182, 254, 0, 0.35);
+	}
+
+	.tb-delete {
+		background: #c62828;
+		color: #fff;
 	}
 
 	.tb-btn {
