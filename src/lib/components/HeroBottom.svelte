@@ -83,7 +83,7 @@
 						rotateX: 0,
 						y: 0,
 						ease: 'power2.out',
-						scrollTrigger: { trigger: el, start: 'top 90%', end: 'top 58%', scrub: 0.6 }
+						scrollTrigger: { trigger: el, start: 'top 72%', end: 'top 28%', scrub: 1.1 }
 					}
 				);
 			});
