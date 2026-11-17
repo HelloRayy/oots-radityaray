@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<svelte:head>
+	<title>SweetTape — Stick By You</title>
+</svelte:head>
+
+<main id="main" tabindex="-1" class="min-h-screen w-full bg-[#034102]"></main>
