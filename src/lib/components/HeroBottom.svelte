@@ -7,22 +7,24 @@
 	const NOTE_ITEMS = ['ship new portfolio', 'polish gsap motion', 'reply client emails'];
 
 	const CARDBOARD_WORDS = [
-		'BROKEN',
-		'LAYOUTS,',
-		'SLOW',
-		'WEBSITES,',
-		'BORING',
-		'PORTFOLIOS,',
-		'LAST-MINUTE',
-		'LAUNCHES.',
-		'I',
+		'DIY',
+		'FAIL,',
+		'MOVING',
+		'DAY',
+		'CHAOS,',
+		'SCHOOL',
+		'PROJECT',
+		'EMERGENCY,',
+		'LAST-MINUTES',
+		'FIXES.',
+		'WE',
 		'ALWAYS',
-		'SHIP',
-		'FOR',
+		'STICK',
+		'BY',
 		'YOU.'
 	];
 
-	const HAND_LINES = ['i build for', 'everyday people.', 'not corporate—just', 'real craft.'];
+	const HAND_LINES = ['we built for', 'everyday moments.', 'not industrial—just', 'real life.'];
 
 	let rootEl: HTMLElement | null = null;
 
@@ -39,21 +41,17 @@
 		}
 
 		const ctx = gsap.context(() => {
-			// Cardboard headline: chars rise by line as you scroll
-			const tops = chars.map((c) => (c.parentElement ?? c).offsetTop);
-			const minTop = Math.min(...tops);
-			const span = Math.max(Math.max(...tops) - minTop, 1);
-			const tl = gsap.timeline({
-				scrollTrigger: { trigger: '.cb-wrap', start: 'top 85%', end: 'bottom 70%', scrub: 0.6 }
-			});
-			chars.forEach((c, i) => {
-				tl.fromTo(
-					c,
-					{ yPercent: 120 },
-					{ yPercent: 0, duration: 0.5, ease: 'power3.out' },
-					((tops[i] - minTop) / span) * 1 + Math.random() * 0.3
-				);
-			});
+			gsap.fromTo(
+				chars,
+				{ yPercent: 120 },
+				{
+					yPercent: 0,
+					duration: 0.6,
+					stagger: 0.008,
+					ease: 'power3.out',
+					scrollTrigger: { trigger: '.cb-wrap', start: 'top 88%', once: true }
+				}
+			);
 
 			// Sticky note drops in + sways
 			gsap.from('.note', {
@@ -216,8 +214,10 @@
 		margin: 0;
 		padding: 0;
 		font-family: 'Nothing You Could Do', cursive;
-		font-size: 0.95vw;
-		color: #8a2a0a;
+		font-size: 1.2vw;
+		font-weight: 700;
+		line-height: 1.35;
+		color: #701d04;
 	}
 
 	.note li {
@@ -271,8 +271,9 @@
 		flex-direction: column;
 		padding: 1.4vw 0 0 2.4vw;
 		font-family: 'Nothing You Could Do', cursive;
-		font-size: 1.15vw;
-		line-height: 1.25;
+		font-size: 1.45vw;
+		font-weight: 700;
+		line-height: 1.3;
 		transform: rotate(-8deg);
 	}
 
