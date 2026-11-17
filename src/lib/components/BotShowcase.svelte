@@ -231,7 +231,7 @@
 	<!-- Top pill -->
 	<div
 		class="subhead-wrap draggable"
-		style:translate="calc(\{offsets.subhead.x\}vw + var(--mx, 0) * 0.3vw) calc(\{offsets.subhead.y\}vw + var(--my, 0) * 0.25vw)"
+		style:translate="calc({offsets.subhead.x}vw + var(--mx, 0) * 0.3vw) calc({offsets.subhead.y}vw + var(--my, 0) * 0.25vw)"
 		style:scale={offsets.subhead.scale}
 		style:rotate="{offsets.subhead.rotate}deg"
 		onpointerdown={(e) => startDrag('subhead', e)}
@@ -247,7 +247,7 @@
 	<!-- Left tags & copy -->
 	<div
 		class="left-tags draggable"
-		style:translate="calc(\{offsets.leftTags.x\}vw + var(--mx, 0) * 0.55vw) calc(\{offsets.leftTags.y\}vw + var(--my, 0) * 0.45vw)"
+		style:translate="calc({offsets.leftTags.x}vw + var(--mx, 0) * 0.55vw) calc({offsets.leftTags.y}vw + var(--my, 0) * 0.45vw)"
 		style:scale={offsets.leftTags.scale}
 		style:rotate="{offsets.leftTags.rotate}deg"
 		onpointerdown={(e) => startDrag('leftTags', e)}
@@ -261,7 +261,7 @@
 
 	<p
 		class="left-copy draggable"
-		style:translate="calc(\{offsets.leftCopy.x\}vw + var(--mx, 0) * 0.65vw) calc(\{offsets.leftCopy.y\}vw + var(--my, 0) * 0.5vw)"
+		style:translate="calc({offsets.leftCopy.x}vw + var(--mx, 0) * 0.65vw) calc({offsets.leftCopy.y}vw + var(--my, 0) * 0.5vw)"
 		style:scale={offsets.leftCopy.scale}
 		style:rotate="{offsets.leftCopy.rotate}deg"
 		onpointerdown={(e) => startDrag('leftCopy', e)}
@@ -276,7 +276,7 @@
 	<div class="center-stage">
 		<div
 			class="giant-the draggable"
-			style:translate="calc(\{offsets.giantThe.x\}vw + var(--mx, 0) * 0.35vw) calc(\{offsets.giantThe.y\}vw + var(--my, 0) * 0.3vw)"
+			style:translate="calc({offsets.giantThe.x}vw + var(--mx, 0) * 0.35vw) calc({offsets.giantThe.y}vw + var(--my, 0) * 0.3vw)"
 		style:scale={offsets.giantThe.scale}
 		style:rotate="{offsets.giantThe.rotate}deg"
 			onpointerdown={(e) => startDrag('giantThe', e)}
@@ -288,7 +288,7 @@
 		</div>
 		<div
 			class="giant-creative draggable"
-			style:translate="calc(\{offsets.giantCreative.x\}vw + var(--mx, 0) * -0.4vw) calc(\{offsets.giantCreative.y\}vw + var(--my, 0) * 0.35vw)"
+			style:translate="calc({offsets.giantCreative.x}vw + var(--mx, 0) * -0.4vw) calc({offsets.giantCreative.y}vw + var(--my, 0) * 0.35vw)"
 		style:scale={offsets.giantCreative.scale}
 		style:rotate="{offsets.giantCreative.rotate}deg"
 			onpointerdown={(e) => startDrag('giantCreative', e)}
@@ -303,7 +303,7 @@
 
 		<img
 			class="muse-center draggable"
-			style:translate="calc(\{offsets.museCenter.x\}vw + var(--mx, 0) * -1.1vw) calc(\{offsets.museCenter.y\}vw + var(--my, 0) * -0.85vw)"
+			style:translate="calc({offsets.museCenter.x}vw + var(--mx, 0) * -1.1vw) calc({offsets.museCenter.y}vw + var(--my, 0) * -0.85vw)"
 		style:scale={offsets.museCenter.scale}
 		style:rotate="{offsets.museCenter.rotate}deg"
 			onpointerdown={(e) => startDrag('museCenter', e)}
@@ -316,7 +316,7 @@
 
 		<div
 			class="explore-stamp draggable"
-			style:translate="calc(\{offsets.exploreStamp.x\}vw + var(--mx, 0) * 0.8vw) calc(\{offsets.exploreStamp.y\}vw + var(--my, 0) * 0.65vw)"
+			style:translate="calc({offsets.exploreStamp.x}vw + var(--mx, 0) * 0.8vw) calc({offsets.exploreStamp.y}vw + var(--my, 0) * 0.65vw)"
 		style:scale={offsets.exploreStamp.scale}
 		style:rotate="{offsets.exploreStamp.rotate}deg"
 			onpointerdown={(e) => startDrag('exploreStamp', e)}
@@ -332,7 +332,7 @@
 	<!-- Right ROLL IT! 3-avatar arc -->
 	<span
 		class="roll-it draggable"
-		style:translate="calc(\{offsets.rollIt.x\}vw + var(--mx, 0) * 0.7vw) calc(\{offsets.rollIt.y\}vw + var(--my, 0) * -0.55vw)"
+		style:translate="calc({offsets.rollIt.x}vw + var(--mx, 0) * 0.7vw) calc({offsets.rollIt.y}vw + var(--my, 0) * -0.55vw)"
 		style:scale={offsets.rollIt.scale}
 		style:rotate="{offsets.rollIt.rotate}deg"
 		onpointerdown={(e) => startDrag('rollIt', e)}
