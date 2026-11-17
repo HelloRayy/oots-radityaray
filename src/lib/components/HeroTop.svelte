@@ -28,6 +28,27 @@
 	let sectionEl: HTMLElement | null = null;
 	let heroImageEl: HTMLImageElement | null = null;
 
+	let tuneOpen = $state(true);
+	let museWidth = $state(34);
+	let museBottom = $state(-4.5);
+	let museOffsetX = $state(0);
+	let copied = $state(false);
+
+	function copyTuneValues() {
+		const text = `width: ${museWidth}vw; bottom: ${museBottom}vw; offsetX: ${museOffsetX}vw;`;
+		navigator.clipboard?.writeText(text);
+		copied = true;
+		setTimeout(() => {
+			copied = false;
+		}, 1500);
+	}
+
+	function resetTuneValues() {
+		museWidth = 34;
+		museBottom = -4.5;
+		museOffsetX = 0;
+	}
+
 	function shuffle<T>(items: T[]): T[] {
 		const copy = [...items];
 		for (let i = copy.length - 1; i > 0; i--) {
@@ -213,7 +234,13 @@
 				</div>
 			</div>
 
-			<div class="hero-image-wrap" aria-hidden="true">
+			<div
+				class="hero-image-wrap"
+				aria-hidden="true"
+				style:width="{museWidth}vw"
+				style:bottom="{museBottom}vw"
+				style:transform="translateX(calc(-50% + {museOffsetX}vw))"
+			>
 				<img
 					class="hero-image"
 					bind:this={heroImageEl}
@@ -223,5 +250,88 @@
 				/>
 			</div>
 		</div>
+	</div>
+
+	<div class="fixed right-4 bottom-4 z-[600] w-64 rounded-xl border border-[#b6fe00]/30 bg-[#012900]/95 p-3 text-xs text-white shadow-2xl backdrop-blur">
+		<div class="mb-2 flex items-center justify-between">
+			<span class="font-bold tracking-wide text-[#b6fe00] uppercase">Muse Tuner</span>
+			<button
+				type="button"
+				onclick={() => (tuneOpen = !tuneOpen)}
+				class="rounded bg-white/10 px-2 py-0.5 text-[11px] hover:bg-white/20"
+			>
+				{tuneOpen ? 'Hide' : 'Show'}
+			</button>
+		</div>
+
+		{#if tuneOpen}
+			<div class="space-y-2.5">
+				<label class="block">
+					<div class="mb-0.5 flex justify-between text-[11px] text-white/80">
+						<span>Width</span>
+						<span class="font-mono text-[#b6fe00]">{museWidth}vw</span>
+					</div>
+					<input
+						type="range"
+						min="15"
+						max="60"
+						step="0.5"
+						bind:value={museWidth}
+						class="w-full accent-[#b6fe00]"
+					/>
+				</label>
+
+				<label class="block">
+					<div class="mb-0.5 flex justify-between text-[11px] text-white/80">
+						<span>Bottom</span>
+						<span class="font-mono text-[#b6fe00]">{museBottom}vw</span>
+					</div>
+					<input
+						type="range"
+						min="-20"
+						max="20"
+						step="0.5"
+						bind:value={museBottom}
+						class="w-full accent-[#b6fe00]"
+					/>
+				</label>
+
+				<label class="block">
+					<div class="mb-0.5 flex justify-between text-[11px] text-white/80">
+						<span>Offset X</span>
+						<span class="font-mono text-[#b6fe00]">{museOffsetX}vw</span>
+					</div>
+					<input
+						type="range"
+						min="-25"
+						max="25"
+						step="0.5"
+						bind:value={museOffsetX}
+						class="w-full accent-[#b6fe00]"
+					/>
+				</label>
+
+				<div class="rounded bg-black/40 p-1.5 font-mono text-[10px] text-[#b6fe00]/90">
+					width: {museWidth}vw; bottom: {museBottom}vw; offsetX: {museOffsetX}vw;
+				</div>
+
+				<div class="flex gap-1.5 pt-0.5">
+					<button
+						type="button"
+						onclick={copyTuneValues}
+						class="flex-1 rounded bg-[#b6fe00] py-1.5 font-bold text-[#013900] transition hover:brightness-110"
+					>
+						{copied ? 'Copied!' : 'Copy Values'}
+					</button>
+					<button
+						type="button"
+						onclick={resetTuneValues}
+						class="rounded bg-white/10 px-2.5 py-1.5 text-white/80 hover:bg-white/20"
+					>
+						Reset
+					</button>
+				</div>
+			</div>
+		{/if}
 	</div>
 </section>
