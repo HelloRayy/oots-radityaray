@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
-	import { whenRevealed } from '#lib/utils/reveal.ts';
+	import museHi from '#lib/assets/muse-hi.svg';
+	import { whenRevealed, whenSweeping } from '#lib/utils/reveal.ts';
 
 	const CORNER_LINES = ['CREATIVE DEVELOPER', 'PORTFOLIO WEBSITE'];
 	const KICKER_LEFT = 'WELCOME';
@@ -25,6 +26,7 @@
 	};
 
 	let sectionEl: HTMLElement | null = null;
+	let heroImageEl: HTMLImageElement | null = null;
 
 	function shuffle<T>(items: T[]): T[] {
 		const copy = [...items];
@@ -44,6 +46,7 @@
 		const cornerPerf = root.querySelector<HTMLElement>('.corner-perf');
 		const cornerChars = Array.from(root.querySelectorAll<HTMLElement>('.corner-mark .char'));
 		const heroMark = root.querySelector<HTMLElement>('.hero-mark');
+		const heroImage = heroImageEl;
 
 		if (allChars.length) {
 			gsap.set(allChars, { y: 0, yPercent: REVEAL.HIDDEN });
@@ -53,6 +56,7 @@
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
 			if (allChars.length) gsap.set(allChars, { clearProps: 'transform' });
 			if (cornerPerf) gsap.set(cornerPerf, { clipPath: 'inset(0% 0% 0% 0%)' });
+			if (heroImage) gsap.set(heroImage, { clearProps: 'transform,opacity' });
 			return;
 		}
 
@@ -102,7 +106,21 @@
 				)
 			: null;
 
+		const imageTween = heroImage
+			? gsap.fromTo(
+					heroImage,
+					{ yPercent: 28, scale: 0.86, opacity: 0 },
+					{ yPercent: 0, scale: 1, opacity: 1, duration: 1.15, ease: 'back.out(1.4)', paused: true }
+				)
+			: null;
+
 		const delayedCalls: gsap.core.Tween[] = [];
+		const unsubSweep = whenSweeping(() => {
+			if (imageTween) {
+				imageTween.play();
+			}
+		});
+
 		const unsubReveal = whenRevealed(() => {
 			if (titleTween) {
 				delayedCalls.push(gsap.delayedCall(REVEAL.DELAY, () => titleTween.play()));
@@ -116,13 +134,16 @@
 		});
 
 		return () => {
+			unsubSweep();
 			unsubReveal();
 			for (const dc of delayedCalls) dc.kill();
 			titleTween?.kill();
 			cornerTl.kill();
 			markTween?.kill();
+			imageTween?.kill();
 			if (allChars.length) gsap.set(allChars, { clearProps: 'transform' });
 			if (heroMark) gsap.set(heroMark, { clearProps: 'transform' });
+			if (heroImage) gsap.set(heroImage, { clearProps: 'transform,opacity' });
 			if (cornerPerf) gsap.set(cornerPerf, { clearProps: 'clipPath' });
 		};
 	});
@@ -187,6 +208,16 @@
 						{/each}
 					</h1>
 				</div>
+			</div>
+
+			<div class="hero-image-wrap" aria-hidden="true">
+				<img
+					class="hero-image"
+					bind:this={heroImageEl}
+					src={museHi}
+					alt=""
+					draggable="false"
+				/>
 			</div>
 		</div>
 	</div>

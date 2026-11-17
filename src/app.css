@@ -239,7 +239,7 @@ html[data-loading] {
 .hero-section .top {
 	--arc-paint: #b6fe00;
 	width: 100%;
-	height: 52.083vw;
+	height: 50vw;
 	position: relative;
 }
 
@@ -283,26 +283,26 @@ html[data-loading] {
 }
 
 .hero-section .title {
-	--hero-mark-w: 12.7vw;
+	--hero-mark-w: 11.5vw;
 	--hero-mark-h: calc(var(--hero-mark-w) * 118 / 191);
-	--hero-mark-lift: 0.5vw;
+	--hero-mark-lift: 0.45vw;
 	flex-direction: column;
 	align-items: center;
-	padding-top: 5.056vw;
+	padding-top: 3.6vw;
 	display: flex;
 	position: relative;
 	z-index: 2;
 }
 
 .hero-section .h4 {
-	--kicker-gap: 21.5vw;
+	--kicker-gap: 20vw;
 	font-family: var(--font-heading);
 	color: #013900;
 	letter-spacing: -0.094vw;
 	gap: calc(var(--kicker-gap) / 2);
 	justify-content: center;
 	align-items: center;
-	font-size: 2.347vw;
+	font-size: 2.2vw;
 	font-weight: 800;
 	line-height: 0.71;
 	display: inline-flex;
@@ -336,19 +336,37 @@ html[data-loading] {
 }
 
 .hero-section .warped-text {
-	--arc-drop: 1.2vw;
-	--arc-tilt: 7deg;
-	margin-top: 0.4vw;
+	--arc-drop: 1.05vw;
+	--arc-tilt: 6.5deg;
+	margin-top: 0.35vw;
 }
 
 .hero-section .h1 {
 	letter-spacing: -0.02em;
 	color: #013900;
 	text-align: center;
-	font-size: 15.2vw;
+	font-size: 13.5vw;
 	font-weight: 800;
 	line-height: 0.78;
 	text-transform: uppercase;
+}
+
+.hero-section .hero-image-wrap {
+	position: absolute;
+	left: 50%;
+	bottom: -8.5vw;
+	transform: translateX(-50%);
+	width: 22vw;
+	aspect-ratio: 1666 / 1966;
+	z-index: 3;
+	pointer-events: none;
+}
+
+.hero-section .hero-image {
+	width: 100%;
+	height: 100%;
+	object-fit: contain;
+	filter: drop-shadow(0 1.4vw 2.2vw rgba(1, 57, 0, 0.28));
 }
 
 .hero-section .h1 .line {
@@ -401,7 +419,7 @@ html[data-loading] {
 		--pre-mark: 46vw;
 	}
 	.hero-section .top {
-		height: 105vw;
+		height: 112vw;
 	}
 	.hero-section .corner-mark {
 		font-size: 3.4vw;
@@ -415,16 +433,20 @@ html[data-loading] {
 		background-size: 100% 0.9vw;
 	}
 	.hero-section .title {
-		--hero-mark-w: 28vw;
+		--hero-mark-w: 26vw;
 		--hero-mark-lift: 0.8vw;
-		padding-top: 22vw;
+		padding-top: 18vw;
 	}
 	.hero-section .h4 {
-		--kicker-gap: 38vw;
-		font-size: 5vw;
+		--kicker-gap: 36vw;
+		font-size: 4.8vw;
 	}
 	.hero-section .h1 {
-		font-size: 19vw;
+		font-size: 18vw;
 		line-height: 0.82;
+	}
+	.hero-section .hero-image-wrap {
+		width: 48vw;
+		bottom: -12vw;
 	}
 }
