@@ -1,0 +1,236 @@
+{
+  "version": 2,
+  "skills": {
+    "agent-browser": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/agent-browser/SKILL.md",
+      "computedHash": "966e24fe362688e1cab9831ae51ed16fdb25acccacd10fc5a833812a6aa7d298"
+    },
+    "brainstorming": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/brainstorming/SKILL.md",
+      "computedHash": "8ed6b8f3cea9867f5daf3e43c8d736f58f0f977c50f38a13b34fe4e532e4e877"
+    },
+    "clone-website": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/clone-website/SKILL.md",
+      "computedHash": "b20e41e49434511414579b7bbb9f6e2cb29ab99f97382c2f749d5f81eeab7510"
+    },
+    "collapsible-sidebar": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/collapsible-sidebar/SKILL.md",
+      "computedHash": "32195142b54eb5dbd15c6ddda92fb1a15f9d2f29473189cafa98bca72d9dbf94"
+    },
+    "convex-best-practices": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/convex-best-practices/SKILL.md",
+      "computedHash": "3bdb34c50d1245182ebdcefe2f6fb7a5cdc76582d1ec88b3fd02d398cf34fcc6"
+    },
+    "deploy-to-vercel": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/deploy-to-vercel/SKILL.md",
+      "computedHash": "18a7fec359bb9eeec22d65757120c6c9dd833dd9cd579e9e68cb632ceebc55dd"
+    },
+    "design-engineer-router": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/design-engineer-router/SKILL.md",
+      "computedHash": "3a132746174b213da3648cfd30c6747bf5e57881a8d5b1d3df0ae3077ecb9cd6"
+    },
+    "design-system-from-codebase": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/design-system-from-codebase/SKILL.md",
+      "computedHash": "f453840b6d3d0ee91e4745c970212ea3f8aef9a092de51f023d3dc889ddf5d4e"
+    },
+    "faiz-editorial-film-edit": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/faiz-editorial-film-edit/SKILL.md",
+      "computedHash": "029896d4314dd449b0e1e32e63f7c103c465c5836068aced26d6ab411f96ea35"
+    },
+    "frontend-design": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-design/SKILL.md",
+      "computedHash": "a7c81a25c7ea1972f7049cd0282545c72ae92237c1b45ba7b1370fab498f5f9b"
+    },
+    "frontend-skill": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/frontend-skill/SKILL.md",
+      "computedHash": "9950757a748d490ea83a7e596db5abc007d6cd8a6b2df7a6fb5787092b9d41d9"
+    },
+    "gpt-taste": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/gpt-tasteskill/SKILL.md",
+      "computedHash": "f0eefce6ce80f76a3645e0ad4cecfd45ef185fed1311e45b1b467d3fedc7bf52"
+    },
+    "grainy-gradient": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/grainy-gradient/SKILL.md",
+      "computedHash": "ac605b8221d59f5d92ee0f8aec438e5d2b9168a7a0132672a2e0f776c6c481cf"
+    },
+    "hermes-wag-summarizer": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/hermes-wag-summarizer/SKILL.md",
+      "computedHash": "bb81f8ed864f4d9d5a9debc7a978952c62786ba93897bddad65b8125d04189fa"
+    },
+    "landing-page-copywriter": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/landing-page-copywriter/SKILL.md",
+      "computedHash": "9d655fba4a872f8119b8c1ac8d5c5cf5c56498af496d82475efc5ecf795578fe"
+    },
+    "make-interfaces-feel-better": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/make-interfaces-feel-better/SKILL.md",
+      "computedHash": "9d5c671d1a1b948961c7cba6caa05769e3e47990e10162450beb1c3a6c0ba6dc"
+    },
+    "pdf": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/pdf/SKILL.md",
+      "computedHash": "e6c5704d48364f983709592c62c418bbf3889649c191f941bd2a699076325929"
+    },
+    "prd": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/prd/SKILL.md",
+      "computedHash": "424b3e518d548708e4a2d3124ab9b7b57c0f0d9261bef6e7c91ad4dd7c9e0840"
+    },
+    "receiving-code-review": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/receiving-code-review/SKILL.md",
+      "computedHash": "3df6da2ae32c1d4027720a3201a14f81126a776d15c73806b042020bad55fcf2"
+    },
+    "refactor-clean": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/refactor-clean/SKILL.md",
+      "computedHash": "794afd7b3572624919d02fc59b0f729d74a985136885f8480acb2ce543c6cffb"
+    },
+    "requesting-code-review": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/requesting-code-review/SKILL.md",
+      "computedHash": "ba7db87bd567bde2feeb79a70684ba1aba791bc3d086c7202c59f98305dc36c6"
+    },
+    "seo-audit": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/seo-audit/SKILL.md",
+      "computedHash": "17463977b8f4b90d0577045288a3b3c19a87f46206dcef227ee75bc56bed4a0e"
+    },
+    "shadcn": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/shadcn/SKILL.md",
+      "computedHash": "d9896e875cbe333ff4eb9e38f930a00898bc01033b423ba565cbca732454eeb7"
+    },
+    "skeleton-dither": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/skeleton-dither/SKILL.md",
+      "computedHash": "a527c61ced6dd5673fe049d1a7d8edd9f9ff5632f34c5e7cd6838c9577664073"
+    },
+    "social-content": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/social-content/SKILL.md",
+      "computedHash": "97c48a45fac27b872e02857576291006db28da28f872f6fa8d9df3f0a43d96ad"
+    },
+    "supabase-postgres-best-practices": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/supabase-postgres-best-practices/SKILL.md",
+      "computedHash": "acd225fe2ef6f2c8e4bd054caa9522ef30d6e56fceeeb0c3395e3b047db788d5"
+    },
+    "systematic-debugging": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/systematic-debugging/SKILL.md",
+      "computedHash": "b8b1fa7a948340f11a3aa0efe6715ddf03fd6e6c6f0cd4484e609649156accb5"
+    },
+    "ui-ux-pro-max": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/ui-ux-pro-max/SKILL.md",
+      "computedHash": "2e8a4e715881589f4c88a42c51840236c9a3ac426ebb48397a8447475f16d1f5"
+    },
+    "vercel-composition-patterns": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/composition-patterns/SKILL.md",
+      "computedHash": "f711ed8b16162eaa712abbcdbbae6c926f86c57e60127735fecc3ad0dd85b3fa"
+    },
+    "vercel-react-best-practices": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/react-best-practices/SKILL.md",
+      "computedHash": "7991ed4fbecdac23f47c1a40c243e00a212a9e7f3604db93959b3ae11dffe299"
+    },
+    "vercel-react-native-skills": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/react-native-skills/SKILL.md",
+      "computedHash": "4c160f1f4e623b989cadb71f42a0813be574d172acf5e32a6411c87f3e28c05a"
+    },
+    "vercel-react-view-transitions": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/react-view-transitions/SKILL.md",
+      "computedHash": "755575b8ee456cd150fcb311a82ca8bb1fe4515ed80d26a4511ae77e81acc5ac"
+    },
+    "web-design-guidelines": {
+      "source": "julianromli/ai-skills",
+      "commit": "a94ccf46c103df64aa237d1dea8927dc7fd1e0b2",
+      "sourceType": "github",
+      "skillPath": "skills/web-design-guidelines/SKILL.md",
+      "computedHash": "4f68ae07187fb0d1fb78c88b503d089da4cf5a9d9625d1f2e425b1590bf96d92"
+    }
+  }
+}
