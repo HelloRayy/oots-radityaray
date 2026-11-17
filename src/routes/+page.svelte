@@ -3,7 +3,7 @@
 </script>
 
 <svelte:head>
-	<title>Hello, Raditya Rayhan!</title>
+	<title>Raditya Rayhan</title>
 </svelte:head>
 
 <main id="main" tabindex="-1">
