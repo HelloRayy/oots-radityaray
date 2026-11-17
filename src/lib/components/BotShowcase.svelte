@@ -32,13 +32,12 @@
 	};
 
 	const INITIAL_MUSE_ICONS: MuseIconItem[] = [
-		{ id: 'claude', name: 'Claude', src: claudeIcon, x: 11.2, y: 15.99, width: 5, height: 5, scale: 1.8, rotate: -4.5, deleted: false },
-		{ id: 'figma', name: 'Figma', src: figmaIcon, x: 78.22, y: 17.35, width: 5, height: 5, scale: 1.8, rotate: 5, deleted: false },
-		{ id: 'github', name: 'GitHub', src: githubIcon, x: 21.75, y: 37.63, width: 5, height: 5, scale: 1.9, rotate: -4, deleted: false },
-		{ id: 'js', name: 'JS', src: jsIcon, x: 20.38, y: 14.51, width: 5, height: 5, scale: 1.8, rotate: 4, deleted: false },
-		{ id: 'nodejs', name: 'Node.js', src: nodejsIcon, x: 65.01, y: 7.58, width: 5, height: 5, scale: 3, rotate: 6, deleted: false },
-		{ id: 'react', name: 'React', src: reactIcon, x: 28.39, y: 41.96, width: 5, height: 5, scale: 1.8, rotate: -12, deleted: false },
-		{ id: 'vscoide', name: 'VS Code', src: vscoideIcon, x: 71.57, y: 39.02, width: 5, height: 5, scale: 1.7, rotate: 8, deleted: false }
+		{ id: 'claude', name: 'Claude', src: claudeIcon, x: 26.49, y: 2.69, width: 5, height: 5, scale: 1.8, rotate: -4.5, deleted: false },
+		{ id: 'figma', name: 'Figma', src: figmaIcon, x: 78.38, y: 19.82, width: 5, height: 5, scale: 1.8, rotate: 5, deleted: false },
+		{ id: 'github', name: 'GitHub', src: githubIcon, x: 20.83, y: 38.59, width: 5, height: 5, scale: 1.9, rotate: -4, deleted: false },
+		{ id: 'js', name: 'JS', src: jsIcon, x: 8.1, y: 19.29, width: 5, height: 5, scale: 1.8, rotate: 4, deleted: false },
+		{ id: 'nodejs', name: 'Node.js', src: nodejsIcon, x: 75.2, y: 3.72, width: 5, height: 5, scale: 2.6, rotate: 6, deleted: false },
+		{ id: 'vscoide', name: 'VS Code', src: vscoideIcon, x: 72.32, y: 39.4, width: 5, height: 5, scale: 1.7, rotate: 8, deleted: false }
 	];
 
 	let dragEnabled = $state(true);
@@ -57,10 +56,10 @@
 		subhead: { x: 0, y: 0, scale: 1, rotate: 0 },
 		leftTags: { x: 0.32, y: -15.88, scale: 1, rotate: 0 },
 		leftCopy: { x: 0.85, y: 5.09, scale: 1, rotate: 0 },
-		museCenter: { x: -0.81, y: 7.57, scale: 1.2, rotate: 0 },
+		museCenter: { x: -0.75, y: 7.25, scale: 1.2, rotate: 0 },
 		exploreStamp: { x: 0.49, y: 30.31, scale: 1, rotate: 0 },
-		giantThe: { x: 0, y: 3, scale: 1.3, rotate: 0 },
-		giantCreative: { x: 0, y: -11.9, scale: 1.3, rotate: 0 },
+		giantThe: { x: 0, y: 3.64, scale: 1.3, rotate: 0 },
+		giantCreative: { x: 0, y: -13.61, scale: 1.3, rotate: 0 },
 		rollIt: { x: -4.02, y: -6.87, scale: 1, rotate: 0 }
 	});
 
