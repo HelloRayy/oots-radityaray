@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import claudeIcon from '#lib/assets/asset-muse-icon/claude.svg';
 	import figmaIcon from '#lib/assets/asset-muse-icon/figma.svg';
 	import githubIcon from '#lib/assets/asset-muse-icon/github.svg';
@@ -40,7 +41,8 @@
 		{ id: 'vscoide', name: 'VS Code', src: vscoideIcon, x: 72.32, y: 39.4, width: 5, height: 5, scale: 1.7, rotate: 8, deleted: false }
 	];
 
-	let dragEnabled = $state(true);
+	let sectionEl: HTMLElement | null = null;
+	let dragEnabled = $state(false);
 	let copied = $state(false);
 	let selectedIconId = $state<string | null>(null);
 	let selectedDragKey = $state<DragKey | null>(null);
@@ -168,9 +170,41 @@
 		selectedIconId = null;
 		selectedDragKey = null;
 	}
+
+	onMount(() => {
+		if (!sectionEl || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		let rafId = 0;
+
+		const updateParallax = () => {
+			rafId = 0;
+			if (!sectionEl || dragEnabled) {
+				sectionEl?.style.setProperty('--p', '0');
+				return;
+			}
+			const rect = sectionEl.getBoundingClientRect();
+			const vh = window.innerHeight || 1;
+			const centerOffset = (rect.top + rect.height / 2 - vh / 2) / vh;
+			const clamped = Math.max(-1.2, Math.min(1.2, centerOffset));
+			sectionEl.style.setProperty('--p', clamped.toFixed(4));
+		};
+
+		const onScroll = () => {
+			if (!rafId) rafId = requestAnimationFrame(updateParallax);
+		};
+
+		updateParallax();
+		window.addEventListener('scroll', onScroll, { passive: true });
+		window.addEventListener('resize', onScroll, { passive: true });
+
+		return () => {
+			if (rafId) cancelAnimationFrame(rafId);
+			window.removeEventListener('scroll', onScroll);
+			window.removeEventListener('resize', onScroll);
+		};
+	});
 </script>
 
-<section class="bot-showcase" class:drag-mode={dragEnabled}>
+<section class="bot-showcase" bind:this={sectionEl} class:drag-mode={dragEnabled}>
 	<div class="paper-grain" aria-hidden="true"></div>
 
 	<!-- Top pill -->
@@ -288,17 +322,18 @@
 	</span>
 
 	<!-- Muse Icons (draggable, resizable, rotatable, deletable) -->
-	{#each museIcons as icon (icon.id)}
+	{#each museIcons as icon, i (icon.id)}
 		{#if !icon.deleted}
 			<div
 				class="muse-icon-item draggable"
 				class:is-selected={dragEnabled && selectedIconId === icon.id}
+				style:--parallax-y="{((i % 2 === 0 ? 1 : -1) * (3.2 + (i % 3) * 1.4)).toFixed(1)}vw"
 				style:left="{icon.x}vw"
 				style:top="{icon.y}vw"
 				style:width="{icon.width}vw"
 				style:height="{icon.height}vw"
 				style:scale={icon.scale}
-				style:transform="rotate({icon.rotate}deg)"
+				style:transform="translate3d(0, calc(var(--p, 0) * var(--parallax-y, 0vw)), 0) rotate({icon.rotate}deg)"
 				onpointerdown={(e) => startIconDrag(icon.id, e)}
 				onpointermove={onDragMove}
 				onpointerup={endDrag}
