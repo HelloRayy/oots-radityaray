@@ -53,7 +53,7 @@
 				}
 			);
 
-			// Sticky note drops in + sways
+			// Sticky note drops in + subtle hover lift
 			gsap.from('.note', {
 				yPercent: -18,
 				rotate: -6,
@@ -63,13 +63,16 @@
 				scrollTrigger: { trigger: '.note', start: 'top 85%', once: true }
 			});
 
-			// Tape strips press in
+			// Tape strips 3D peel-in
 			gsap.utils.toArray<HTMLElement>('.tape-strip').forEach((el) => {
 				gsap.from(el, {
-					scaleX: 0,
-					transformOrigin: 'left center',
-					duration: 0.7,
-					ease: 'power3.out',
+					rotateX: -65,
+					yPercent: -20,
+					opacity: 0,
+					transformPerspective: 700,
+					transformOrigin: 'top center',
+					duration: 0.85,
+					ease: 'back.out(1.4)',
 					scrollTrigger: { trigger: el, start: 'top 90%', once: true }
 				});
 			});
@@ -90,21 +93,22 @@
 				scrollTrigger: { trigger: '.hand-note', start: 'top 85%', once: true }
 			});
 
-			// Parallax props
+			// Smooth inertia parallax props (scrub: 1.2)
 			gsap.to('#gift', {
-				yPercent: -12,
+				yPercent: -14,
 				ease: 'none',
-				scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true }
+				scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: 1.2 }
 			});
 			gsap.to('#lemon', {
-				yPercent: -6,
+				yPercent: -8,
 				ease: 'none',
-				scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true }
+				scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: 1.2 }
 			});
 			gsap.to('#paperclip', {
-				rotate: 8,
+				rotate: 10,
+				yPercent: -5,
 				ease: 'none',
-				scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: true }
+				scrollTrigger: { trigger: root, start: 'top bottom', end: 'bottom top', scrub: 1.2 }
 			});
 		}, root);
 
