@@ -5,13 +5,101 @@
 	import ideasImg from '#lib/assets/bot-avatars-all/Ideas.png';
 	import pmImg from '#lib/assets/bot-avatars-all/PM.png';
 	import strategyImg from '#lib/assets/bot-avatars-all/Strategy.png';
+
+	type DragKey =
+		| 'subhead'
+		| 'leftTags'
+		| 'leftCopy'
+		| 'showcaseLeft'
+		| 'showcaseRight'
+		| 'museCenter'
+		| 'exploreStamp'
+		| 'rollIt'
+		| 'railTop'
+		| 'railMid'
+		| 'railBot';
+
+	let dragEnabled = $state(true);
+	let copied = $state(false);
+	let offsets = $state<Record<DragKey, { x: number; y: number }>>({
+		subhead: { x: 0, y: 0 },
+		leftTags: { x: 0, y: 0 },
+		leftCopy: { x: 0, y: 0 },
+		showcaseLeft: { x: 0, y: 0 },
+		showcaseRight: { x: 0, y: 0 },
+		museCenter: { x: 0, y: 0 },
+		exploreStamp: { x: 0, y: 0 },
+		rollIt: { x: 0, y: 0 },
+		railTop: { x: 0, y: 0 },
+		railMid: { x: 0, y: 0 },
+		railBot: { x: 0, y: 0 }
+	});
+
+	let activeDrag: {
+		key: DragKey;
+		startX: number;
+		startY: number;
+		origX: number;
+		origY: number;
+	} | null = null;
+
+	function startDrag(key: DragKey, e: PointerEvent) {
+		if (!dragEnabled) return;
+		e.preventDefault();
+		(e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+		activeDrag = {
+			key,
+			startX: e.clientX,
+			startY: e.clientY,
+			origX: offsets[key].x,
+			origY: offsets[key].y
+		};
+	}
+
+	function onDragMove(e: PointerEvent) {
+		if (!activeDrag) return;
+		const vw = window.innerWidth / 100;
+		const dx = Number(((e.clientX - activeDrag.startX) / vw).toFixed(2));
+		const dy = Number(((e.clientY - activeDrag.startY) / vw).toFixed(2));
+		offsets[activeDrag.key] = {
+			x: Number((activeDrag.origX + dx).toFixed(2)),
+			y: Number((activeDrag.origY + dy).toFixed(2))
+		};
+	}
+
+	function endDrag() {
+		activeDrag = null;
+	}
+
+	function copyLayout() {
+		const changed = Object.entries(offsets)
+			.filter(([, v]) => v.x !== 0 || v.y !== 0)
+			.map(([k, v]) => `${k}: x=${v.x}vw, y=${v.y}vw`)
+			.join('\n');
+		const out = changed || 'no changes yet (all 0vw)';
+		navigator.clipboard?.writeText(out);
+		copied = true;
+		setTimeout(() => (copied = false), 1500);
+	}
+
+	function resetLayout() {
+		for (const k of Object.keys(offsets) as DragKey[]) {
+			offsets[k] = { x: 0, y: 0 };
+		}
+	}
 </script>
 
-<section class="bot-showcase">
+<section class="bot-showcase" class:drag-mode={dragEnabled}>
 	<div class="paper-grain" aria-hidden="true"></div>
 
 	<!-- Top pill -->
-	<div class="subhead-wrap">
+	<div
+		class="subhead-wrap draggable"
+		style:translate="{offsets.subhead.x}vw {offsets.subhead.y}vw"
+		onpointerdown={(e) => startDrag('subhead', e)}
+		onpointermove={onDragMove}
+		onpointerup={endDrag}
+	>
 		<span class="subhead-pill">
 			<span class="subhead-dots" aria-hidden="true"></span>
 			MEET THE AI SQUAD
@@ -19,24 +107,48 @@
 	</div>
 
 	<!-- Left tags & copy -->
-	<div class="left-tags">
+	<div
+		class="left-tags draggable"
+		style:translate="{offsets.leftTags.x}vw {offsets.leftTags.y}vw"
+		onpointerdown={(e) => startDrag('leftTags', e)}
+		onpointermove={onDragMove}
+		onpointerup={endDrag}
+	>
 		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>UI / UX DESIGN</span>
 		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>GSAP MOTION</span>
 		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>SYSTEMS</span>
 	</div>
 
-	<p class="left-copy">
+	<p
+		class="left-copy draggable"
+		style:translate="{offsets.leftCopy.x}vw {offsets.leftCopy.y}vw"
+		onpointerdown={(e) => startDrag('leftCopy', e)}
+		onpointermove={onDragMove}
+		onpointerup={endDrag}
+	>
 		Always ready for crisp layouts, playful micro-interactions, and bold visual systems.
 		Easygoing. Pixel-sharp. No drama.
 	</p>
 
-	<!-- 2 taped showcase circles (matching target) -->
-	<div class="showcase-circle showcase-left" aria-hidden="true">
+	<!-- 2 taped showcase avatars -->
+	<div
+		class="showcase-circle showcase-left draggable"
+		style:translate="{offsets.showcaseLeft.x}vw {offsets.showcaseLeft.y}vw"
+		onpointerdown={(e) => startDrag('showcaseLeft', e)}
+		onpointermove={onDragMove}
+		onpointerup={endDrag}
+	>
 		<img class="showcase-tape" src="/assets/masking-tape-x2.png" alt="" draggable="false" />
 		<img class="showcase-img" src={pmImg} alt="" draggable="false" />
 	</div>
 
-	<div class="showcase-circle showcase-right" aria-hidden="true">
+	<div
+		class="showcase-circle showcase-right draggable"
+		style:translate="{offsets.showcaseRight.x}vw {offsets.showcaseRight.y}vw"
+		onpointerdown={(e) => startDrag('showcaseRight', e)}
+		onpointermove={onDragMove}
+		onpointerup={endDrag}
+	>
 		<img class="showcase-tape" src="/assets/masking-tape-x2.png" alt="" draggable="false" />
 		<img class="showcase-img" src={strategyImg} alt="" draggable="false" />
 	</div>
@@ -50,27 +162,85 @@
 			{/each}
 		</div>
 
-		<img class="muse-center" src={museHi} alt="Raditya Rayhan" draggable="false" />
+		<img
+			class="muse-center draggable"
+			style:translate="{offsets.museCenter.x}vw {offsets.museCenter.y}vw"
+			onpointerdown={(e) => startDrag('museCenter', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+			src={museHi}
+			alt="Raditya Rayhan"
+			draggable="false"
+		/>
 
-		<div class="explore-stamp" aria-hidden="true">
+		<div
+			class="explore-stamp draggable"
+			style:translate="{offsets.exploreStamp.x}vw {offsets.exploreStamp.y}vw"
+			onpointerdown={(e) => startDrag('exploreStamp', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+		>
 			<span class="explore-ring"></span>
 			<span class="explore-text">EXPLORE</span>
 			<span class="explore-dot">↗</span>
 		</div>
 	</div>
 
-	<!-- Right ROLL IT! 3-circle arc -->
-	<span class="roll-it" aria-hidden="true">ROLL IT!</span>
-	<div class="rail-arc" aria-hidden="true">
-		<div class="rail-circle rail-top">
+	<!-- Right ROLL IT! 3-avatar arc -->
+	<span
+		class="roll-it draggable"
+		style:translate="{offsets.rollIt.x}vw {offsets.rollIt.y}vw"
+		onpointerdown={(e) => startDrag('rollIt', e)}
+		onpointermove={onDragMove}
+		onpointerup={endDrag}
+	>
+		ROLL IT!
+	</span>
+
+	<div class="rail-arc">
+		<div
+			class="rail-circle rail-top draggable"
+			style:translate="{offsets.railTop.x}vw {offsets.railTop.y}vw"
+			onpointerdown={(e) => startDrag('railTop', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+		>
 			<img src={engineerImg} alt="" draggable="false" />
 		</div>
-		<div class="rail-circle rail-mid is-active">
+		<div
+			class="rail-circle rail-mid is-active draggable"
+			style:translate="{offsets.railMid.x}vw {offsets.railMid.y}vw"
+			onpointerdown={(e) => startDrag('railMid', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+		>
 			<img src={designerImg} alt="" draggable="false" />
 		</div>
-		<div class="rail-circle rail-bot">
+		<div
+			class="rail-circle rail-bot draggable"
+			style:translate="{offsets.railBot.x}vw {offsets.railBot.y}vw"
+			onpointerdown={(e) => startDrag('railBot', e)}
+			onpointermove={onDragMove}
+			onpointerup={endDrag}
+		>
 			<img src={ideasImg} alt="" draggable="false" />
 		</div>
+	</div>
+
+	<!-- Drag Mode Toolbar -->
+	<div class="drag-toolbar">
+		<button
+			type="button"
+			class="tb-btn"
+			class:is-on={dragEnabled}
+			onclick={() => (dragEnabled = !dragEnabled)}
+		>
+			Drag: {dragEnabled ? 'ON' : 'OFF'}
+		</button>
+		<button type="button" class="tb-btn tb-copy" onclick={copyLayout}>
+			{copied ? 'Copied!' : 'Copy Layout'}
+		</button>
+		<button type="button" class="tb-btn" onclick={resetLayout}>Reset</button>
 	</div>
 </section>
 
@@ -82,6 +252,51 @@
 		background: #fa8005;
 		overflow: clip;
 		z-index: 1;
+	}
+
+	.drag-mode .draggable {
+		cursor: grab;
+		outline: 1.5px dashed rgba(255, 255, 255, 0.45);
+		outline-offset: 4px;
+		pointer-events: auto !important;
+		touch-action: none;
+	}
+
+	.drag-mode .draggable:active {
+		cursor: grabbing;
+		outline-color: #b6fe00;
+	}
+
+	.drag-toolbar {
+		position: absolute;
+		bottom: 1.5vw;
+		left: 1.5vw;
+		z-index: 50;
+		display: flex;
+		gap: 0.5vw;
+		background: rgba(1, 41, 0, 0.92);
+		padding: 0.5vw;
+		border-radius: 0.6vw;
+		border: 1px solid rgba(182, 254, 0, 0.35);
+	}
+
+	.tb-btn {
+		padding: 0.4vw 0.8vw;
+		border-radius: 0.4vw;
+		font-size: 12px;
+		font-weight: 700;
+		color: #fff;
+		background: rgba(255, 255, 255, 0.12);
+	}
+
+	.tb-btn.is-on {
+		background: #034102;
+		color: #b6fe00;
+	}
+
+	.tb-copy {
+		background: #b6fe00;
+		color: #013900;
 	}
 
 	.paper-grain {
@@ -167,7 +382,7 @@
 		z-index: 5;
 	}
 
-	/* 2 taped showcase avatars (pure image, no container bg) */
+	/* 2 taped showcase avatars */
 	.showcase-circle {
 		position: absolute;
 		width: 8.2vw;
@@ -297,7 +512,7 @@
 		font-weight: 900;
 	}
 
-	/* Right ROLL IT! 3-avatar arc (pure image, no container bg) */
+	/* Right ROLL IT! 3-avatar arc */
 	.roll-it {
 		position: absolute;
 		top: 19.5vw;
