@@ -41,4 +41,8 @@
 
 <Preloader />
 
+<button class="menu-tab" type="button" aria-label="Pull Me">
+	<span>PULL ME</span>
+</button>
+
 {@render children()}
