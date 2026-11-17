@@ -242,7 +242,7 @@
 			onpointerup={endDrag}
 			aria-hidden="true"
 		>
-			{#each 'CREATIVE'.split('') as ch, i (i)}
+			{#each 'STACK'.split('') as ch, i (i)}
 				<span class="c-char" style:--i={i} style:--letters={8}>{ch}</span>
 			{/each}
 		</div>
