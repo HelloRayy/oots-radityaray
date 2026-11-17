@@ -230,7 +230,7 @@
 			onpointerup={endDrag}
 			aria-hidden="true"
 		>
-			THE
+			TOOLS
 		</div>
 		<div
 			class="giant-creative draggable"
@@ -242,7 +242,7 @@
 			onpointerup={endDrag}
 			aria-hidden="true"
 		>
-			{#each 'STACK'.split('') as ch, i (i)}
+			{#each 'DEVELOPER'.split('') as ch, i (i)}
 				<span class="c-char" style:--i={i} style:--letters={8}>{ch}</span>
 			{/each}
 		</div>
