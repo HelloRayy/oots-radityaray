@@ -295,7 +295,7 @@ html[data-loading] {
 }
 
 .hero-section .h4 {
-	--kicker-gap: 20vw;
+	--kicker-gap: 15.5vw;
 	font-family: var(--font-heading);
 	color: #013900;
 	letter-spacing: -0.06vw;
@@ -338,7 +338,7 @@ html[data-loading] {
 .hero-section .warped-text {
 	--arc-drop: 1.2vw;
 	--arc-tilt: 7deg;
-	margin-top: 0.25vw;
+	margin-top: 1.6vw;
 }
 
 .hero-section .h1 {
@@ -438,8 +438,11 @@ html[data-loading] {
 		padding-top: 18vw;
 	}
 	.hero-section .h4 {
-		--kicker-gap: 36vw;
+		--kicker-gap: 30vw;
 		font-size: 4.8vw;
+	}
+	.hero-section .warped-text {
+		margin-top: 3vw;
 	}
 	.hero-section .h1 {
 		font-size: 18vw;
