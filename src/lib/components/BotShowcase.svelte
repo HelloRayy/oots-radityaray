@@ -234,9 +234,9 @@
 	.muse-center {
 		position: relative;
 		z-index: 3;
-		width: 24vw;
+		width: 30vw;
 		height: auto;
-		margin-top: 2vw;
+		margin-top: 1vw;
 		filter: drop-shadow(0 1.2vw 2.2vw rgba(0, 0, 0, 0.24));
 	}
 
