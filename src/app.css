@@ -3,7 +3,7 @@
 :root {
 	--screen: 100svh;
 	--screen-lg: 100lvh;
-	--font-heading: 'futura-pt-condensed', 'Barlow Condensed', 'Arial Narrow', 'Helvetica Neue', sans-serif;
+	--font-heading: 'Sofia Sans Condensed', 'Arial Narrow', 'Helvetica Neue', sans-serif;
 	--font-body: 'Inter Tight', Inter, system-ui, sans-serif;
 	--sb-track: #013900;
 	--sb-thumb: #b6fe00;
@@ -239,7 +239,7 @@ html[data-loading] {
 .hero-section .top {
 	--arc-paint: #b6fe00;
 	width: 100%;
-	height: 50vw;
+	height: 52.083vw;
 	position: relative;
 }
 
@@ -251,7 +251,7 @@ html[data-loading] {
 	padding-left: 0.85vw;
 	font-size: 1.389vw;
 	font-style: normal;
-	font-weight: 700;
+	font-weight: 800;
 	line-height: 1.25vw;
 	position: absolute;
 	top: 0.9vw;
@@ -283,12 +283,12 @@ html[data-loading] {
 }
 
 .hero-section .title {
-	--hero-mark-w: 11.5vw;
+	--hero-mark-w: 12.7vw;
 	--hero-mark-h: calc(var(--hero-mark-w) * 118 / 191);
-	--hero-mark-lift: 0.45vw;
+	--hero-mark-lift: 0.5vw;
 	flex-direction: column;
 	align-items: center;
-	padding-top: 3.6vw;
+	padding-top: 5.056vw;
 	display: flex;
 	position: relative;
 	z-index: 2;
@@ -298,12 +298,12 @@ html[data-loading] {
 	--kicker-gap: 20vw;
 	font-family: var(--font-heading);
 	color: #013900;
-	letter-spacing: -0.094vw;
+	letter-spacing: -0.06vw;
 	gap: calc(var(--kicker-gap) / 2);
 	justify-content: center;
 	align-items: center;
-	font-size: 2.2vw;
-	font-weight: 800;
+	font-size: 2.347vw;
+	font-weight: 900;
 	line-height: 0.71;
 	display: inline-flex;
 	text-transform: uppercase;
@@ -336,27 +336,27 @@ html[data-loading] {
 }
 
 .hero-section .warped-text {
-	--arc-drop: 1.05vw;
-	--arc-tilt: 6.5deg;
-	margin-top: 0.35vw;
+	--arc-drop: 1.2vw;
+	--arc-tilt: 7deg;
+	margin-top: 0.25vw;
 }
 
 .hero-section .h1 {
-	letter-spacing: -0.02em;
+	letter-spacing: -0.015em;
 	color: #013900;
 	text-align: center;
-	font-size: 13.5vw;
-	font-weight: 800;
-	line-height: 0.78;
+	font-size: 18.8vw;
+	font-weight: 900;
+	line-height: 0.74;
 	text-transform: uppercase;
 }
 
 .hero-section .hero-image-wrap {
 	position: absolute;
 	left: 50%;
-	bottom: -8.5vw;
+	bottom: -7.5vw;
 	transform: translateX(-50%);
-	width: 22vw;
+	width: 27vw;
 	aspect-ratio: 1666 / 1966;
 	z-index: 3;
 	pointer-events: none;
