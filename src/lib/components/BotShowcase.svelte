@@ -161,14 +161,12 @@
 		z-index: 5;
 	}
 
-	/* 2 taped showcase circles */
+	/* 2 taped showcase avatars (pure image, no container bg) */
 	.showcase-circle {
 		position: absolute;
 		width: 8.2vw;
 		height: 8.2vw;
-		border-radius: 999px;
 		z-index: 4;
-		box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.22);
 	}
 
 	.showcase-left {
@@ -184,9 +182,8 @@
 	.showcase-img {
 		width: 100%;
 		height: 100%;
-		border-radius: 999px;
-		object-fit: cover;
-		background: #fff1a2;
+		object-fit: contain;
+		filter: drop-shadow(0 0.8vw 1.4vw rgba(0, 0, 0, 0.25));
 	}
 
 	.showcase-tape {
@@ -284,11 +281,11 @@
 		font-weight: 900;
 	}
 
-	/* Right ROLL IT! 3-circle arc */
+	/* Right ROLL IT! 3-avatar arc (pure image, no container bg) */
 	.roll-it {
 		position: absolute;
 		top: 19.5vw;
-		right: 11vw;
+		right: 10.5vw;
 		font-family: var(--font-heading);
 		font-weight: 900;
 		font-size: 1.2vw;
@@ -305,41 +302,35 @@
 
 	.rail-circle {
 		position: absolute;
-		width: 7.4vw;
-		height: 7.4vw;
-		border-radius: 999px;
-		padding: 0.35vw;
-		background: rgba(255, 255, 255, 0.2);
-		box-shadow: 0 0.6vw 1.4vw rgba(0, 0, 0, 0.2);
+		width: 7.5vw;
+		height: 7.5vw;
 		z-index: 5;
 	}
 
 	.rail-circle.is-active {
-		width: 8.4vw;
-		height: 8.4vw;
-		background: #fff1a2;
-		padding: 0.45vw;
+		width: 9.2vw;
+		height: 9.2vw;
 	}
 
 	.rail-circle img {
 		width: 100%;
 		height: 100%;
-		border-radius: 999px;
-		object-fit: cover;
+		object-fit: contain;
+		filter: drop-shadow(0 0.6vw 1.2vw rgba(0, 0, 0, 0.26));
 	}
 
 	.rail-top {
-		top: 14.5vw;
-		right: 1.2vw;
+		top: 15vw;
+		right: 0.2vw;
 	}
 
 	.rail-mid {
 		top: 21.5vw;
-		right: 5vw;
+		right: 3.8vw;
 	}
 
 	.rail-bot {
 		top: 29.5vw;
-		right: 1.2vw;
+		right: 0.2vw;
 	}
 </style>
