@@ -238,11 +238,13 @@
 		padding: 3.4vw 2.2vw 2vw;
 		background: linear-gradient(180deg, #ffe81a 0%, #ffdc00 70%, #f7cf00 100%);
 		box-shadow:
-			0.4vw 1.6vw 2.4vw rgba(0, 0, 0, 0.35),
+			0.8vw 2.2vw 2.8vw rgba(0, 0, 0, 0.48),
+			inset -0.8vw 0 1.4vw rgba(140, 95, 0, 0.14),
 			inset 0 -0.6vw 1vw rgba(160, 110, 0, 0.12);
 		rotate: 3deg;
+		transform: perspective(700px) rotateY(-3deg);
 		z-index: 2;
-		clip-path: polygon(0 1%, 100% 0, 99% 97%, 96% 100%, 2% 99%);
+		clip-path: polygon(0 1%, 100% 0, 99.2% 18%, 100% 38%, 98.8% 62%, 99.6% 85%, 97% 100%, 2% 99%);
 	}
 
 	.note-title {
