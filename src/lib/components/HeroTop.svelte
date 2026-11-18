@@ -453,9 +453,10 @@
 	.headline-hud {
 		position: fixed;
 		top: 16px;
-		right: 16px;
+		left: 50%;
+		transform: translateX(-50%);
 		z-index: 95;
-		width: 248px;
+		width: 260px;
 		background: rgba(1, 41, 0, 0.94);
 		color: #f4fbe8;
 		border: 1px solid rgba(182, 254, 0, 0.45);
