@@ -2,8 +2,66 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
+	import claudeIcon from '#lib/assets/asset-muse-icon/claude.svg';
+	import figmaIcon from '#lib/assets/asset-muse-icon/figma.svg';
+	import githubIcon from '#lib/assets/asset-muse-icon/github.svg';
+	import jsIcon from '#lib/assets/asset-muse-icon/js.svg';
+	import nodejsIcon from '#lib/assets/asset-muse-icon/nodejs.svg';
+	import reactIcon from '#lib/assets/asset-muse-icon/react.svg';
+	import vscodeIcon from '#lib/assets/asset-muse-icon/vscoide.svg';
 
 	let sectionEl: HTMLElement | null = null;
+
+	const ICON_OPTIONS = [
+		{ id: 'figma', label: 'Figma', src: figmaIcon },
+		{ id: 'claude', label: 'Claude', src: claudeIcon },
+		{ id: 'react', label: 'React', src: reactIcon },
+		{ id: 'vscode', label: 'VS Code', src: vscodeIcon },
+		{ id: 'nodejs', label: 'Node.js', src: nodejsIcon },
+		{ id: 'github', label: 'GitHub', src: githubIcon },
+		{ id: 'js', label: 'JS', src: jsIcon }
+	];
+
+	type TagItem = {
+		id: string;
+		row: 0 | 1 | 2;
+		iconId: string;
+		px: number;
+		py: number;
+		pw: number;
+		pr: number;
+		pp: number;
+		pe: string;
+	};
+
+	let tagItems = $state<TagItem[]>([
+		{ id: 'r1-a', row: 0, iconId: 'figma', px: 69, py: -24, pw: 14, pr: -6, pp: 0.03, pe: 'sine.inOut' },
+		{ id: 'r1-b', row: 0, iconId: 'claude', px: 53, py: 50, pw: 14, pr: 5, pp: 0.03, pe: 'power1.inOut' },
+		{ id: 'r1-c', row: 0, iconId: 'react', px: 94, py: 46, pw: 14, pr: -14, pp: -0.02, pe: 'power2.inOut' },
+		{ id: 'r2-a', row: 1, iconId: 'vscode', px: -5, py: 47, pw: 14, pr: 12, pp: 0.04, pe: 'sine.inOut' },
+		{ id: 'r3-a', row: 2, iconId: 'nodejs', px: 61, py: -32, pw: 14, pr: 6, pp: -0.02, pe: 'power2.inOut' },
+		{ id: 'r3-b', row: 2, iconId: 'github', px: 43, py: 49, pw: 14, pr: 9, pp: 0.032, pe: 'power1.inOut' }
+	]);
+
+	let hudOpen = $state(true);
+	let selectedTagId = $state('r1-a');
+	let copied = $state(false);
+
+	const selectedTag = $derived(tagItems.find((t) => t.id === selectedTagId) ?? tagItems[0]);
+
+	function getIconSrc(iconId: string) {
+		return ICON_OPTIONS.find((o) => o.id === iconId)?.src ?? figmaIcon;
+	}
+
+	async function copyTags() {
+		try {
+			await navigator.clipboard.writeText(JSON.stringify(tagItems, null, 2));
+			copied = true;
+			setTimeout(() => (copied = false), 1500);
+		} catch {
+			// ignore
+		}
+	}
 
 	const scrub = 1.5;
 	const cornerRatio = 0.11;
@@ -624,9 +682,15 @@
 					</span>
 				</span>
 
-				<img class="giant-prop giant-prop--tag" src="/assets/slider/double/card.webp" alt="" aria-hidden="true" style="--px:69%;--py:-24%;--pw:22.71vw;--pr:-6deg;--pz:1;--pp:0.03;--pe:sine.inOut" />
-				<img class="giant-prop giant-prop--tag" src="/assets/slider/masking/card.webp" alt="" aria-hidden="true" style="--px:53%;--py:50%;--pw:22.71vw;--pr:5deg;--pz:1;--pp:0.03;--pe:power1.inOut" />
-				<img class="giant-prop giant-prop--tag" src="/assets/slider/opp-quiet/card.webp" alt="" aria-hidden="true" style="--px:94%;--py:46%;--pw:22.71vw;--pr:-14deg;--pz:1;--pp:-0.02;--pe:power2.inOut" />
+				{#each tagItems.filter((t) => t.row === 0) as tag (tag.id)}
+					<img
+						class="giant-prop giant-prop--tag"
+						src={getIconSrc(tag.iconId)}
+						alt=""
+						aria-hidden="true"
+						style="--px:{tag.px}%;--py:{tag.py}%;--pw:{tag.pw}vw;--pr:{tag.pr}deg;--pz:1;--pp:{tag.pp};--pe:{tag.pe}"
+					/>
+				{/each}
 
 				<div class="hand-note giant-note" style="--px:26%;--py:78%" aria-hidden="true">
 					<div class="hand-ink">
@@ -687,7 +751,15 @@
 					</span>
 				</span>
 
-				<img class="giant-prop giant-prop--tag" src="/assets/slider/cloth/card.webp" alt="" aria-hidden="true" style="--px:-5%;--py:47%;--pw:22.71vw;--pr:12deg;--pz:1;--pp:0.04;--pe:sine.inOut" />
+				{#each tagItems.filter((t) => t.row === 1) as tag (tag.id)}
+					<img
+						class="giant-prop giant-prop--tag"
+						src={getIconSrc(tag.iconId)}
+						alt=""
+						aria-hidden="true"
+						style="--px:{tag.px}%;--py:{tag.py}%;--pw:{tag.pw}vw;--pr:{tag.pr}deg;--pz:1;--pp:{tag.pp};--pe:{tag.pe}"
+					/>
+				{/each}
 
 				<div class="hand-note giant-note" style="--px:19%;--py:-24%" aria-hidden="true">
 					<div class="hand-ink">
@@ -748,8 +820,15 @@
 					</span>
 				</span>
 
-				<img class="giant-prop giant-prop--tag" src="/assets/sibling-opp-normal.webp" alt="" aria-hidden="true" style="--px:61%;--py:-32%;--pw:22.71vw;--pr:6deg;--pz:1;--pp:-0.02;--pe:power2.inOut" />
-				<img class="giant-prop giant-prop--tag" src="/assets/sibling-opp-normal.webp" alt="" aria-hidden="true" style="--px:43%;--py:49%;--pw:22.71vw;--pr:9deg;--pz:1;--pp:0.032;--pe:power1.inOut" />
+				{#each tagItems.filter((t) => t.row === 2) as tag (tag.id)}
+					<img
+						class="giant-prop giant-prop--tag"
+						src={getIconSrc(tag.iconId)}
+						alt=""
+						aria-hidden="true"
+						style="--px:{tag.px}%;--py:{tag.py}%;--pw:{tag.pw}vw;--pr:{tag.pr}deg;--pz:1;--pp:{tag.pp};--pe:{tag.pe}"
+					/>
+				{/each}
 
 				<div class="hand-note giant-note" style="--px:25%;--py:75%" aria-hidden="true">
 					<div class="hand-ink">
@@ -764,6 +843,53 @@
 		</div>
 	</div>
 </section>
+
+<!-- Tag Icon HUD -->
+<div class="giant-hud">
+	<div class="giant-hud-bar">
+		<strong>Icon Tags HUD</strong>
+		<div class="giant-hud-actions">
+			<button type="button" onclick={copyTags}>{copied ? 'Copied!' : 'Copy'}</button>
+			<button type="button" onclick={() => (hudOpen = !hudOpen)}>{hudOpen ? 'Hide' : 'Show'}</button>
+		</div>
+	</div>
+	{#if hudOpen && selectedTag}
+		<div class="giant-hud-body">
+			<label>
+				<span>Slot</span>
+				<select bind:value={selectedTagId}>
+					{#each tagItems as t}
+						<option value={t.id}>{t.id} (Row {t.row + 1} - {t.iconId})</option>
+					{/each}
+				</select>
+			</label>
+			<label>
+				<span>Icon</span>
+				<select bind:value={selectedTag.iconId}>
+					{#each ICON_OPTIONS as opt}
+						<option value={opt.id}>{opt.label}</option>
+					{/each}
+				</select>
+			</label>
+			<label>
+				<span>Size (pw): {selectedTag.pw.toFixed(1)}vw</span>
+				<input type="range" min="4" max="32" step="0.5" bind:value={selectedTag.pw} />
+			</label>
+			<label>
+				<span>Pos X (px): {selectedTag.px}%</span>
+				<input type="range" min="-20" max="120" step="1" bind:value={selectedTag.px} />
+			</label>
+			<label>
+				<span>Pos Y (py): {selectedTag.py}%</span>
+				<input type="range" min="-60" max="100" step="1" bind:value={selectedTag.py} />
+			</label>
+			<label>
+				<span>Rotate (pr): {selectedTag.pr}deg</span>
+				<input type="range" min="-45" max="45" step="1" bind:value={selectedTag.pr} />
+			</label>
+		</div>
+	{/if}
+</div>
 
 <style>
 	.giant-pinning {
@@ -1206,6 +1332,72 @@
 
 	.hand-note .hand-line {
 		display: block;
+	}
+
+	.giant-hud {
+		position: fixed;
+		bottom: 16px;
+		left: 16px;
+		z-index: 900;
+		background: rgba(1, 32, 0, 0.92);
+		color: #b6fe00;
+		border: 1px solid rgba(182, 254, 0, 0.35);
+		border-radius: 10px;
+		padding: 10px 12px;
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 11px;
+		width: 250px;
+		backdrop-filter: blur(8px);
+		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+	}
+
+	.giant-hud-bar {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	.giant-hud-actions {
+		display: flex;
+		gap: 4px;
+	}
+
+	.giant-hud-actions button {
+		background: rgba(182, 254, 0, 0.16);
+		color: #b6fe00;
+		border: 1px solid rgba(182, 254, 0, 0.35);
+		border-radius: 5px;
+		padding: 2px 6px;
+		font-size: 10px;
+		cursor: pointer;
+	}
+
+	.giant-hud-body {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+		margin-top: 8px;
+	}
+
+	.giant-hud-body label {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+	}
+
+	.giant-hud-body select {
+		background: #022901;
+		color: #b6fe00;
+		border: 1px solid rgba(182, 254, 0, 0.35);
+		border-radius: 5px;
+		padding: 3px 6px;
+		font-size: 11px;
+	}
+
+	.giant-hud-body input[type='range'] {
+		width: 100%;
+		accent-color: #b6fe00;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
