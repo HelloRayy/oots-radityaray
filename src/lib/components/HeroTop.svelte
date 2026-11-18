@@ -133,6 +133,7 @@
 				)
 			: null;
 
+		const delayedCalls: gsap.core.Tween[] = [];
 		const hoverAbort = new AbortController();
 
 		const h1El = root.querySelector<HTMLElement>('.h1');
@@ -166,12 +167,14 @@
 				}
 			};
 
+			let hoverReady = false;
 			let hoverRaf = 0;
 			let lastPx = 0;
 			let lastPy = 0;
 
 			const applyHoverFrame = () => {
 				hoverRaf = 0;
+				if (!hoverReady) return;
 				const radius = Math.max(20, hl.radius);
 				const sy = window.scrollY;
 				for (const node of charNodes) {
@@ -198,6 +201,7 @@
 			root.addEventListener(
 				'pointermove',
 				(e: PointerEvent) => {
+					if (!hoverReady) return;
 					lastPx = e.clientX;
 					lastPy = e.clientY;
 					if (!hoverRaf) hoverRaf = requestAnimationFrame(applyHoverFrame);
@@ -212,13 +216,21 @@
 						cancelAnimationFrame(hoverRaf);
 						hoverRaf = 0;
 					}
-					resetChars();
+					if (hoverReady) resetChars();
 				},
 				{ signal: hoverAbort.signal }
 			);
+
+			whenRevealed(() => {
+				delayedCalls.push(
+					gsap.delayedCall(REVEAL.DELAY + 0.9, () => {
+						measureChars();
+						hoverReady = true;
+					})
+				);
+			});
 		}
 
-		const delayedCalls: gsap.core.Tween[] = [];
 		const unsubSweep = whenSweeping(() => {
 			if (imageTween) {
 				imageTween.play();
@@ -231,10 +243,15 @@
 			const qx = gsap.quickTo(heroImage, 'x', { duration: 0.8, ease: 'power3.out' });
 			const qy = gsap.quickTo(heroImage, 'y', { duration: 0.8, ease: 'power3.out' });
 			const qr = gsap.quickTo(heroImage, 'rotation', { duration: 0.9, ease: 'power3.out' });
+			let driftReady = false;
+			whenRevealed(() => {
+				delayedCalls.push(gsap.delayedCall(REVEAL.DELAY + 0.9, () => (driftReady = true)));
+			});
 
 			root.addEventListener(
 				'pointermove',
 				(e: PointerEvent) => {
+					if (!driftReady) return;
 					const nx = (e.clientX / window.innerWidth - 0.5) * 2;
 					const ny = (e.clientY / window.innerHeight - 0.5) * 2;
 					qx(nx * 14);
