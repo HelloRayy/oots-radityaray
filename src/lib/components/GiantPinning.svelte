@@ -10,6 +10,7 @@
 	import reactIcon from '#lib/assets/asset-muse-icon/react.svg';
 	import vscodeIcon from '#lib/assets/asset-muse-icon/vscoide.svg';
 	import r1Img from '#lib/assets/image-row/r1.svg';
+	import r1_2Img from '#lib/assets/image-row/r1-2.png';
 	import r2_1Img from '#lib/assets/image-row/r2-1.svg';
 	import r2_2Img from '#lib/assets/image-row/r2-2.svg';
 	import r3_1Img from '#lib/assets/image-row/r3-1.svg';
@@ -676,7 +677,7 @@
 				</h2>
 
 				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:98%;--py:-15%;--pw:15vw;--pr:-8deg;--pz:2;--pp:-0.03;--pe:none">
-					<img src="/assets/create-double-last.webp" alt="" />
+					<img src={r1_2Img} alt="" />
 					<span
 						class="peel giant-tape"
 						style="--peel-w:0.62em;--peel-h:0.1961em;--peel-from:calc(var(--peel-edge) + 0.34 * var(--peel-span));--peel-to:calc(var(--peel-edge) + 0 * var(--peel-span));--peel-dir:88.4deg;--peel-back:url(#peel-back-kraft)"
