@@ -1,10 +1,10 @@
 import { json } from '@sveltejs/kit';
-import { RESEND_API_KEY, RESEND_TO_EMAIL } from '$env/static/private';
+import { env } from '$env/dynamic/private';
 import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ request }) => {
-	const apiKey = RESEND_API_KEY;
-	const toEmail = RESEND_TO_EMAIL || 'sigmaperson2828@gmail.com';
+	const apiKey = env.RESEND_API_KEY || process.env.RESEND_API_KEY;
+	const toEmail = env.RESEND_TO_EMAIL || process.env.RESEND_TO_EMAIL || 'sigmaperson2828@gmail.com';
 
 	if (!apiKey) {
 		return json({ ok: false, error: 'RESEND_API_KEY belum dikonfigurasi.' }, { status: 500 });
