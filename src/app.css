@@ -5,10 +5,20 @@
 	--screen-lg: 100lvh;
 	--font-heading: 'Sofia Sans Condensed', 'Arial Narrow', 'Helvetica Neue', sans-serif;
 	--font-body: 'Inter Tight', Inter, system-ui, sans-serif;
+	--font-note: 'Nothing You Could Do', 'Caveat', cursive;
 	--sb-track: #013900;
 	--sb-thumb: #b6fe00;
 	--curve-depth: 10.336vw;
+	--drop-blur: 0.02vw;
+	--drop-ink: rgba(0, 0, 0, 0.34);
 	--section-curve: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1456 150.5' preserveAspectRatio='none'%3E%3Cpath d='M1456 0C801.9 272 212.833 113.333 0 0Z' fill='%23000'/%3E%3C/svg%3E");
+	--section-bite: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1456 150.5' preserveAspectRatio='none'%3E%3Cpath d='M0 0C212.833 113.333 801.9 272 1456 0L1456 150.5L0 150.5Z' fill='%23000'/%3E%3C/svg%3E");
+}
+
+@property --peel {
+	syntax: '<number>';
+	inherits: true;
+	initial-value: 0;
 }
 
 *,
