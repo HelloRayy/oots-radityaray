@@ -3,7 +3,7 @@
 	import gsap from 'gsap';
 
 	const PHRASE = 'DESIGNED WITH CARE, \u00A0\u00A0\u00A0 ENGINEERED TO PERFORM \u00A0\u00A0\u2726\u00A0\u00A0 ';
-	const REPEATED_TEXT = PHRASE.repeat(5);
+	const REPEATED_TEXT = PHRASE.repeat(2);
 
 	let sectionEl: HTMLElement | null = null;
 	let textPathEl: SVGTextPathElement | null = null;
@@ -66,7 +66,6 @@
 
 		<!-- Orange background below the wave -->
 		<use href="#wave-band-bottom-fill" fill="#fa8005" />
-		<use href="#wave-band-bottom-fill" fill="url(#wave-band-grain)" opacity="0.28" />
 
 		<!-- Lime-green ribbon -->
 		<use href="#wave-band-path" class="band-tape" />
@@ -75,7 +74,6 @@
 				{REPEATED_TEXT}
 			</textPath>
 		</text>
-		<use href="#wave-band-path" class="band-tape-grain" />
 	</svg>
 </section>
 
@@ -86,12 +84,14 @@
 		overflow: hidden;
 		z-index: 2;
 		margin-top: -4vw;
+		contain: layout style paint;
 	}
 
 	.wave-band svg {
 		width: 100%;
 		height: auto;
 		display: block;
+		will-change: transform;
 	}
 
 	.band-tape {
@@ -99,14 +99,6 @@
 		stroke: #b6fe00;
 		stroke-width: 195;
 		stroke-linecap: round;
-	}
-
-	.band-tape-grain {
-		fill: none;
-		stroke: url(#wave-band-grain);
-		stroke-width: 195;
-		opacity: 0.16;
-		pointer-events: none;
 	}
 
 	.band-text {
