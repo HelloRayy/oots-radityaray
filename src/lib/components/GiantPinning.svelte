@@ -235,11 +235,7 @@
 		const revealTweens: gsap.core.Tween[] = [];
 		const arrowTimelines: gsap.core.Timeline[] = [];
 
-		const rowChars = rows.map((row) => {
-			const chars = gsap.utils.toArray<HTMLElement>('.char', row);
-			if (chars.length) gsap.set(chars, { yPercent: 115 });
-			return chars;
-		});
+		const rowChars = rows.map((row) => gsap.utils.toArray<HTMLElement>('.char', row));
 
 		const indices = gsap.utils.toArray<HTMLElement>('.giant-index', root);
 		if (indices.length) gsap.set(indices, { autoAlpha: 0 });
@@ -261,8 +257,8 @@
 				}
 			}
 			revealTweens.push(
-				gsap.to(shuffle(fresh), {
-					yPercent: 0,
+				gsap.from(shuffle(fresh), {
+					yPercent: 115,
 					duration: 0.7,
 					stagger: 0.055,
 					ease: 'power3.out'
@@ -399,7 +395,6 @@
 		const subhead = topTitle?.querySelector<HTMLElement>('.subhead') ?? null;
 		let topSt: ScrollTrigger | null = null;
 		if (topTitle) {
-			if (topChars.length) gsap.set(topChars, { yPercent: 115 });
 			if (subhead) gsap.set(subhead, { autoAlpha: 0 });
 			topSt = ScrollTrigger.create({
 				trigger: root,
@@ -408,8 +403,8 @@
 				onEnter: () => {
 					if (topChars.length) {
 						revealTweens.push(
-							gsap.to(shuffle(topChars), {
-								yPercent: 0,
+							gsap.from(shuffle(topChars), {
+								yPercent: 115,
 								duration: 0.7,
 								stagger: 0.014,
 								ease: 'power3.out'
