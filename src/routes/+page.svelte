@@ -4,6 +4,7 @@
 	import WaveBand from '#lib/components/WaveBand.svelte';
 	import BotShowcase from '#lib/components/BotShowcase.svelte';
 	import GiantPinning from '#lib/components/GiantPinning.svelte';
+	import ContactSection from '#lib/components/ContactSection.svelte';
 </script>
 
 <svelte:head>
@@ -16,4 +17,5 @@
 	<WaveBand />
 	<BotShowcase />
 	<GiantPinning />
+	<ContactSection />
 </main>

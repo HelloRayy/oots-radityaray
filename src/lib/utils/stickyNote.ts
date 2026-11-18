@@ -63,11 +63,96 @@ function drawNoteCanvas(title: string, items: string[], size = 512): HTMLCanvasE
 	return canvas;
 }
 
+function drawContactNoteCanvas(email: string, phone: string, size = 1024): HTMLCanvasElement {
+	const canvas = document.createElement('canvas');
+	canvas.width = size;
+	canvas.height = Math.round(size * (SHEET.H / SHEET.W));
+	const ctx = canvas.getContext('2d');
+	if (!ctx) return canvas;
+
+	const r = canvas.width;
+	const s = canvas.height;
+	const ink = '#7b5406';
+	const font = '"Sofia Sans Condensed", "Arial Narrow", sans-serif';
+	const rows = [0.235, 0.545];
+
+	const grad = ctx.createLinearGradient(0, 0, 0, s);
+	grad.addColorStop(0, '#f9dd55');
+	grad.addColorStop(1, '#f2cf3e');
+	ctx.fillStyle = grad;
+	ctx.fillRect(0, 0, r, s);
+
+	[
+		{ tag: 'EMAIL', value: email },
+		{ tag: 'PHONE', value: phone }
+	].forEach(({ tag, value }, idx) => {
+		const a = s * rows[idx];
+		const fs = 0.036 * r;
+		ctx.font = `800 ${fs}px ${font}`;
+		ctx.textBaseline = 'middle';
+		const padY = 0.42 * fs;
+		const padR = 0.6 * fs;
+		const padL = 1.5 * fs;
+		const pillH = fs + 2 * padY;
+		const pillW = ctx.measureText(tag).width + padL + padR;
+		const rad = 0.34 * fs;
+		const bx = 0.085 * r;
+		const by = a;
+
+		ctx.fillStyle = ink;
+		ctx.beginPath();
+		ctx.roundRect(bx, by, pillW, pillH, rad);
+		ctx.fill();
+
+		const dotR = 0.09 * fs;
+		const dotsSpan = 0.56 * pillH;
+		ctx.fillStyle = '#fedd49';
+		for (let d = 0; d < 3; d++) {
+			const dy = by + (pillH - dotsSpan) / 2 + (dotsSpan / 3) * (d + 0.5);
+			ctx.beginPath();
+			ctx.arc(bx + 0.42 * padL, dy, dotR, 0, Math.PI * 2);
+			ctx.fill();
+		}
+		ctx.fillText(tag, bx + padL, by + pillH / 2 + 0.06 * fs);
+
+		ctx.font = `800 ${0.058 * r}px ${font}`;
+		ctx.fillStyle = ink;
+		ctx.textBaseline = 'alphabetic';
+		ctx.fillText(value, 0.085 * r, a + 0.145 * s);
+
+		const dashW = 0.014 * r;
+		const step = dashW + 0.014 * r;
+		const startX = 0.085 * r;
+		const endX = 0.915 * r;
+		const lineY = a + 0.192 * s;
+		ctx.fillStyle = ink;
+		ctx.globalAlpha = 0.55;
+		for (let x = startX; x + dashW <= endX; x += step) {
+			ctx.fillRect(x, lineY, dashW, 0.005 * r);
+		}
+		ctx.globalAlpha = 1;
+	});
+
+	return canvas;
+}
+
+export function mountContactStickyNote(
+	container: HTMLElement,
+	email: string,
+	phone: string,
+	motionScale = 0.5
+): () => void {
+	return mountStickyNote(container, '', [], motionScale, (sz) =>
+		drawContactNoteCanvas(email, phone, sz)
+	);
+}
+
 export function mountStickyNote(
 	container: HTMLElement,
 	title: string,
 	items: string[],
-	motionScale = 1
+	motionScale = 1,
+	customDraw?: (size: number) => HTMLCanvasElement
 ): () => void {
 	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 	const dprCap = 1.25;
@@ -102,7 +187,8 @@ export function mountStickyNote(
 		512,
 		Math.round((container.clientHeight || 300) * NOTE.SPAN * (NOTE.W / NOTE.H) * Math.min(window.devicePixelRatio || 1, dprCap))
 	);
-	const texture = new THREE.CanvasTexture(drawNoteCanvas(title, items, texSize));
+	const makeCanvas = () => (customDraw ? customDraw(Math.max(1024, texSize)) : drawNoteCanvas(title, items, texSize));
+	const texture = new THREE.CanvasTexture(makeCanvas());
 	texture.colorSpace = THREE.SRGBColorSpace;
 	texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
 
@@ -206,7 +292,7 @@ export function mountStickyNote(
 
 	document.fonts?.ready.then(() => {
 		if (disposed) return;
-		texture.image = drawNoteCanvas(title, items, texSize);
+		texture.image = makeCanvas();
 		texture.needsUpdate = true;
 		dirty = true;
 	});
