@@ -9,24 +9,24 @@
 	const NOTE_ITEMS = ['ship new portfolio', 'polish gsap motion', 'reply client emails'];
 
 	const CARDBOARD_WORDS = [
-		'DIY',
-		'FAIL,',
-		'MOVING',
-		'DAY',
-		'CHAOS,',
-		'SCHOOL',
-		'PROJECT',
-		'EMERGENCY,',
-		'LAST-MINUTES',
-		'FIXES.',
-		'WE',
-		'ALWAYS',
-		'STICK',
-		'BY',
-		'YOU.'
+		'PIXEL',
+		'OBSESSION,',
+		'JANKY',
+		'CODE',
+		'RESCUE,',
+		'SNAPPY',
+		'MOTION.',
+		'ZERO',
+		'BORING',
+		'TEMPLATES.'
 	];
 
-	const HAND_LINES = ['we built for', 'everyday moments.', 'not industrial—just', 'real life.'];
+	const HAND_LINES = [
+		'handcrafted code.',
+		'obsessive details.',
+		'built to feel alive,',
+		'not just work.'
+	];
 
 	let rootEl: HTMLElement | null = null;
 	let noteEl: HTMLElement | null = null;
@@ -270,9 +270,9 @@
 	/* Sticky note (3D WebGL container) */
 	.note {
 		position: absolute;
-		top: 8.2vw;
-		left: 1.5vw;
-		width: 30vw;
+		top: 5.5vw;
+		left: -2.2vw;
+		width: 38.5vw;
 		aspect-ratio: 1 / 0.94;
 		rotate: 3deg;
 		pointer-events: none;
@@ -287,8 +287,8 @@
 
 	#tape-on-note {
 		position: absolute;
-		top: 9.6vw;
-		left: 10vw;
+		top: 12.2vw;
+		left: 11vw;
 		width: 11vw;
 		z-index: 5;
 		rotate: -2deg;

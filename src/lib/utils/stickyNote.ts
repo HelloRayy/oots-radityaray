@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { liveTune } from './tunerStore.ts';
 
 const SHEET = { W: 1, H: 0.94 };
-const NOTE = { W: SHEET.W, H: SHEET.H, SEGS: 44, SPAN: 0.62 };
+const NOTE = { W: SHEET.W, H: SHEET.H, SEGS: 44, SPAN: 0.48 };
 const WIND = {
 	SPEED: 1,
 	CURL: 0.14,
@@ -88,10 +88,10 @@ export function mountStickyNote(
 	dirLight.castShadow = true;
 	dirLight.shadow.mapSize.set(512, 512);
 	dirLight.shadow.blurSamples = 20;
-	dirLight.shadow.camera.left = -1.2;
-	dirLight.shadow.camera.right = 1.2;
-	dirLight.shadow.camera.top = 1.2;
-	dirLight.shadow.camera.bottom = -1.2;
+	dirLight.shadow.camera.left = -2;
+	dirLight.shadow.camera.right = 2;
+	dirLight.shadow.camera.top = 2;
+	dirLight.shadow.camera.bottom = -2;
 	dirLight.shadow.camera.near = 1;
 	dirLight.shadow.camera.far = 10;
 	dirLight.shadow.radius = SHADOW.SOFT;
@@ -119,7 +119,7 @@ export function mountStickyNote(
 	scene.add(noteMesh);
 
 	const shadowMat = new THREE.ShadowMaterial({ opacity: SHADOW.OPACITY });
-	const shadowGeo = new THREE.PlaneGeometry(4, 4);
+	const shadowGeo = new THREE.PlaneGeometry(6, 6);
 	const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
 	shadowPlane.position.z = -0.02;
 	shadowPlane.receiveShadow = true;
