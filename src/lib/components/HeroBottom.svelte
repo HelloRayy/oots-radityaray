@@ -3,6 +3,7 @@
 	import gsap from 'gsap';
 	import { ScrollTrigger } from 'gsap/ScrollTrigger';
 	import { whenRevealed } from '#lib/utils/reveal.ts';
+	import { mountStickyNote } from '#lib/utils/stickyNote.ts';
 
 	const NOTE_TITLE = 'TO-DO LIST';
 	const NOTE_ITEMS = ['ship new portfolio', 'polish gsap motion', 'reply client emails'];
@@ -28,6 +29,7 @@
 	const HAND_LINES = ['we built for', 'everyday moments.', 'not industrial—just', 'real life.'];
 
 	let rootEl: HTMLElement | null = null;
+	let noteEl: HTMLElement | null = null;
 
 	onMount(() => {
 		const root = rootEl;
@@ -123,10 +125,11 @@
 			});
 		}, root);
 
-		// Tactile hover poke on note, paperclip, and gift
+		const unmountNote = noteEl ? mountStickyNote(noteEl, NOTE_TITLE, NOTE_ITEMS) : () => {};
+
+		// Tactile hover poke on paperclip and gift
 		const pokeAbort = new AbortController();
 		const pokeTargets = [
-			{ sel: '.note', hover: { rotate: -1, y: -6, scale: 1.02 }, rest: { rotate: 3, y: 0, scale: 1 } },
 			{ sel: '#paperclip', hover: { rotate: -12, scale: 1.1 }, rest: { rotate: 0, scale: 1 } },
 			{ sel: '#gift', hover: { rotate: -2, scale: 1.03 }, rest: { rotate: 0, scale: 1 } }
 		];
@@ -151,6 +154,7 @@
 		});
 
 		return () => {
+			unmountNote();
 			unsubReveal();
 			pokeAbort.abort();
 			ctx.revert();
@@ -159,12 +163,13 @@
 </script>
 
 <section class="bottom-part" bind:this={rootEl}>
-	<!-- Sticky note -->
-	<div class="note">
-		<p class="note-title">{NOTE_TITLE}</p>
+	<!-- Sticky note (3D WebGL curled mesh + VSM drop shadow) -->
+	<div class="note" bind:this={noteEl} aria-hidden="true"></div>
+	<div class="sr-only">
+		<p>{NOTE_TITLE}</p>
 		<ul>
 			{#each NOTE_ITEMS as item (item)}
-				<li><span class="dot" aria-hidden="true"></span>{item}</li>
+				<li>{item}</li>
 			{/each}
 		</ul>
 	</div>
@@ -228,60 +233,22 @@
 		user-select: none;
 	}
 
-	/* Sticky note */
+	/* Sticky note (3D WebGL container) */
 	.note {
 		position: absolute;
-		top: 11.9vw;
-		left: 4.5vw;
-		width: 22vw;
+		top: 8.2vw;
+		left: 1.5vw;
+		width: 30vw;
 		aspect-ratio: 1 / 0.94;
-		padding: 3.4vw 2.2vw 2vw;
-		background: linear-gradient(180deg, #ffe81a 0%, #ffdc00 70%, #f7cf00 100%);
-		box-shadow:
-			0.8vw 2.2vw 2.8vw rgba(0, 0, 0, 0.48),
-			inset -0.8vw 0 1.4vw rgba(140, 95, 0, 0.14),
-			inset 0 -0.6vw 1vw rgba(160, 110, 0, 0.12);
 		rotate: 3deg;
-		transform: perspective(700px) rotateY(-3deg);
+		pointer-events: none;
 		z-index: 2;
-		clip-path: polygon(0 1%, 100% 0, 99.2% 18%, 100% 38%, 98.8% 62%, 99.6% 85%, 97% 100%, 2% 99%);
 	}
 
-	.note-title {
-		font-family: var(--font-heading);
-		font-weight: 900;
-		font-size: 2.6vw;
-		line-height: 0.9;
-		letter-spacing: -0.02em;
-		color: #8a2a0a;
-		margin: 0 0 1.2vw;
-	}
-
-	.note ul {
-		list-style: none;
-		margin: 0;
-		padding: 0;
-		font-family: 'Nothing You Could Do', cursive;
-		font-size: 1.2vw;
-		font-weight: 700;
-		line-height: 1.35;
-		color: #701d04;
-	}
-
-	.note li {
-		display: flex;
-		align-items: center;
-		gap: 0.7vw;
-		padding: 0.45vw 0;
-		border-bottom: 1px dashed rgba(138, 42, 10, 0.45);
-	}
-
-	.dot {
-		width: 0.65vw;
-		height: 0.65vw;
-		border: 1.5px solid #8a2a0a;
-		border-radius: 999px;
-		flex-shrink: 0;
+	.note :global(canvas) {
+		width: 100%;
+		height: 100%;
+		display: block;
 	}
 
 	#tape-on-note {
@@ -454,16 +421,9 @@
 			height: 210vw;
 		}
 		.note {
-			top: 8vw;
-			left: 6vw;
-			width: 52vw;
-			padding: 8vw 5vw 4vw;
-		}
-		.note-title {
-			font-size: 6.5vw;
-		}
-		.note ul {
-			font-size: 3vw;
+			top: 2vw;
+			left: -3vw;
+			width: 58vw;
 		}
 		#tape-on-note {
 			top: 4vw;
