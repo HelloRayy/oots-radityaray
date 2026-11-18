@@ -402,7 +402,7 @@
 			if (topChars.length) gsap.set(topChars, { yPercent: 115 });
 			if (subhead) gsap.set(subhead, { autoAlpha: 0 });
 			topSt = ScrollTrigger.create({
-				trigger: topTitle,
+				trigger: root,
 				start: 'top 75%',
 				once: true,
 				onEnter: () => {
@@ -520,6 +520,11 @@
 							if (tape.parentElement) io.unobserve(tape.parentElement);
 							triggerPeel(tape);
 						});
+						const rowNote = rows[rowIdx]?.querySelector<HTMLElement>('.hand-note');
+						if (rowNote) {
+							io.unobserve(rowNote);
+							triggerNote(rowNote);
+						}
 					},
 					undefined,
 					flushTime
