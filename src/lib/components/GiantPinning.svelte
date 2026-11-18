@@ -416,6 +416,14 @@
 							})
 						);
 					}
+					if (rowChars[0]?.length) {
+						rowClips[0].forEach((el) => io.unobserve(el));
+						revealBatch(rowChars[0]);
+					}
+					rowTapes[0]?.forEach((tape) => {
+						if (tape.parentElement) io.unobserve(tape.parentElement);
+						triggerPeel(tape);
+					});
 					if (subhead) {
 						revealTweens.push(
 							gsap.to(subhead, {
