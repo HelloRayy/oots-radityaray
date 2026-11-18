@@ -388,6 +388,11 @@
 		z-index: 2;
 	}
 
+	.bot-showcase :global(.arc-foot[data-paper]::before) {
+		opacity: 0.42;
+		mix-blend-mode: multiply;
+	}
+
 	.draggable,
 	.muse-icon-item {
 		will-change: transform;
