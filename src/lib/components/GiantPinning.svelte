@@ -628,29 +628,29 @@
 	<div class="wrapper">
 		<div class="giant-canvas">
 			<div class="top-title">
-				<h5 class="subhead">WHY WE EXIST</h5>
-				<h2 class="h2" aria-label="WE’RE HERE FOR THE EVERYDAY MOMENTS.">
+				<h5 class="subhead">HOW I WORK</h5>
+				<h2 class="h2" aria-label="BUILT FOR THE DETAILS THAT STICK.">
 					<span class="line">
-						{#each 'WE’RE\u00A0HERE'.split('') as ch, i}
+						{#each 'BUILT\u00A0FOR'.split('') as ch, i}
 							<span class="clip" style="--i:{i}"><span class="char">{ch}</span></span>
 						{/each}
 					</span>
 					<span class="line">
-						{#each 'FOR\u00A0THE\u00A0EVERYDAY'.split('') as ch, i}
+						{#each 'THE\u00A0DETAILS'.split('') as ch, i}
 							<span class="clip" style="--i:{i}"><span class="char">{ch}</span></span>
 						{/each}
 					</span>
 					<span class="line">
-						{#each 'MOMENTS.'.split('') as ch, i}
+						{#each 'THAT\u00A0STICK.'.split('') as ch, i}
 							<span class="clip" style="--i:{i}"><span class="char">{ch}</span></span>
 						{/each}
 					</span>
 				</h2>
 			</div>
 
-			<!-- Row 1: TO CREATE -->
+			<!-- Row 1: TO DESIGN -->
 			<div class="giant-row down-to-horizontal">
-				<h2 class="giant" aria-label="TO CREATE">
+				<h2 class="giant" aria-label="TO DESIGN">
 					<img class="giant-index" src="/assets/index-1.svg" alt="" aria-hidden="true" draggable="false" />
 					<span class="clip" style="--i:0"><span class="char">T</span></span>
 					<span class="clip" style="--i:1"><span class="char">O</span></span>
@@ -670,7 +670,7 @@
 						</span>
 					</span>
 					<span>
-						{#each 'CREATE'.split('') as ch, i}
+						{#each 'DESIGN'.split('') as ch, i}
 							<span class="clip" style="--i:{i}"><span class="char">{ch}</span></span>
 						{/each}
 					</span>
@@ -702,9 +702,9 @@
 					<div class="hand-ink">
 						<svg class="hand-rule hand-rule--x" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M 0 3 C 30 8 65 8 100 1" /></svg>
 						<svg class="hand-rule hand-rule--y" viewBox="0 0 10 100" preserveAspectRatio="none"><path d="M 6 0 C 2 33 3 70 6 100" /></svg>
-						<span class="hand-line">every masterpiece</span>
-						<span class="hand-line">starts held</span>
-						<span class="hand-line">in place.</span>
+						<span class="hand-line">every layout</span>
+						<span class="hand-line">starts with</span>
+						<span class="hand-line">clear intent.</span>
 					</div>
 				</div>
 			</div>
@@ -717,9 +717,9 @@
 				</svg>
 			</div>
 
-			<!-- Row 2: TO FIX -->
+			<!-- Row 2: TO BUILD -->
 			<div class="giant-row diagdown-to-horizontal">
-				<h2 class="giant" aria-label="TO FIX">
+				<h2 class="giant" aria-label="TO BUILD">
 					<img class="giant-index" src="/assets/index-2.svg" alt="" aria-hidden="true" draggable="false" />
 					<span class="clip" style="--i:0"><span class="char">T</span></span>
 					<span class="clip" style="--i:1"><span class="char">O</span></span>
@@ -739,7 +739,7 @@
 						</span>
 					</span>
 					<span>
-						{#each 'FIX'.split('') as ch, i}
+						{#each 'BUILD'.split('') as ch, i}
 							<span class="clip" style="--i:{i}"><span class="char">{ch}</span></span>
 						{/each}
 					</span>
@@ -771,9 +771,9 @@
 					<div class="hand-ink">
 						<svg class="hand-rule hand-rule--x" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M 0 3 C 30 8 65 8 100 1" /></svg>
 						<svg class="hand-rule hand-rule--y" viewBox="0 0 10 100" preserveAspectRatio="none"><path d="M 6 0 C 2 33 3 70 6 100" /></svg>
-						<span class="hand-line">the quick fix</span>
-						<span class="hand-line">that outlasts</span>
-						<span class="hand-line">the thing it fixed.</span>
+						<span class="hand-line">clean code</span>
+						<span class="hand-line">that holds up</span>
+						<span class="hand-line">in production.</span>
 					</div>
 				</div>
 			</div>
@@ -786,9 +786,9 @@
 				</svg>
 			</div>
 
-			<!-- Row 3: TO PROTECT -->
+			<!-- Row 3: TO SHIP -->
 			<div class="giant-row diagup-to-horizontal">
-				<h2 class="giant" aria-label="TO PROTECT">
+				<h2 class="giant" aria-label="TO SHIP">
 					<img class="giant-index" src="/assets/index-3.svg" alt="" aria-hidden="true" draggable="false" />
 					<span class="clip" style="--i:0"><span class="char">T</span></span>
 					<span class="clip" style="--i:1"><span class="char">O</span></span>
@@ -808,7 +808,7 @@
 						</span>
 					</span>
 					<span>
-						{#each 'PROTECT'.split('') as ch, i}
+						{#each 'SHIP'.split('') as ch, i}
 							<span class="clip" style="--i:{i}"><span class="char">{ch}</span></span>
 						{/each}
 					</span>
@@ -840,9 +840,9 @@
 					<div class="hand-ink">
 						<svg class="hand-rule hand-rule--x" viewBox="0 0 100 10" preserveAspectRatio="none"><path d="M 0 3 C 30 8 65 8 100 1" /></svg>
 						<svg class="hand-rule hand-rule--y" viewBox="0 0 10 100" preserveAspectRatio="none"><path d="M 6 0 C 2 33 3 70 6 100" /></svg>
-						<span class="hand-line">from our hands</span>
-						<span class="hand-line">to theirs,</span>
-						<span class="hand-line">arriving whole.</span>
+						<span class="hand-line">from figma</span>
+						<span class="hand-line">to browser,</span>
+						<span class="hand-line">pixel-sharp.</span>
 					</div>
 				</div>
 			</div>
