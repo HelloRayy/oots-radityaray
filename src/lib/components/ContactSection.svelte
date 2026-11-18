@@ -11,6 +11,7 @@
 	let noteEl: HTMLElement | null = null;
 	let sendLabel = $state('SEND');
 	let sending = $state(false);
+	let notice = $state<{ type: 'success' | 'error'; title: string; detail: string } | null>(null);
 
 	function shuffle<T>(arr: T[]): T[] {
 		const copy = [...arr];
@@ -21,26 +22,62 @@
 		return copy;
 	}
 
-	function handleSubmit(e: SubmitEvent) {
+	async function handleSubmit(e: SubmitEvent) {
 		e.preventDefault();
 		if (sending) return;
 		const form = e.currentTarget as HTMLFormElement;
 		const data = Object.fromEntries(new FormData(form)) as Record<string, string>;
+
 		if (!data.email?.trim()) {
 			sendLabel = 'ADD AN EMAIL FIRST';
+			notice = {
+				type: 'error',
+				title: 'EMAIL REQUIRED',
+				detail: 'Isi alamat email dulu supaya bisa dibalas.'
+			};
 			return;
 		}
 		if (!data.message?.trim()) {
 			sendLabel = 'WRITE A MESSAGE FIRST';
+			notice = {
+				type: 'error',
+				title: 'MESSAGE EMPTY',
+				detail: 'Tulis pesan singkat dulu sebelum mengirim.'
+			};
 			return;
 		}
+
 		sending = true;
 		sendLabel = 'SENDING…';
-		setTimeout(() => {
+		notice = null;
+
+		try {
+			const res = await fetch('/api/contact', {
+				method: 'POST',
+				headers: { 'Content-Type': 'application/json' },
+				body: JSON.stringify(data)
+			});
+			const result = await res.json().catch(() => ({}));
+			if (!res.ok || !result.ok) {
+				throw new Error(result?.error || `Error ${res.status}`);
+			}
 			form.reset();
+			sendLabel = 'SENT';
+			notice = {
+				type: 'success',
+				title: 'MESSAGE SENT',
+				detail: 'Pesan lo sudah masuk ke inbox. Gua akan balas secepatnya.'
+			};
+		} catch (err) {
+			sendLabel = 'TRY AGAIN';
+			notice = {
+				type: 'error',
+				title: 'FAILED TO SEND',
+				detail: err instanceof Error ? err.message : 'Gagal mengirim pesan. Coba lagi.'
+			};
+		} finally {
 			sending = false;
-			sendLabel = 'SENT — WE’LL BE IN TOUCH';
-		}, 650);
+		}
 	}
 
 	onMount(() => {
@@ -220,6 +257,24 @@
 				{sendLabel}
 			</button>
 		</form>
+
+		{#if notice}
+			<div class="contact-notice" data-type={notice.type} role="status" aria-live="polite">
+				<span class="contact-notice-badge">
+					<span class="notice-dots" aria-hidden="true"></span>
+					<span>{notice.title}</span>
+				</span>
+				<p class="contact-notice-text">{notice.detail}</p>
+				<button
+					class="contact-notice-close"
+					type="button"
+					aria-label="Dismiss notification"
+					onclick={() => (notice = null)}
+				>
+					×
+				</button>
+			</div>
+		{/if}
 	</div>
 
 	<div class="contact-note" aria-hidden="true">
@@ -493,6 +548,91 @@
 	.contact-send:focus-visible {
 		outline: 0.14vw solid var(--contact-paper-ink);
 		outline-offset: 0.2vw;
+	}
+
+	.contact-notice {
+		margin-top: 1.6vw;
+		padding: 1.15vw 1.5vw;
+		border-radius: 1.528vw;
+		display: flex;
+		align-items: center;
+		gap: 1.1vw;
+		background: #ebe4c6;
+		color: #013900;
+		border: 2px solid #013900;
+	}
+
+	.contact-notice[data-type='success'] {
+		background: #b6fe00;
+		color: #013900;
+		border-color: #013900;
+	}
+
+	.contact-notice[data-type='error'] {
+		background: #ff7b5f;
+		color: #2b0600;
+		border-color: #2b0600;
+	}
+
+	.contact-notice-badge {
+		position: relative;
+		flex: none;
+		display: inline-flex;
+		align-items: center;
+		padding: 0.45vw 0.9vw 0.45vw 1.25vw;
+		border-radius: 0.35vw;
+		background: currentColor;
+		font-family: var(--font-heading);
+		font-weight: 800;
+		font-size: max(12px, 0.95vw);
+		line-height: 1;
+		letter-spacing: 0.04em;
+	}
+
+	.contact-notice-badge > span:last-child {
+		color: #fdfbe8;
+	}
+
+	.contact-notice[data-type='success'] .contact-notice-badge > span:last-child {
+		color: #b6fe00;
+	}
+
+	.notice-dots {
+		width: 0.18vw;
+		height: 0.85vw;
+		background-image: radial-gradient(circle, #fdfbe8 42%, transparent 45%);
+		background-repeat: repeat-y;
+		background-size: 100% 0.28vw;
+		position: absolute;
+		left: 0.45vw;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.contact-notice-text {
+		margin: 0;
+		flex: 1;
+		font-family: var(--font-body);
+		font-size: max(13px, 1vw);
+		font-weight: 600;
+		line-height: 1.35;
+	}
+
+	.contact-notice-close {
+		flex: none;
+		width: 2vw;
+		height: 2vw;
+		min-width: 28px;
+		min-height: 28px;
+		border-radius: 999px;
+		border: 0;
+		background: rgba(0, 0, 0, 0.1);
+		color: inherit;
+		font-size: 1.25rem;
+		line-height: 1;
+		cursor: pointer;
+		display: grid;
+		place-items: center;
 	}
 
 	.contact-note {
