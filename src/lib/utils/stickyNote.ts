@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { liveTune } from './tunerStore.ts';
 
 const SHEET = { W: 1, H: 0.94 };
 const NOTE = { W: SHEET.W, H: SHEET.H, SEGS: 44, SPAN: 0.62 };
@@ -164,8 +165,9 @@ export function mountStickyNote(
 	};
 
 	const applyFrame = (tSec: number, scrollBoost = 0, px = 0, py = 0, proximity = 0) => {
-		const d = tSec * WIND.SPEED;
-		const gustWave = Math.pow(Math.max(0, Math.sin(0.31 * d) * Math.sin(0.117 * d + 2) - 0.25) / 0.75, 1.6) + scrollBoost * WIND.SCROLL;
+		const d = tSec * liveTune.page2.windSpeed;
+		shadowMat.opacity = liveTune.page2.shadowOpacity;
+		const gustWave = Math.pow(Math.max(0, Math.sin(0.31 * d) * Math.sin(0.117 * d + 2) - 0.25) / 0.75, 1.6) + scrollBoost * liveTune.page2.scrollWind;
 		const gustAmp = WIND.GUST * gustWave;
 		const pos = geometry.attributes.position.array as Float32Array;
 
@@ -179,7 +181,7 @@ export function mountStickyNote(
 			const tremble = WIND.TREMBLE * (0.35 + 1.8 * gustWave) * (Math.sin(8.7 * d + 1.9 * bx + 1.1 * m) + 0.6 * Math.sin(13.3 * d + 3.1 * bx));
 			const gustShape = 0.55 + 0.45 * Math.sin(1.3 * d + 1.6 * bx) + 0.9 * diag;
 			const poke = WIND.POKE * proximity * (0.5 + 0.9 * (bx * px + (m - 0.5) * py));
-			const z = w * (WIND.CURL + motionScale * (flutter + tremble + gustAmp * gustShape + poke));
+			const z = w * (liveTune.page2.curl + motionScale * (flutter + tremble + gustAmp * gustShape + poke));
 			pos[i + 2] = z;
 			pos[i + 1] = by + z * z * 0.4 * smoothstep(m / 0.3);
 		}

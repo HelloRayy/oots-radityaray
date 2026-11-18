@@ -90,21 +90,55 @@
 				);
 			});
 
-			// Hand note rules draw + lines fade up
-			gsap.from('.hand-rule path', {
-				strokeDashoffset: 120,
-				duration: 1,
-				ease: 'power2.out',
-				scrollTrigger: { trigger: '.hand-note', start: 'top 85%', once: true }
-			});
-			gsap.from('.hand-line', {
-				yPercent: 60,
-				opacity: 0,
-				stagger: 0.12,
-				duration: 0.6,
-				ease: 'power2.out',
-				scrollTrigger: { trigger: '.hand-note', start: 'top 85%', once: true }
-			});
+			// Hand note: rule X/Y draw + char-by-char typing animation (sweet-tape.com)
+			const handNote = root.querySelector<HTMLElement>('.hand-note');
+			const handInk = root.querySelector<HTMLElement>('.hand-ink');
+			const ruleX = root.querySelector<HTMLElement>('.hand-rule--x');
+			const ruleY = root.querySelector<HTMLElement>('.hand-rule--y');
+			if (handNote && handInk && ruleX && ruleY) {
+				const lineEls = Array.from(handInk.querySelectorAll<HTMLElement>('.hand-line'));
+				const charMatrix = lineEls.map((lineEl) => {
+					const text = lineEl.textContent ?? '';
+					lineEl.textContent = '';
+					return Array.from(text, (ch) => {
+						const span = document.createElement('span');
+						span.textContent = ch;
+						lineEl.appendChild(span);
+						return span;
+					});
+				});
+
+				const allHandChars = charMatrix.flat();
+				gsap.set(allHandChars, { visibility: 'hidden' });
+
+				const handTl = gsap.timeline({ paused: true });
+				const rw = ruleX.getBoundingClientRect().width;
+				const rh = ruleY.getBoundingClientRect().height;
+				const ruleTotal = 0.42;
+				handTl.fromTo(ruleX, { scaleX: 0 }, { scaleX: 1, duration: (ruleTotal * rw) / (rw + rh || 1), ease: 'none', transformOrigin: 'left center' }, 0);
+				handTl.fromTo(ruleY, { scaleY: 0 }, { scaleY: 1, duration: (ruleTotal * rh) / (rw + rh || 1), ease: 'none', transformOrigin: 'top center' }, 0);
+
+				let cursor = handTl.duration() + 0.14;
+				const charStep = 0.06;
+				const lineBreak = 0.18;
+				charMatrix.forEach((charsInLine, idx) => {
+					if (idx > 0) cursor += lineBreak;
+					for (const chSpan of charsInLine) {
+						handTl.set(chSpan, { visibility: 'visible' }, cursor);
+						cursor += charStep;
+					}
+				});
+
+				ScrollTrigger.create({
+					trigger: handNote,
+					start: 'top 85%',
+					end: 'bottom top',
+					onEnter: () => handTl.play(0),
+					onEnterBack: () => handTl.play(0),
+					onLeave: () => handTl.pause(0),
+					onLeaveBack: () => handTl.pause(0)
+				});
+			}
 
 			// Smooth inertia parallax props (scrub: 1.2)
 			gsap.to('#gift', {
