@@ -226,7 +226,7 @@
 </script>
 
 <section class="bot-showcase" bind:this={sectionEl} class:drag-mode={dragEnabled}>
-	<div class="paper-grain" aria-hidden="true"></div>
+	<div class="arc-foot" data-paper="true" aria-hidden="true"></div>
 
 	<!-- Top pill -->
 	<div
@@ -368,12 +368,13 @@
 
 <style>
 	.bot-showcase {
+		--arc-paint: #fa8005;
 		position: relative;
 		width: 100%;
-		height: 54vw;
-		background: #fa8005;
+		height: calc(54vw + var(--curve-depth));
+		background: transparent;
 		overflow: clip;
-		z-index: 1;
+		z-index: 2;
 	}
 
 	.drag-mode .draggable {
