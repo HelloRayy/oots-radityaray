@@ -40,33 +40,17 @@
 		pe: string;
 	};
 
-	let tagItems = $state<TagItem[]>([
+	const TAG_ITEMS: TagItem[] = [
 		{ id: 'r1-a', row: 0, iconId: 'figma', px: 69, py: -24, pw: 22.71, pr: -6, pp: 0.03, pe: 'sine.inOut' },
 		{ id: 'r1-b', row: 0, iconId: 'claude', px: 53, py: 50, pw: 22.71, pr: 5, pp: 0.03, pe: 'power1.inOut' },
 		{ id: 'r1-c', row: 0, iconId: 'react', px: 94, py: 46, pw: 22.71, pr: -14, pp: -0.02, pe: 'power2.inOut' },
 		{ id: 'r2-a', row: 1, iconId: 'vscode', px: -5, py: 47, pw: 22.71, pr: 12, pp: 0.04, pe: 'sine.inOut' },
 		{ id: 'r3-a', row: 2, iconId: 'nodejs', px: 61, py: -32, pw: 22.71, pr: 6, pp: -0.02, pe: 'power2.inOut' },
 		{ id: 'r3-b', row: 2, iconId: 'github', px: 43, py: 49, pw: 22.71, pr: 9, pp: 0.032, pe: 'power1.inOut' }
-	]);
-
-	let hudOpen = $state(true);
-	let selectedTagId = $state('r1-a');
-	let copied = $state(false);
-
-	const selectedTag = $derived(tagItems.find((t) => t.id === selectedTagId) ?? tagItems[0]);
+	];
 
 	function getIconSrc(iconId: string) {
 		return ICON_OPTIONS.find((o) => o.id === iconId)?.src ?? figmaIcon;
-	}
-
-	async function copyTags() {
-		try {
-			await navigator.clipboard.writeText(JSON.stringify(tagItems, null, 2));
-			copied = true;
-			setTimeout(() => (copied = false), 1500);
-		} catch {
-			// ignore
-		}
 	}
 
 	const scrub = 1.5;
@@ -684,7 +668,7 @@
 					</span>
 				</span>
 
-				{#each tagItems.filter((t) => t.row === 0) as tag (tag.id)}
+				{#each TAG_ITEMS.filter((t) => t.row === 0) as tag (tag.id)}
 					<img
 						class="giant-prop giant-prop--tag"
 						src={getIconSrc(tag.iconId)}
@@ -753,7 +737,7 @@
 					</span>
 				</span>
 
-				{#each tagItems.filter((t) => t.row === 1) as tag (tag.id)}
+				{#each TAG_ITEMS.filter((t) => t.row === 1) as tag (tag.id)}
 					<img
 						class="giant-prop giant-prop--tag"
 						src={getIconSrc(tag.iconId)}
@@ -822,7 +806,7 @@
 					</span>
 				</span>
 
-				{#each tagItems.filter((t) => t.row === 2) as tag (tag.id)}
+				{#each TAG_ITEMS.filter((t) => t.row === 2) as tag (tag.id)}
 					<img
 						class="giant-prop giant-prop--tag"
 						src={getIconSrc(tag.iconId)}
@@ -845,53 +829,6 @@
 		</div>
 	</div>
 </section>
-
-<!-- Tag Icon HUD -->
-<div class="giant-hud">
-	<div class="giant-hud-bar">
-		<strong>Icon Tags HUD</strong>
-		<div class="giant-hud-actions">
-			<button type="button" onclick={copyTags}>{copied ? 'Copied!' : 'Copy'}</button>
-			<button type="button" onclick={() => (hudOpen = !hudOpen)}>{hudOpen ? 'Hide' : 'Show'}</button>
-		</div>
-	</div>
-	{#if hudOpen && selectedTag}
-		<div class="giant-hud-body">
-			<label>
-				<span>Slot</span>
-				<select bind:value={selectedTagId}>
-					{#each tagItems as t}
-						<option value={t.id}>{t.id} (Row {t.row + 1} - {t.iconId})</option>
-					{/each}
-				</select>
-			</label>
-			<label>
-				<span>Icon</span>
-				<select bind:value={selectedTag.iconId}>
-					{#each ICON_OPTIONS as opt}
-						<option value={opt.id}>{opt.label}</option>
-					{/each}
-				</select>
-			</label>
-			<label>
-				<span>Size (pw): {selectedTag.pw.toFixed(1)}vw</span>
-				<input type="range" min="4" max="32" step="0.5" bind:value={selectedTag.pw} />
-			</label>
-			<label>
-				<span>Pos X (px): {selectedTag.px}%</span>
-				<input type="range" min="-20" max="120" step="1" bind:value={selectedTag.px} />
-			</label>
-			<label>
-				<span>Pos Y (py): {selectedTag.py}%</span>
-				<input type="range" min="-60" max="100" step="1" bind:value={selectedTag.py} />
-			</label>
-			<label>
-				<span>Rotate (pr): {selectedTag.pr}deg</span>
-				<input type="range" min="-45" max="45" step="1" bind:value={selectedTag.pr} />
-			</label>
-		</div>
-	{/if}
-</div>
 
 <style>
 	.giant-pinning {
@@ -1334,72 +1271,6 @@
 
 	.hand-note .hand-line {
 		display: block;
-	}
-
-	.giant-hud {
-		position: fixed;
-		bottom: 16px;
-		left: 16px;
-		z-index: 900;
-		background: rgba(1, 32, 0, 0.92);
-		color: #b6fe00;
-		border: 1px solid rgba(182, 254, 0, 0.35);
-		border-radius: 10px;
-		padding: 10px 12px;
-		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-		font-size: 11px;
-		width: 250px;
-		backdrop-filter: blur(8px);
-		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-	}
-
-	.giant-hud-bar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-
-	.giant-hud-actions {
-		display: flex;
-		gap: 4px;
-	}
-
-	.giant-hud-actions button {
-		background: rgba(182, 254, 0, 0.16);
-		color: #b6fe00;
-		border: 1px solid rgba(182, 254, 0, 0.35);
-		border-radius: 5px;
-		padding: 2px 6px;
-		font-size: 10px;
-		cursor: pointer;
-	}
-
-	.giant-hud-body {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		margin-top: 8px;
-	}
-
-	.giant-hud-body label {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-	}
-
-	.giant-hud-body select {
-		background: #022901;
-		color: #b6fe00;
-		border: 1px solid rgba(182, 254, 0, 0.35);
-		border-radius: 5px;
-		padding: 3px 6px;
-		font-size: 11px;
-	}
-
-	.giant-hud-body input[type='range'] {
-		width: 100%;
-		accent-color: #b6fe00;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
