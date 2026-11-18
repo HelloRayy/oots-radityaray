@@ -506,8 +506,7 @@
 			const unit = camTl.duration() / Math.max(1, count - 1);
 
 			path.opens.forEach((openIdx, rowIdx) => {
-				const endIdx = (path.opens[rowIdx + 1] ?? count) - 1;
-				const flushTime = Math.max(0, (times[endIdx] ?? camTl!.duration()) - 0.001);
+				const enterTime = Math.max(0, (times[openIdx] ?? 0) - 0.001);
 				camTl!.call(
 					() => {
 						flushBatch();
@@ -525,22 +524,15 @@
 							io.unobserve(rowNote);
 							triggerNote(rowNote);
 						}
-					},
-					undefined,
-					flushTime
-				);
-				if (rowIdx > 0) {
-					const arrowTime = Math.max(0, (times[openIdx] ?? 0) - 0.001);
-					camTl!.call(
-						() => {
+						if (rowIdx > 0) {
 							const arrowEl = arrowEls[rowIdx - 1];
 							if (arrowEl) io.unobserve(arrowEl);
 							triggerArrow(rowIdx - 1);
-						},
-						undefined,
-						arrowTime
-					);
-				}
+						}
+					},
+					undefined,
+					enterTime
+				);
 			});
 
 			camSt = ScrollTrigger.create({
@@ -885,7 +877,8 @@
 		content: '';
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100% var(--giant-sheet);
-		opacity: 0.2;
+		opacity: 0.42;
+		mix-blend-mode: multiply;
 		pointer-events: none;
 		background-position: 0 0;
 		background-repeat: no-repeat;
@@ -903,7 +896,8 @@
 		content: '';
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100% var(--giant-sheet);
-		opacity: 0.2;
+		opacity: 0.42;
+		mix-blend-mode: multiply;
 		pointer-events: none;
 		background-position: 0 100%;
 		background-repeat: no-repeat;
@@ -916,7 +910,8 @@
 		height: var(--giant-tail);
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100vw var(--giant-sheet);
-		opacity: 0.2;
+		opacity: 0.42;
+		mix-blend-mode: multiply;
 		pointer-events: none;
 		background-repeat: repeat;
 		position: absolute;
