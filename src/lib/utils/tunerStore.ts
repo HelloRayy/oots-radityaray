@@ -14,17 +14,17 @@ export interface Page2Tune {
 }
 
 export const DEFAULT_LENIS_TUNE: LenisTune = {
-	duration: 1.8,
-	lerp: 0.1,
-	wheelMultiplier: 1.0,
-	touchMultiplier: 1.0
+	duration: 1.65,
+	lerp: 0.22,
+	wheelMultiplier: 2.2,
+	touchMultiplier: 1
 };
 
 export const DEFAULT_PAGE2_TUNE: Page2Tune = {
-	curl: 0.14,
-	windSpeed: 1.0,
-	scrollWind: 1.1,
-	shadowOpacity: 0.2,
+	curl: 0.32,
+	windSpeed: 2.5,
+	scrollWind: 0,
+	shadowOpacity: 0.5,
 	handCharDelay: 0.06
 };
 

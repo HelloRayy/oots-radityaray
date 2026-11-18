@@ -70,13 +70,13 @@ export function mountStickyNote(
 	motionScale = 1
 ): () => void {
 	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	const dprCap = window.matchMedia('(hover: none) and (min-width: 744px)').matches ? 2 : 3;
+	const dprCap = 1.5;
 
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
 	camera.position.z = NOTE.H / NOTE.SPAN / (2 * Math.tan((Math.PI / 180) * 17.5));
 
-	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
 	renderer.toneMapping = THREE.NoToneMapping;
 	renderer.setClearColor(0x000000, 0);
 	renderer.shadowMap.enabled = true;
@@ -86,8 +86,8 @@ export function mountStickyNote(
 	const dirLight = new THREE.DirectionalLight(0xffffff, LIGHT.POWER);
 	dirLight.position.set(LIGHT.X, LIGHT.Y, LIGHT.Z);
 	dirLight.castShadow = true;
-	dirLight.shadow.mapSize.set(512, 512);
-	dirLight.shadow.blurSamples = 20;
+	dirLight.shadow.mapSize.set(256, 256);
+	dirLight.shadow.blurSamples = 10;
 	dirLight.shadow.camera.left = -2;
 	dirLight.shadow.camera.right = 2;
 	dirLight.shadow.camera.top = 2;
@@ -104,7 +104,7 @@ export function mountStickyNote(
 	);
 	const texture = new THREE.CanvasTexture(drawNoteCanvas(title, items, texSize));
 	texture.colorSpace = THREE.SRGBColorSpace;
-	texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
+	texture.anisotropy = Math.min(4, renderer.capabilities.getMaxAnisotropy());
 
 	const material = new THREE.MeshStandardMaterial({
 		map: texture,
@@ -112,8 +112,27 @@ export function mountStickyNote(
 		side: THREE.DoubleSide
 	});
 
-	const geometry = new THREE.PlaneGeometry(NOTE.W, NOTE.H, NOTE.SEGS, NOTE.SEGS);
+	const segs = 28;
+	const geometry = new THREE.PlaneGeometry(NOTE.W, NOTE.H, segs, segs);
 	const basePos = Float32Array.from(geometry.attributes.position.array);
+	const vertCount = basePos.length / 3;
+	const preW = new Float32Array(vertCount);
+	const preM = new Float32Array(vertCount);
+	const preDiag = new Float32Array(vertCount);
+	const preYLift = new Float32Array(vertCount);
+
+	for (let v = 0; v < vertCount; v++) {
+		const bx = basePos[v * 3];
+		const by = basePos[v * 3 + 1];
+		const m = (NOTE.H / 2 - by) / NOTE.H;
+		const o = Math.abs(bx) / NOTE.W;
+		const val = smoothstep(m / 0.85) + smoothstep((o - WIND.PIN_HALF) / (0.5 - WIND.PIN_HALF)) * (1 - smoothstep(m / 0.35)) * smoothstep(m / 0.12) * 0.55;
+		preW[v] = Math.pow(clamp01(val), 2.1);
+		preM[v] = m;
+		preDiag[v] = m * (0.5 - bx / NOTE.W);
+		preYLift[v] = 0.4 * smoothstep(m / 0.3);
+	}
+
 	const noteMesh = new THREE.Mesh(geometry, material);
 	noteMesh.castShadow = true;
 	scene.add(noteMesh);
@@ -157,33 +176,28 @@ export function mountStickyNote(
 		dirty = true;
 	};
 
-	const pinWeight = (x: number, y: number) => {
-		const a = (NOTE.H / 2 - y) / NOTE.H;
-		const o = Math.abs(x) / NOTE.W;
-		const val = smoothstep(a / 0.85) + smoothstep((o - WIND.PIN_HALF) / (0.5 - WIND.PIN_HALF)) * (1 - smoothstep(a / 0.35)) * smoothstep(a / 0.12) * 0.55;
-		return Math.pow(clamp01(val), 2.1);
-	};
-
 	const applyFrame = (tSec: number, scrollBoost = 0, px = 0, py = 0, proximity = 0) => {
 		const d = tSec * liveTune.page2.windSpeed;
 		shadowMat.opacity = liveTune.page2.shadowOpacity;
 		const gustWave = Math.pow(Math.max(0, Math.sin(0.31 * d) * Math.sin(0.117 * d + 2) - 0.25) / 0.75, 1.6) + scrollBoost * liveTune.page2.scrollWind;
 		const gustAmp = WIND.GUST * gustWave;
 		const pos = geometry.attributes.position.array as Float32Array;
+		const curl = liveTune.page2.curl;
+		const pokeScale = WIND.POKE * proximity;
+		const trembleScale = WIND.TREMBLE * (0.35 + 1.8 * gustWave);
 
-		for (let i = 0; i < pos.length; i += 3) {
+		for (let v = 0; v < vertCount; v++) {
+			const i = v * 3;
 			const bx = basePos[i];
 			const by = basePos[i + 1];
-			const w = pinWeight(bx, by);
-			const m = (NOTE.H / 2 - by) / NOTE.H;
-			const diag = m * (0.5 - bx / NOTE.W);
+			const m = preM[v];
 			const flutter = WIND.FLUTTER * (Math.sin(1.1 * d + 1.4 * m - 0.8 * bx) + 0.5 * Math.sin(1.9 * d - 0.9 * m - 1.2 * bx + 1.3));
-			const tremble = WIND.TREMBLE * (0.35 + 1.8 * gustWave) * (Math.sin(8.7 * d + 1.9 * bx + 1.1 * m) + 0.6 * Math.sin(13.3 * d + 3.1 * bx));
-			const gustShape = 0.55 + 0.45 * Math.sin(1.3 * d + 1.6 * bx) + 0.9 * diag;
-			const poke = WIND.POKE * proximity * (0.5 + 0.9 * (bx * px + (m - 0.5) * py));
-			const z = w * (liveTune.page2.curl + motionScale * (flutter + tremble + gustAmp * gustShape + poke));
+			const tremble = trembleScale * (Math.sin(8.7 * d + 1.9 * bx + 1.1 * m) + 0.6 * Math.sin(13.3 * d + 3.1 * bx));
+			const gustShape = 0.55 + 0.45 * Math.sin(1.3 * d + 1.6 * bx) + 0.9 * preDiag[v];
+			const poke = pokeScale * (0.5 + 0.9 * (bx * px + (m - 0.5) * py));
+			const z = preW[v] * (curl + motionScale * (flutter + tremble + gustAmp * gustShape + poke));
 			pos[i + 2] = z;
-			pos[i + 1] = by + z * z * 0.4 * smoothstep(m / 0.3);
+			pos[i + 1] = by + z * z * preYLift[v];
 		}
 		geometry.attributes.position.needsUpdate = true;
 		geometry.computeVertexNormals();

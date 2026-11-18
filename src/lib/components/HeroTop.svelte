@@ -142,47 +142,68 @@
 				}
 			};
 
-			root.addEventListener(
-				'pointermove',
-				(e: PointerEvent) => {
-					const radius = Math.max(20, HOVER_TUNE.radius);
-					for (const charEl of h1Chars) {
-						const rect = charEl.getBoundingClientRect();
-						const cx = rect.left + rect.width / 2;
-						const cy = rect.top + rect.height / 2;
-						const dx = e.clientX - cx;
-						const dy = e.clientY - cy;
-						const dist = Math.hypot(dx, dy);
-						const raw = Math.max(0, 1 - dist / radius);
-						const falloff = raw * raw * (3 - 2 * raw);
+			let hoverRaf = 0;
+			let lastPx = 0;
+			let lastPy = 0;
 
-						if (falloff <= 0.001) {
-							gsap.to(charEl, {
-								yPercent: 0,
-								scale: 1,
-								rotation: 0,
-								duration: HOVER_TUNE.duration,
-								ease: 'power3.out',
-								overwrite: 'auto'
-							});
-							continue;
-						}
+			const applyHoverFrame = () => {
+				hoverRaf = 0;
+				const radius = Math.max(20, HOVER_TUNE.radius);
+				for (const charEl of h1Chars) {
+					const rect = charEl.getBoundingClientRect();
+					const cx = rect.left + rect.width / 2;
+					const cy = rect.top + rect.height / 2;
+					const dx = lastPx - cx;
+					const dy = lastPy - cy;
+					const dist = Math.hypot(dx, dy);
+					const raw = Math.max(0, 1 - dist / radius);
+					const falloff = raw * raw * (3 - 2 * raw);
 
-						const dirX = Math.max(-1, Math.min(1, dx / radius));
+					if (falloff <= 0.001) {
 						gsap.to(charEl, {
-							yPercent: HOVER_TUNE.liftY * falloff,
-							scale: 1 + (HOVER_TUNE.scale - 1) * falloff,
-							rotation: dirX * HOVER_TUNE.maxTilt * falloff,
+							yPercent: 0,
+							scale: 1,
+							rotation: 0,
 							duration: HOVER_TUNE.duration,
 							ease: 'power3.out',
 							overwrite: 'auto'
 						});
+						continue;
 					}
+
+					const dirX = Math.max(-1, Math.min(1, dx / radius));
+					gsap.to(charEl, {
+						yPercent: HOVER_TUNE.liftY * falloff,
+						scale: 1 + (HOVER_TUNE.scale - 1) * falloff,
+						rotation: dirX * HOVER_TUNE.maxTilt * falloff,
+						duration: HOVER_TUNE.duration,
+						ease: 'power3.out',
+						overwrite: 'auto'
+					});
+				}
+			};
+
+			root.addEventListener(
+				'pointermove',
+				(e: PointerEvent) => {
+					lastPx = e.clientX;
+					lastPy = e.clientY;
+					if (!hoverRaf) hoverRaf = requestAnimationFrame(applyHoverFrame);
 				},
 				{ signal: hoverAbort.signal, passive: true }
 			);
 
-			root.addEventListener('pointerleave', resetChars, { signal: hoverAbort.signal });
+			root.addEventListener(
+				'pointerleave',
+				() => {
+					if (hoverRaf) {
+						cancelAnimationFrame(hoverRaf);
+						hoverRaf = 0;
+					}
+					resetChars();
+				},
+				{ signal: hoverAbort.signal }
+			);
 		}
 
 		const delayedCalls: gsap.core.Tween[] = [];

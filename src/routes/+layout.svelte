@@ -17,7 +17,7 @@
 
 	let { children }: LayoutProps = $props();
 
-	let hudOpen = $state(true);
+	let hudOpen = $state(false);
 	let copiedHud = $state(false);
 	let lenisCfg = $state<LenisTune>({ ...DEFAULT_LENIS_TUNE });
 	let page2Cfg = $state<Page2Tune>({ ...DEFAULT_PAGE2_TUNE });
@@ -83,11 +83,13 @@
 		gsap.ticker.add(onTick);
 		lenis.on('scroll', (e: Lenis) => {
 			ScrollTrigger.update();
-			hudStats = {
-				scroll: Math.round(e.scroll),
-				velocity: Number(e.velocity.toFixed(2)),
-				progress: Math.round((e.progress || 0) * 100)
-			};
+			if (hudOpen) {
+				hudStats = {
+					scroll: Math.round(e.scroll),
+					velocity: Number(e.velocity.toFixed(2)),
+					progress: Math.round((e.progress || 0) * 100)
+				};
+			}
 		});
 
 		let graceCall: gsap.core.Tween | null = null;
