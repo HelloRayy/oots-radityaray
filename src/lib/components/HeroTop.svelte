@@ -28,35 +28,13 @@
 	let sectionEl: HTMLElement | null = null;
 	let heroImageEl: HTMLImageElement | null = null;
 
-	const DEFAULT_TUNE = {
-		radius: 220,
-		liftY: -5,
-		scale: 1.03,
-		maxTilt: 2.5,
-		duration: 0.45
+	const HOVER_TUNE = {
+		radius: 420,
+		liftY: -18,
+		scale: 1.15,
+		maxTilt: 10,
+		duration: 0.15
 	};
-
-	let tunerOpen = $state(true);
-	let copiedPrompt = $state(false);
-	let tune = $state({ ...DEFAULT_TUNE });
-
-	function resetTune() {
-		tune = { ...DEFAULT_TUNE };
-	}
-
-	function copyForAI() {
-		const text = [
-			'Update the hero .h1 .char proximity hover motion in HeroTop.svelte with these exact values:',
-			`- Radius: ${tune.radius}px`,
-			`- Lift Y: ${tune.liftY}%`,
-			`- Scale: ${tune.scale}`,
-			`- Max Tilt: ${tune.maxTilt}deg`,
-			`- Duration: ${tune.duration}s (ease: power3.out, smoothstep falloff)`
-		].join('\n');
-		navigator.clipboard?.writeText(text);
-		copiedPrompt = true;
-		setTimeout(() => (copiedPrompt = false), 1500);
-	}
 
 	function shuffle<T>(items: T[]): T[] {
 		const copy = [...items];
@@ -157,7 +135,7 @@
 						yPercent: 0,
 						scale: 1,
 						rotation: 0,
-						duration: Math.max(0.2, tune.duration * 1.15),
+						duration: Math.max(0.2, HOVER_TUNE.duration * 1.15),
 						ease: 'power3.out',
 						overwrite: 'auto'
 					});
@@ -167,7 +145,7 @@
 			root.addEventListener(
 				'pointermove',
 				(e: PointerEvent) => {
-					const radius = Math.max(20, tune.radius);
+					const radius = Math.max(20, HOVER_TUNE.radius);
 					for (const charEl of h1Chars) {
 						const rect = charEl.getBoundingClientRect();
 						const cx = rect.left + rect.width / 2;
@@ -183,7 +161,7 @@
 								yPercent: 0,
 								scale: 1,
 								rotation: 0,
-								duration: tune.duration,
+								duration: HOVER_TUNE.duration,
 								ease: 'power3.out',
 								overwrite: 'auto'
 							});
@@ -192,10 +170,10 @@
 
 						const dirX = Math.max(-1, Math.min(1, dx / radius));
 						gsap.to(charEl, {
-							yPercent: tune.liftY * falloff,
-							scale: 1 + (tune.scale - 1) * falloff,
-							rotation: dirX * tune.maxTilt * falloff,
-							duration: tune.duration,
+							yPercent: HOVER_TUNE.liftY * falloff,
+							scale: 1 + (HOVER_TUNE.scale - 1) * falloff,
+							rotation: dirX * HOVER_TUNE.maxTilt * falloff,
+							duration: HOVER_TUNE.duration,
 							ease: 'power3.out',
 							overwrite: 'auto'
 						});
@@ -336,125 +314,4 @@
 			</div>
 		</div>
 	</div>
-
-	<div class="hover-tuner" class:is-collapsed={!tunerOpen}>
-		<div class="tuner-head">
-			<button type="button" class="tuner-toggle" onclick={() => (tunerOpen = !tunerOpen)}>
-				Hover Tuner {tunerOpen ? '[-]' : '[+]'}
-			</button>
-			{#if tunerOpen}
-				<div class="tuner-actions">
-					<button type="button" class="tuner-btn" onclick={resetTune}>Reset</button>
-					<button type="button" class="tuner-btn is-accent" onclick={copyForAI}>
-						{copiedPrompt ? 'Copied!' : 'Copy for AI'}
-					</button>
-				</div>
-			{/if}
-		</div>
-
-		{#if tunerOpen}
-			<div class="tuner-body">
-				<label class="tuner-row">
-					<span>Radius ({tune.radius}px)</span>
-					<input type="range" min="60" max="420" step="10" bind:value={tune.radius} />
-				</label>
-				<label class="tuner-row">
-					<span>Lift Y ({tune.liftY}%)</span>
-					<input type="range" min="-20" max="0" step="1" bind:value={tune.liftY} />
-				</label>
-				<label class="tuner-row">
-					<span>Scale ({tune.scale.toFixed(2)})</span>
-					<input type="range" min="1" max="1.15" step="0.01" bind:value={tune.scale} />
-				</label>
-				<label class="tuner-row">
-					<span>Max Tilt ({tune.maxTilt}deg)</span>
-					<input type="range" min="0" max="10" step="0.5" bind:value={tune.maxTilt} />
-				</label>
-				<label class="tuner-row">
-					<span>Duration ({tune.duration.toFixed(2)}s)</span>
-					<input type="range" min="0.15" max="1" step="0.05" bind:value={tune.duration} />
-				</label>
-			</div>
-		{/if}
-	</div>
 </section>
-
-<style>
-	.hover-tuner {
-		position: fixed;
-		right: 16px;
-		bottom: 16px;
-		z-index: 90;
-		width: 250px;
-		background: rgba(1, 41, 0, 0.94);
-		color: #f4fbe8;
-		border: 1px solid rgba(182, 254, 0, 0.45);
-		border-radius: 10px;
-		padding: 10px 12px;
-		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-		font-size: 12px;
-		box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-	}
-
-	.hover-tuner.is-collapsed {
-		width: auto;
-	}
-
-	.tuner-head {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-
-	.tuner-toggle {
-		background: none;
-		border: none;
-		color: #b6fe00;
-		font-weight: 700;
-		cursor: pointer;
-		padding: 0;
-		font-size: 12px;
-	}
-
-	.tuner-actions {
-		display: flex;
-		gap: 6px;
-	}
-
-	.tuner-btn {
-		border: none;
-		border-radius: 6px;
-		padding: 4px 8px;
-		font-size: 11px;
-		font-weight: 700;
-		cursor: pointer;
-		background: rgba(255, 255, 255, 0.14);
-		color: #fff;
-	}
-
-	.tuner-btn.is-accent {
-		background: #b6fe00;
-		color: #013900;
-	}
-
-	.tuner-body {
-		margin-top: 10px;
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-	}
-
-	.tuner-row {
-		display: flex;
-		flex-direction: column;
-		gap: 3px;
-		font-size: 11px;
-	}
-
-	.tuner-row input[type='range'] {
-		width: 100%;
-		accent-color: #b6fe00;
-		cursor: pointer;
-	}
-</style>
