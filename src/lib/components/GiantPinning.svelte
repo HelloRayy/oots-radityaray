@@ -13,8 +13,8 @@
 	import r1_2Img from '#lib/assets/image-row/r1-2.png';
 	import r2_1Img from '#lib/assets/image-row/r2-1.svg';
 	import r2_2Img from '#lib/assets/image-row/r2-2.svg';
-	import r3_1Img from '#lib/assets/image-row/r3-1.svg';
-	import r3_2Img from '#lib/assets/image-row/r3-2.svg';
+	import r3_1Img from '#lib/assets/image-row/r3-1.png';
+	import r3_2Img from '#lib/assets/image-row/r3-2.png';
 
 	let sectionEl: HTMLElement | null = null;
 
