@@ -42,10 +42,10 @@
 	];
 
 	let sectionEl: HTMLElement | null = null;
-	let dragEnabled = $state(false);
+	let dragEnabled = $state(true);
 	let copied = $state(false);
 	let selectedIconId = $state<string | null>(null);
-	let selectedDragKey = $state<DragKey | null>(null);
+	let selectedDragKey = $state<DragKey | null>('museCenter');
 	let museIcons = $state<MuseIconItem[]>(INITIAL_MUSE_ICONS.map((item) => ({ ...item })));
 
 	const selectedIcon = $derived(
@@ -364,6 +364,68 @@
 			</div>
 		{/if}
 	{/each}
+
+	<div class="drag-toolbar-wrap">
+		{#if dragEnabled && selectedIcon}
+			<div class="icon-inspector">
+				<span class="inspector-title">{selectedIcon.name}</span>
+				<label class="inspector-field">
+					<span>W</span>
+					<input class="num-input" type="number" step="0.2" min="1" max="30" bind:value={selectedIcon.width} />
+				</label>
+				<label class="inspector-field">
+					<span>H</span>
+					<input class="num-input" type="number" step="0.2" min="1" max="30" bind:value={selectedIcon.height} />
+				</label>
+				<label class="inspector-field">
+					<span>Scale</span>
+					<input type="range" min="0.4" max="3.5" step="0.05" bind:value={selectedIcon.scale} />
+					<span>{selectedIcon.scale.toFixed(2)}</span>
+				</label>
+				<label class="inspector-field">
+					<span>Rot</span>
+					<input class="num-input" type="number" step="0.5" min="-180" max="180" bind:value={selectedIcon.rotate} />
+				</label>
+				<button type="button" class="tb-btn tb-delete" onclick={deleteSelectedIcon}>Delete</button>
+			</div>
+		{:else if dragEnabled && selectedDragKey}
+			<div class="icon-inspector">
+				<span class="inspector-title">{selectedDragKey}</span>
+				<label class="inspector-field">
+					<span>X</span>
+					<input class="num-input" type="number" step="0.1" bind:value={offsets[selectedDragKey].x} />
+				</label>
+				<label class="inspector-field">
+					<span>Y</span>
+					<input class="num-input" type="number" step="0.1" bind:value={offsets[selectedDragKey].y} />
+				</label>
+				<label class="inspector-field">
+					<span>Scale</span>
+					<input type="range" min="0.4" max="2.5" step="0.05" bind:value={offsets[selectedDragKey].scale} />
+					<span>{offsets[selectedDragKey].scale.toFixed(2)}</span>
+				</label>
+				<label class="inspector-field">
+					<span>Rot</span>
+					<input class="num-input" type="number" step="0.5" min="-180" max="180" bind:value={offsets[selectedDragKey].rotate} />
+				</label>
+			</div>
+		{/if}
+
+		<div class="drag-toolbar">
+			<button
+				type="button"
+				class="tb-btn"
+				class:is-on={dragEnabled}
+				onclick={() => (dragEnabled = !dragEnabled)}
+			>
+				Drag: {dragEnabled ? 'ON' : 'OFF'}
+			</button>
+			<button type="button" class="tb-btn tb-copy" onclick={copyLayout}>
+				{copied ? 'Copied!' : 'Copy Layout'}
+			</button>
+			<button type="button" class="tb-btn" onclick={resetLayout}>Reset</button>
+		</div>
+	</div>
 </section>
 
 <style>
@@ -411,7 +473,7 @@
 
 	.drag-toolbar-wrap {
 		position: absolute;
-		bottom: 1.5vw;
+		bottom: calc(1.5vw + var(--curve-depth) * 0.55);
 		left: 1.5vw;
 		z-index: 50;
 		display: flex;
