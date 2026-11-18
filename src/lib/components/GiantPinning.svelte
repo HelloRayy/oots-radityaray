@@ -5,40 +5,11 @@
 
 	let sectionEl: HTMLElement | null = null;
 
-	// Temporary HUD Tuner state
-	let hudOpen = $state(true);
-	let copied = $state(false);
-	let scrub = $state(0.6);
-	let cornerRatio = $state(0.13);
-	let inset = $state(0.045);
-	let openAt = $state(0.4);
-	let parallaxScale = $state(1);
-
-	let rebuildCamera: (() => void) | null = null;
-
-	function resetTuner() {
-		scrub = 0.6;
-		cornerRatio = 0.13;
-		inset = 0.045;
-		openAt = 0.4;
-		parallaxScale = 1;
-		rebuildCamera?.();
-	}
-
-	async function copyTuner() {
-		const payload = JSON.stringify(
-			{ scrub, cornerRatio, inset, openAt, parallaxScale },
-			null,
-			2
-		);
-		try {
-			await navigator.clipboard.writeText(payload);
-			copied = true;
-			setTimeout(() => (copied = false), 1500);
-		} catch {
-			// ignore clipboard errors
-		}
-	}
+	const scrub = 1.5;
+	const cornerRatio = 0.11;
+	const inset = 0.01;
+	const openAt = 0.26;
+	const parallaxScale = 0.9;
 
 	function shuffle<T>(arr: T[]): T[] {
 		const copy = [...arr];
@@ -554,15 +525,9 @@
 			});
 		};
 
-		rebuildCamera = () => {
-			buildCamera();
-			ScrollTrigger.refresh();
-		};
-
 		buildCamera();
 
 		return () => {
-			rebuildCamera = null;
 			camSt?.kill();
 			camTl?.kill();
 			topSt?.kill();
@@ -799,42 +764,6 @@
 		</div>
 	</div>
 </section>
-
-<!-- Temporary HUD Tuner -->
-<div class="giant-hud" data-open={hudOpen}>
-	<div class="giant-hud-bar">
-		<strong>GiantPinning HUD</strong>
-		<div class="giant-hud-actions">
-			<button type="button" onclick={copyTuner}>{copied ? 'Copied!' : 'Copy'}</button>
-			<button type="button" onclick={resetTuner}>Reset</button>
-			<button type="button" onclick={() => (hudOpen = !hudOpen)}>{hudOpen ? 'Hide' : 'Show'}</button>
-		</div>
-	</div>
-	{#if hudOpen}
-		<div class="giant-hud-body">
-			<label>
-				<span>Scrub: {scrub.toFixed(2)}</span>
-				<input type="range" min="0.1" max="2" step="0.05" bind:value={scrub} onchange={() => rebuildCamera?.()} />
-			</label>
-			<label>
-				<span>Corner Bezier: {cornerRatio.toFixed(2)}</span>
-				<input type="range" min="0" max="0.35" step="0.01" bind:value={cornerRatio} onchange={() => rebuildCamera?.()} />
-			</label>
-			<label>
-				<span>Inset: {inset.toFixed(3)}</span>
-				<input type="range" min="0.01" max="0.15" step="0.005" bind:value={inset} onchange={() => rebuildCamera?.()} />
-			</label>
-			<label>
-				<span>Open At: {openAt.toFixed(2)}</span>
-				<input type="range" min="0.2" max="0.7" step="0.02" bind:value={openAt} onchange={() => rebuildCamera?.()} />
-			</label>
-			<label>
-				<span>Parallax: {parallaxScale.toFixed(2)}x</span>
-				<input type="range" min="0" max="2.5" step="0.1" bind:value={parallaxScale} />
-			</label>
-		</div>
-	{/if}
-</div>
 
 <style>
 	.giant-pinning {
@@ -1277,64 +1206,6 @@
 
 	.hand-note .hand-line {
 		display: block;
-	}
-
-	/* Temporary HUD Tuner */
-	.giant-hud {
-		position: fixed;
-		bottom: 16px;
-		left: 16px;
-		z-index: 900;
-		background: rgba(1, 32, 0, 0.9);
-		color: #b6fe00;
-		border: 1px solid rgba(182, 254, 0, 0.35);
-		border-radius: 10px;
-		padding: 10px 12px;
-		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-		font-size: 11px;
-		width: 240px;
-		backdrop-filter: blur(8px);
-		box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
-	}
-
-	.giant-hud-bar {
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		gap: 8px;
-	}
-
-	.giant-hud-actions {
-		display: flex;
-		gap: 4px;
-	}
-
-	.giant-hud-actions button {
-		background: rgba(182, 254, 0, 0.16);
-		color: #b6fe00;
-		border: 1px solid rgba(182, 254, 0, 0.35);
-		border-radius: 5px;
-		padding: 2px 6px;
-		font-size: 10px;
-		cursor: pointer;
-	}
-
-	.giant-hud-body {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-		margin-top: 8px;
-	}
-
-	.giant-hud-body label {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-	}
-
-	.giant-hud-body input[type='range'] {
-		width: 100%;
-		accent-color: #b6fe00;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
