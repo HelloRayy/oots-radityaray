@@ -29,19 +29,19 @@
 	let heroImageEl: HTMLImageElement | null = null;
 
 	const HEADLINE_DEFAULTS = {
-		fontSize: 19.5,
-		letterSpacing: 0.01,
-		arcDrop: 1.2,
-		arcTilt: 7,
-		marginTop: 1.6,
-		radius: 420,
+		fontSize: 21,
+		letterSpacing: 0,
+		arcDrop: 2.1,
+		arcTilt: 7.5,
+		marginTop: 3.4,
+		radius: 520,
 		liftY: -18,
 		scale: 1.15,
 		maxTilt: 10,
-		duration: 0.15
+		duration: 0.8
 	};
 
-	let hlOpen = $state(true);
+	let hlOpen = $state(false);
 	let copiedHl = $state(false);
 	let hl = $state({ ...HEADLINE_DEFAULTS });
 	let replayTitleTween: (() => void) | null = null;
