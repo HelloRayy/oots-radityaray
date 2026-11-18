@@ -200,11 +200,18 @@
 			}
 		};
 
+		let cachedRect = sectionEl.getBoundingClientRect();
+		const updateRect = () => {
+			if (sectionEl) cachedRect = sectionEl.getBoundingClientRect();
+		};
+		window.addEventListener('resize', updateRect, { passive: true });
+
+		const onPointerEnter = () => updateRect();
+
 		const onPointerMove = (e: PointerEvent) => {
 			if (!sectionEl || dragEnabled) return;
-			const rect = sectionEl.getBoundingClientRect();
-			targetX = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-			targetY = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
+			targetX = ((e.clientX - cachedRect.left) / cachedRect.width - 0.5) * 2;
+			targetY = ((e.clientY - cachedRect.top) / cachedRect.height - 0.5) * 2;
 			if (!rafId) rafId = requestAnimationFrame(tick);
 		};
 
@@ -214,11 +221,14 @@
 			if (!rafId) rafId = requestAnimationFrame(tick);
 		};
 
-		sectionEl.addEventListener('pointermove', onPointerMove);
-		sectionEl.addEventListener('pointerleave', onPointerLeave);
+		sectionEl.addEventListener('pointerenter', onPointerEnter, { passive: true });
+		sectionEl.addEventListener('pointermove', onPointerMove, { passive: true });
+		sectionEl.addEventListener('pointerleave', onPointerLeave, { passive: true });
 
 		return () => {
 			if (rafId) cancelAnimationFrame(rafId);
+			window.removeEventListener('resize', updateRect);
+			sectionEl?.removeEventListener('pointerenter', onPointerEnter);
 			sectionEl?.removeEventListener('pointermove', onPointerMove);
 			sectionEl?.removeEventListener('pointerleave', onPointerLeave);
 		};
@@ -374,7 +384,14 @@
 		height: calc(54vw + var(--curve-depth));
 		background: transparent;
 		overflow: clip;
+		contain: layout style paint;
 		z-index: 2;
+	}
+
+	.draggable,
+	.muse-icon-item {
+		will-change: transform;
+		backface-visibility: hidden;
 	}
 
 	.drag-mode .draggable {

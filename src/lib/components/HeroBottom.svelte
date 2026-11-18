@@ -258,7 +258,16 @@
 		width: 100%;
 		height: 126.056vw;
 		overflow-x: clip;
+		contain: layout style paint;
 		z-index: 1;
+	}
+
+	.tape-strip,
+	#gift,
+	#lemon,
+	#paperclip {
+		will-change: transform, clip-path;
+		backface-visibility: hidden;
 	}
 
 	img {

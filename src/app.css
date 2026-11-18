@@ -416,6 +416,8 @@ main#main::before {
 	height: 100%;
 	object-fit: contain;
 	filter: drop-shadow(0 1.4vw 2.2vw rgba(1, 57, 0, 0.28));
+	will-change: transform;
+	backface-visibility: hidden;
 }
 
 .hero-section .h1 .line {

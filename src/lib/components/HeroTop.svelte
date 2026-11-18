@@ -137,16 +137,31 @@
 
 		const h1El = root.querySelector<HTMLElement>('.h1');
 		if (h1El && h1Chars.length) {
+			const charNodes = h1Chars.map((el) => ({
+				el,
+				cx: 0,
+				cy: 0,
+				qy: gsap.quickTo(el, 'yPercent', { duration: hl.duration, ease: 'power3.out' }),
+				qs: gsap.quickTo(el, 'scale', { duration: hl.duration, ease: 'power3.out' }),
+				qr: gsap.quickTo(el, 'rotation', { duration: hl.duration, ease: 'power3.out' })
+			}));
+
+			const measureChars = () => {
+				const sy = window.scrollY;
+				for (const node of charNodes) {
+					const rect = node.el.getBoundingClientRect();
+					node.cx = rect.left + rect.width / 2;
+					node.cy = rect.top + sy + rect.height / 2;
+				}
+			};
+			measureChars();
+			window.addEventListener('resize', measureChars, { signal: hoverAbort.signal, passive: true });
+
 			const resetChars = () => {
-				for (const charEl of h1Chars) {
-					gsap.to(charEl, {
-						yPercent: 0,
-						scale: 1,
-						rotation: 0,
-						duration: Math.max(0.2, hl.duration * 1.15),
-						ease: 'power3.out',
-						overwrite: 'auto'
-					});
+				for (const node of charNodes) {
+					node.qy(0);
+					node.qs(1);
+					node.qr(0);
 				}
 			};
 
@@ -157,37 +172,25 @@
 			const applyHoverFrame = () => {
 				hoverRaf = 0;
 				const radius = Math.max(20, hl.radius);
-				for (const charEl of h1Chars) {
-					const rect = charEl.getBoundingClientRect();
-					const cx = rect.left + rect.width / 2;
-					const cy = rect.top + rect.height / 2;
-					const dx = lastPx - cx;
-					const dy = lastPy - cy;
+				const sy = window.scrollY;
+				for (const node of charNodes) {
+					const dx = lastPx - node.cx;
+					const dy = lastPy + sy - node.cy;
 					const dist = Math.hypot(dx, dy);
 					const raw = Math.max(0, 1 - dist / radius);
 					const falloff = raw * raw * (3 - 2 * raw);
 
 					if (falloff <= 0.001) {
-						gsap.to(charEl, {
-							yPercent: 0,
-							scale: 1,
-							rotation: 0,
-							duration: hl.duration,
-							ease: 'power3.out',
-							overwrite: 'auto'
-						});
+						node.qy(0);
+						node.qs(1);
+						node.qr(0);
 						continue;
 					}
 
 					const dirX = Math.max(-1, Math.min(1, dx / radius));
-					gsap.to(charEl, {
-						yPercent: hl.liftY * falloff,
-						scale: 1 + (hl.scale - 1) * falloff,
-						rotation: dirX * hl.maxTilt * falloff,
-						duration: hl.duration,
-						ease: 'power3.out',
-						overwrite: 'auto'
-					});
+					node.qy(hl.liftY * falloff);
+					node.qs(1 + (hl.scale - 1) * falloff);
+					node.qr(dirX * hl.maxTilt * falloff);
 				}
 			};
 
