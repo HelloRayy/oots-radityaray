@@ -808,7 +808,7 @@
 					</span>
 				</h2>
 
-				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:103%;--py:-15%;--pw:17vw;--pr:5deg;--pz:3;--pp:0.045;--pe:none">
+				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:106%;--py:6%;--pw:17vw;--pr:5deg;--pz:3;--pp:0.02;--pe:none">
 					<img src="/assets/opp-tape-last.webp" alt="" />
 					<span
 						class="peel giant-tape"
