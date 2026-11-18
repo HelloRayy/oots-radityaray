@@ -454,38 +454,6 @@
 			});
 		}
 
-		// Poke/hover interaction on .giant letters
-		const pokeCleanups: (() => void)[] = [];
-		for (const row of rows) {
-			const chars = gsap.utils.toArray<HTMLElement>('.giant .char', row);
-			for (const ch of chars) {
-				const onEnter = () => {
-					gsap.to(ch, {
-						y: '-0.06em',
-						rotate: (Math.random() - 0.5) * 8,
-						duration: 0.22,
-						ease: 'power2.out',
-						overwrite: 'auto'
-					});
-				};
-				const onLeave = () => {
-					gsap.to(ch, {
-						y: 0,
-						rotate: 0,
-						duration: 0.45,
-						ease: 'elastic.out(1, 0.45)',
-						overwrite: 'auto'
-					});
-				};
-				ch.addEventListener('pointerenter', onEnter);
-				ch.addEventListener('pointerleave', onLeave);
-				pokeCleanups.push(() => {
-					ch.removeEventListener('pointerenter', onEnter);
-					ch.removeEventListener('pointerleave', onLeave);
-				});
-			}
-		}
-
 		// 4. Build & rebuild ScrollTrigger camera timeline
 		let camTl: gsap.core.Timeline | null = null;
 		let camSt: ScrollTrigger | null = null;
@@ -579,7 +547,6 @@
 			batchTimer?.kill();
 			revealTweens.forEach((t) => t.kill());
 			arrowTimelines.forEach((t) => t.kill());
-			pokeCleanups.forEach((fn) => fn());
 			pItems.forEach((item) => {
 				item.el.style.removeProperty('--pdx');
 				item.el.style.removeProperty('--prot');
@@ -874,8 +841,7 @@
 		content: '';
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100% var(--giant-sheet);
-		opacity: 0.42;
-		mix-blend-mode: multiply;
+		opacity: 0.25;
 		pointer-events: none;
 		background-position: 0 0;
 		background-repeat: no-repeat;
@@ -893,8 +859,7 @@
 		content: '';
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100% var(--giant-sheet);
-		opacity: 0.42;
-		mix-blend-mode: multiply;
+		opacity: 0.25;
 		pointer-events: none;
 		background-position: 0 100%;
 		background-repeat: no-repeat;
@@ -907,8 +872,7 @@
 		height: var(--giant-tail);
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100vw var(--giant-sheet);
-		opacity: 0.42;
-		mix-blend-mode: multiply;
+		opacity: 0.25;
 		pointer-events: none;
 		background-repeat: repeat;
 		position: absolute;
@@ -1098,7 +1062,6 @@
 	.giant-pinning .char {
 		display: block;
 		cursor: default;
-		will-change: transform;
 	}
 
 	.giant-prop {
@@ -1109,8 +1072,6 @@
 		rotate: calc(var(--pr) + var(--prot, 0deg));
 		z-index: var(--pz);
 		translate: var(--pdx, 0px);
-		will-change: transform;
-		filter: drop-shadow(0.35vw 0.5vw var(--drop-blur) var(--drop-ink));
 		pointer-events: none;
 		-webkit-user-select: none;
 		user-select: none;
@@ -1119,7 +1080,7 @@
 
 	.giant-prop--shot {
 		font-size: calc(var(--pw) * var(--gp-scale, 1) * 1.6815);
-		filter: drop-shadow(0.7vw 1vw var(--drop-blur) var(--drop-ink));
+		box-shadow: 0.7vw 1vw 0 var(--drop-ink);
 		border-radius: 0.14em;
 	}
 

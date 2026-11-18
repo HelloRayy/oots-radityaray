@@ -164,22 +164,12 @@ export function mountStickyNote(
 	const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
 	renderer.toneMapping = THREE.NoToneMapping;
 	renderer.setClearColor(0x000000, 0);
-	renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.VSMShadowMap;
+	renderer.shadowMap.enabled = false;
 	container.appendChild(renderer.domElement);
 
 	const dirLight = new THREE.DirectionalLight(0xffffff, LIGHT.POWER);
 	dirLight.position.set(LIGHT.X, LIGHT.Y, LIGHT.Z);
-	dirLight.castShadow = true;
-	dirLight.shadow.mapSize.set(256, 256);
-	dirLight.shadow.blurSamples = 10;
-	dirLight.shadow.camera.left = -2;
-	dirLight.shadow.camera.right = 2;
-	dirLight.shadow.camera.top = 2;
-	dirLight.shadow.camera.bottom = -2;
-	dirLight.shadow.camera.near = 1;
-	dirLight.shadow.camera.far = 10;
-	dirLight.shadow.radius = SHADOW.SOFT;
+	dirLight.castShadow = false;
 
 	scene.add(dirLight, new THREE.AmbientLight(0xffffff, Math.PI * LIGHT.AMBIENT));
 
@@ -220,15 +210,7 @@ export function mountStickyNote(
 	}
 
 	const noteMesh = new THREE.Mesh(geometry, material);
-	noteMesh.castShadow = true;
 	scene.add(noteMesh);
-
-	const shadowMat = new THREE.ShadowMaterial({ opacity: SHADOW.OPACITY });
-	const shadowGeo = new THREE.PlaneGeometry(6, 6);
-	const shadowPlane = new THREE.Mesh(shadowGeo, shadowMat);
-	shadowPlane.position.z = -0.02;
-	shadowPlane.receiveShadow = true;
-	scene.add(shadowPlane);
 
 	let dirty = true;
 	let disposed = false;
@@ -264,7 +246,6 @@ export function mountStickyNote(
 
 	const applyFrame = (tSec: number, scrollBoost = 0, px = 0, py = 0, proximity = 0) => {
 		const d = tSec * liveTune.page2.windSpeed;
-		shadowMat.opacity = liveTune.page2.shadowOpacity;
 		const gustWave = Math.pow(Math.max(0, Math.sin(0.31 * d) * Math.sin(0.117 * d + 2) - 0.25) / 0.75, 1.6) + scrollBoost * liveTune.page2.scrollWind;
 		const gustAmp = WIND.GUST * gustWave;
 		const pos = geometry.attributes.position.array as Float32Array;
@@ -384,8 +365,6 @@ export function mountStickyNote(
 		geometry.dispose();
 		texture.dispose();
 		material.dispose();
-		shadowGeo.dispose();
-		shadowMat.dispose();
 		renderer.dispose();
 		renderer.domElement.remove();
 	};

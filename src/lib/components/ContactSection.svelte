@@ -117,39 +117,9 @@
 			}
 		});
 
-		// Interactive poke on contact-title chars
-		const pokeCleanups: (() => void)[] = [];
-		for (const ch of titleChars) {
-			const onEnter = () => {
-				gsap.to(ch, {
-					y: '-0.06em',
-					rotate: (Math.random() - 0.5) * 8,
-					duration: 0.22,
-					ease: 'power2.out',
-					overwrite: 'auto'
-				});
-			};
-			const onLeave = () => {
-				gsap.to(ch, {
-					y: 0,
-					rotate: 0,
-					duration: 0.45,
-					ease: 'elastic.out(1, 0.45)',
-					overwrite: 'auto'
-				});
-			};
-			ch.addEventListener('pointerenter', onEnter);
-			ch.addEventListener('pointerleave', onLeave);
-			pokeCleanups.push(() => {
-				ch.removeEventListener('pointerenter', onEnter);
-				ch.removeEventListener('pointerleave', onLeave);
-			});
-		}
-
 		return () => {
 			st.kill();
 			tweens.forEach((t) => t.kill());
-			pokeCleanups.forEach((fn) => fn());
 			cleanupNote?.();
 		};
 	});
@@ -317,8 +287,7 @@
 
 	.contact-section::before {
 		content: '';
-		opacity: 0.42;
-		mix-blend-mode: multiply;
+		opacity: 0.25;
 		pointer-events: none;
 		background-image: url(/assets/paper-overlay.webp);
 		background-repeat: repeat-y;
@@ -403,7 +372,6 @@
 	.contact-section .char {
 		display: block;
 		cursor: default;
-		will-change: transform;
 	}
 
 	.contact-sheet {

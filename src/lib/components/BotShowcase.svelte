@@ -245,7 +245,6 @@
 		style:scale={offsets.subhead.scale}
 		style:rotate="{offsets.subhead.rotate}deg"
 		onpointerdown={(e) => startDrag('subhead', e)}
-		onpointermove={onDragMove}
 		onpointerup={endDrag}
 	>
 		<span class="subhead-pill">
@@ -261,7 +260,6 @@
 		style:scale={offsets.leftTags.scale}
 		style:rotate="{offsets.leftTags.rotate}deg"
 		onpointerdown={(e) => startDrag('leftTags', e)}
-		onpointermove={onDragMove}
 		onpointerup={endDrag}
 	>
 		<span class="tag"><span class="tag-dots" aria-hidden="true"></span>UI / UX DESIGN</span>
@@ -275,7 +273,6 @@
 		style:scale={offsets.leftCopy.scale}
 		style:rotate="{offsets.leftCopy.rotate}deg"
 		onpointerdown={(e) => startDrag('leftCopy', e)}
-		onpointermove={onDragMove}
 		onpointerup={endDrag}
 	>
 		Always ready for crisp layouts, playful micro-interactions, and bold visual systems.
@@ -290,8 +287,7 @@
 		style:scale={offsets.giantThe.scale}
 		style:rotate="{offsets.giantThe.rotate}deg"
 			onpointerdown={(e) => startDrag('giantThe', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
+				onpointerup={endDrag}
 			aria-hidden="true"
 		>
 			TOOLS
@@ -302,8 +298,7 @@
 		style:scale={offsets.giantCreative.scale}
 		style:rotate="{offsets.giantCreative.rotate}deg"
 			onpointerdown={(e) => startDrag('giantCreative', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
+				onpointerup={endDrag}
 			aria-hidden="true"
 		>
 			{#each 'DEVELOPER'.split('') as ch, i (i)}
@@ -317,8 +312,7 @@
 		style:scale={offsets.museCenter.scale}
 		style:rotate="{offsets.museCenter.rotate}deg"
 			onpointerdown={(e) => startDrag('museCenter', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
+				onpointerup={endDrag}
 			src={museIlyIcon}
 			alt="Raditya Rayhan"
 			draggable="false"
@@ -330,8 +324,7 @@
 		style:scale={offsets.exploreStamp.scale}
 		style:rotate="{offsets.exploreStamp.rotate}deg"
 			onpointerdown={(e) => startDrag('exploreStamp', e)}
-			onpointermove={onDragMove}
-			onpointerup={endDrag}
+				onpointerup={endDrag}
 		>
 			<span class="explore-ring"></span>
 			<span class="explore-text">EXPLORE</span>
@@ -346,7 +339,6 @@
 		style:scale={offsets.rollIt.scale}
 		style:rotate="{offsets.rollIt.rotate}deg"
 		onpointerdown={(e) => startDrag('rollIt', e)}
-		onpointermove={onDragMove}
 		onpointerup={endDrag}
 	>
 		ROLL IT!
@@ -367,8 +359,7 @@
 				style:scale={icon.scale}
 				style:transform="translate3d(calc(var(--mx, 0) * var(--depth-x, 0vw)), calc(var(--my, 0) * var(--depth-y, 0vw)), 0) rotate({icon.rotate}deg)"
 				onpointerdown={(e) => startIconDrag(icon.id, e)}
-				onpointermove={onDragMove}
-				onpointerup={endDrag}
+						onpointerup={endDrag}
 			>
 				<img src={icon.src} alt={icon.name} draggable="false" />
 			</div>
