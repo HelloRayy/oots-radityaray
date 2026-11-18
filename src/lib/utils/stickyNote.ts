@@ -70,13 +70,13 @@ export function mountStickyNote(
 	motionScale = 1
 ): () => void {
 	const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	const dprCap = 1.5;
+	const dprCap = 1.25;
 
 	const scene = new THREE.Scene();
 	const camera = new THREE.PerspectiveCamera(35, 1, 0.01, 100);
 	camera.position.z = NOTE.H / NOTE.SPAN / (2 * Math.tan((Math.PI / 180) * 17.5));
 
-	const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: 'high-performance' });
+	const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: true, powerPreference: 'high-performance' });
 	renderer.toneMapping = THREE.NoToneMapping;
 	renderer.setClearColor(0x000000, 0);
 	renderer.shadowMap.enabled = true;
@@ -112,7 +112,7 @@ export function mountStickyNote(
 		side: THREE.DoubleSide
 	});
 
-	const segs = 28;
+	const segs = 22;
 	const geometry = new THREE.PlaneGeometry(NOTE.W, NOTE.H, segs, segs);
 	const basePos = Float32Array.from(geometry.attributes.position.array);
 	const vertCount = basePos.length / 3;

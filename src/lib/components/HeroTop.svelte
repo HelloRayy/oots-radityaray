@@ -149,7 +149,8 @@
 			const measureChars = () => {
 				const sy = window.scrollY;
 				for (const node of charNodes) {
-					const rect = node.el.getBoundingClientRect();
+					const target = node.el.parentElement ?? node.el;
+					const rect = target.getBoundingClientRect();
 					node.cx = rect.left + rect.width / 2;
 					node.cy = rect.top + sy + rect.height / 2;
 				}
