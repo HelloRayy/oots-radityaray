@@ -9,6 +9,11 @@
 	import nodejsIcon from '#lib/assets/asset-muse-icon/nodejs.svg';
 	import reactIcon from '#lib/assets/asset-muse-icon/react.svg';
 	import vscodeIcon from '#lib/assets/asset-muse-icon/vscoide.svg';
+	import r1Img from '#lib/assets/image-row/r1.svg';
+	import r2_1Img from '#lib/assets/image-row/r2-1.svg';
+	import r2_2Img from '#lib/assets/image-row/r2-2.svg';
+	import r3_1Img from '#lib/assets/image-row/r3-1.svg';
+	import r3_2Img from '#lib/assets/image-row/r3-2.svg';
 
 	let sectionEl: HTMLElement | null = null;
 
@@ -653,7 +658,7 @@
 						aria-hidden="true"
 						style="--giant-tilt:3.19deg;--giant-dy:-0.118em;--giant-dx:0em;--pp:0.012;--pe:sine.inOut"
 					>
-						<img class="giant-card" src="/assets/create-masking-first.webp" alt="" />
+						<img class="giant-card" src={r1Img} alt="" />
 						<span
 							class="peel giant-tape"
 							style="--peel-w:0.62em;--peel-h:0.1961em;--peel-from:calc(var(--peel-edge) + 0.34 * var(--peel-span));--peel-to:calc(var(--peel-edge) + 0 * var(--peel-span));--peel-dir:88.4deg;--peel-back:url(#peel-back-kraft)"
@@ -722,7 +727,7 @@
 						aria-hidden="true"
 						style="--giant-tilt:9.6deg;--giant-dy:-0.36em;--giant-dx:0.15em;--pp:0.01;--pe:none"
 					>
-						<img class="giant-card" src="/assets/cloth-tapex4.webp" alt="" />
+						<img class="giant-card" src={r2_1Img} alt="" />
 						<span
 							class="peel giant-tape"
 							style="--peel-w:0.62em;--peel-h:0.2105em;--peel-from:calc(var(--peel-edge) + 0.28 * var(--peel-span));--peel-to:calc(var(--peel-edge) + 0 * var(--peel-span));--peel-dir:88.4deg;--peel-back:url(#peel-back-black)"
@@ -740,7 +745,7 @@
 				</h2>
 
 				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:32%;--py:22%;--pw:21vw;--pr:-5deg;--pz:1;--pp:-0.025;--pe:power1.inOut">
-					<img src="/assets/cloth-tapex4-bottomleft.webp" alt="" />
+					<img src={r2_2Img} alt="" />
 					<span
 						class="peel giant-tape"
 						style="--peel-w:0.62em;--peel-h:0.2105em;--peel-from:calc(var(--peel-edge) + 0.28 * var(--peel-span));--peel-to:calc(var(--peel-edge) + 0 * var(--peel-span));--peel-dir:88.4deg;--peel-back:url(#peel-back-black)"
@@ -791,7 +796,7 @@
 						aria-hidden="true"
 						style="--giant-tilt:4.8deg;--giant-dy:-0.1571em;--giant-dx:0.0785em;--pp:0.014;--pe:sine.inOut"
 					>
-						<img class="giant-card" src="/assets/protect-opp-tape-x4-square.webp" alt="" />
+						<img class="giant-card" src={r3_1Img} alt="" />
 						<span
 							class="peel giant-tape"
 							style="--peel-w:0.62em;--peel-h:0.1961em;--peel-from:calc(var(--peel-edge) + 0.38 * var(--peel-span));--peel-to:calc(var(--peel-edge) + 0 * var(--peel-span));--peel-dir:88.4deg;--peel-back:url(#peel-back-kraft)"
@@ -809,7 +814,7 @@
 				</h2>
 
 				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:48%;--py:-12%;--pw:17vw;--pr:5deg;--pz:3;--pp:0.02;--pe:none">
-					<img src="/assets/opp-tape-last.webp" alt="" />
+					<img src={r3_2Img} alt="" />
 					<span
 						class="peel giant-tape"
 						style="--peel-w:0.62em;--peel-h:0.1961em;--peel-from:calc(var(--peel-edge) + 0.38 * var(--peel-span));--peel-to:calc(var(--peel-edge) + 0 * var(--peel-span));--peel-dir:88.4deg;--peel-back:url(#peel-back-kraft)"
