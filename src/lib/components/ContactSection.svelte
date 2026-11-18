@@ -265,14 +265,14 @@
 
 <style>
 	.contact-section {
-		--contact-bg: #b6fe00;
+		--contact-bg: #50cbff;
 		--contact-ink: #013900;
 		--contact-paper: #fdfbe8;
 		--contact-paper-ink: #0d470c;
 		--contact-field-bg: #ebe4c6;
 		--contact-field-ink: #7b5406;
-		--contact-perf: #bdf400;
-		--contact-pad-top: 6vw;
+		--contact-perf: #50cbff;
+		--contact-pad-top: calc(var(--curve-depth) + 4vw);
 		--contact-gap: 3.194vw;
 		--contact-sheet-w: 74.722vw;
 		--contact-sheet-pad-x: 7.431vw;
@@ -290,10 +290,26 @@
 		--contact-arc: var(--curve-depth);
 		--contact-overlap: 4vw;
 		width: 100%;
-		margin-top: -1px;
+		margin-top: calc(var(--contact-arc) * -1);
 		padding: var(--contact-pad-top) 0 calc(var(--contact-arc) + 6vw);
 		background: var(--contact-bg);
 		color: var(--contact-ink);
+		-webkit-mask-image: linear-gradient(#000 0 0), var(--section-bite);
+		mask-image: linear-gradient(#000 0 0), var(--section-bite);
+		-webkit-mask-size:
+			100% calc(100% - var(--contact-arc) + 1px),
+			100% var(--contact-arc);
+		mask-size:
+			100% calc(100% - var(--contact-arc) + 1px),
+			100% var(--contact-arc);
+		-webkit-mask-position:
+			0 100%,
+			0 0;
+		mask-position:
+			0 100%,
+			0 0;
+		-webkit-mask-repeat: no-repeat, no-repeat;
+		mask-repeat: no-repeat, no-repeat;
 		position: relative;
 		overflow-x: clip;
 		z-index: 12;
