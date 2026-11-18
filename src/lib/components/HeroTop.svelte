@@ -28,13 +28,48 @@
 	let sectionEl: HTMLElement | null = null;
 	let heroImageEl: HTMLImageElement | null = null;
 
-	const HOVER_TUNE = {
+	const HEADLINE_DEFAULTS = {
+		fontSize: 19.5,
+		letterSpacing: 0.01,
+		arcDrop: 1.2,
+		arcTilt: 7,
+		marginTop: 1.6,
 		radius: 420,
 		liftY: -18,
 		scale: 1.15,
 		maxTilt: 10,
 		duration: 0.15
 	};
+
+	let hlOpen = $state(true);
+	let copiedHl = $state(false);
+	let hl = $state({ ...HEADLINE_DEFAULTS });
+	let replayTitleTween: (() => void) | null = null;
+
+	function resetHl() {
+		hl = { ...HEADLINE_DEFAULTS };
+	}
+
+	function copyHlForAI() {
+		const text = [
+			'Update Hero Headline layout & motion with these exact values:',
+			'Typography / Warp:',
+			`- fontSize: ${hl.fontSize}vw`,
+			`- letterSpacing: ${hl.letterSpacing}em`,
+			`- arcDrop: ${hl.arcDrop}vw`,
+			`- arcTilt: ${hl.arcTilt}deg`,
+			`- marginTop: ${hl.marginTop}vw`,
+			'Hover Motion (.h1 .char):',
+			`- radius: ${hl.radius}px`,
+			`- liftY: ${hl.liftY}%`,
+			`- scale: ${hl.scale}`,
+			`- maxTilt: ${hl.maxTilt}deg`,
+			`- duration: ${hl.duration}s`
+		].join('\n');
+		navigator.clipboard?.writeText(text);
+		copiedHl = true;
+		setTimeout(() => (copiedHl = false), 1500);
+	}
 
 	function shuffle<T>(items: T[]): T[] {
 		const copy = [...items];
@@ -127,6 +162,10 @@
 			: null;
 
 		const hoverAbort = new AbortController();
+		replayTitleTween = () => {
+			if (titleTween) titleTween.restart();
+		};
+
 		const h1El = root.querySelector<HTMLElement>('.h1');
 		if (h1El && h1Chars.length) {
 			const resetChars = () => {
@@ -135,7 +174,7 @@
 						yPercent: 0,
 						scale: 1,
 						rotation: 0,
-						duration: Math.max(0.2, HOVER_TUNE.duration * 1.15),
+						duration: Math.max(0.2, hl.duration * 1.15),
 						ease: 'power3.out',
 						overwrite: 'auto'
 					});
@@ -148,7 +187,7 @@
 
 			const applyHoverFrame = () => {
 				hoverRaf = 0;
-				const radius = Math.max(20, HOVER_TUNE.radius);
+				const radius = Math.max(20, hl.radius);
 				for (const charEl of h1Chars) {
 					const rect = charEl.getBoundingClientRect();
 					const cx = rect.left + rect.width / 2;
@@ -164,7 +203,7 @@
 							yPercent: 0,
 							scale: 1,
 							rotation: 0,
-							duration: HOVER_TUNE.duration,
+							duration: hl.duration,
 							ease: 'power3.out',
 							overwrite: 'auto'
 						});
@@ -173,10 +212,10 @@
 
 					const dirX = Math.max(-1, Math.min(1, dx / radius));
 					gsap.to(charEl, {
-						yPercent: HOVER_TUNE.liftY * falloff,
-						scale: 1 + (HOVER_TUNE.scale - 1) * falloff,
-						rotation: dirX * HOVER_TUNE.maxTilt * falloff,
-						duration: HOVER_TUNE.duration,
+						yPercent: hl.liftY * falloff,
+						scale: 1 + (hl.scale - 1) * falloff,
+						rotation: dirX * hl.maxTilt * falloff,
+						duration: hl.duration,
 						ease: 'power3.out',
 						overwrite: 'auto'
 					});
@@ -309,8 +348,18 @@
 					</span>
 				</p>
 
-				<div class="warped-text">
-					<h1 class="h1" aria-label={HERO_LINES.join(' ')}>
+				<div
+					class="warped-text"
+					style:--arc-drop="{hl.arcDrop}vw"
+					style:--arc-tilt="{hl.arcTilt}deg"
+					style:margin-top="{hl.marginTop}vw"
+				>
+					<h1
+						class="h1"
+						style:font-size="{hl.fontSize}vw"
+						style:letter-spacing="{hl.letterSpacing}em"
+						aria-label={HERO_LINES.join(' ')}
+					>
 						{#each HERO_LINES as line (line)}
 							<span class="line" style:--letters={line.length}>
 								{#each line.split('') as ch, i (i)}
@@ -335,4 +384,153 @@
 			</div>
 		</div>
 	</div>
+
+	<div class="headline-hud" class:is-collapsed={!hlOpen}>
+		<div class="hl-head">
+			<button type="button" class="hl-toggle" onclick={() => (hlOpen = !hlOpen)}>
+				Headline HUD {hlOpen ? '[-]' : '[+]'}
+			</button>
+			{#if hlOpen}
+				<div class="hl-actions">
+					<button type="button" class="hl-btn" onclick={() => replayTitleTween?.()}>Replay</button>
+					<button type="button" class="hl-btn" onclick={resetHl}>Reset</button>
+					<button type="button" class="hl-btn is-accent" onclick={copyHlForAI}>
+						{copiedHl ? 'Copied!' : 'Copy'}
+					</button>
+				</div>
+			{/if}
+		</div>
+
+		{#if hlOpen}
+			<div class="hl-body">
+				<label class="hl-row">
+					<span>Size ({hl.fontSize.toFixed(1)}vw)</span>
+					<input type="range" min="10" max="26" step="0.5" bind:value={hl.fontSize} />
+				</label>
+				<label class="hl-row">
+					<span>Tracking ({hl.letterSpacing.toFixed(2)}em)</span>
+					<input type="range" min="-0.08" max="0.12" step="0.01" bind:value={hl.letterSpacing} />
+				</label>
+				<label class="hl-row">
+					<span>Arc Drop ({hl.arcDrop.toFixed(1)}vw)</span>
+					<input type="range" min="0" max="5" step="0.1" bind:value={hl.arcDrop} />
+				</label>
+				<label class="hl-row">
+					<span>Arc Tilt ({hl.arcTilt.toFixed(1)}deg)</span>
+					<input type="range" min="0" max="18" step="0.5" bind:value={hl.arcTilt} />
+				</label>
+				<label class="hl-row">
+					<span>Top Offset ({hl.marginTop.toFixed(1)}vw)</span>
+					<input type="range" min="-4" max="8" step="0.2" bind:value={hl.marginTop} />
+				</label>
+				<div class="hl-divider"></div>
+				<label class="hl-row">
+					<span>Hover Radius ({hl.radius}px)</span>
+					<input type="range" min="80" max="520" step="10" bind:value={hl.radius} />
+				</label>
+				<label class="hl-row">
+					<span>Lift Y ({hl.liftY}%)</span>
+					<input type="range" min="-35" max="0" step="1" bind:value={hl.liftY} />
+				</label>
+				<label class="hl-row">
+					<span>Scale ({hl.scale.toFixed(2)})</span>
+					<input type="range" min="1" max="1.35" step="0.01" bind:value={hl.scale} />
+				</label>
+				<label class="hl-row">
+					<span>Max Tilt ({hl.maxTilt}deg)</span>
+					<input type="range" min="0" max="20" step="0.5" bind:value={hl.maxTilt} />
+				</label>
+				<label class="hl-row">
+					<span>Duration ({hl.duration.toFixed(2)}s)</span>
+					<input type="range" min="0.05" max="0.8" step="0.01" bind:value={hl.duration} />
+				</label>
+			</div>
+		{/if}
+	</div>
 </section>
+
+<style>
+	.headline-hud {
+		position: fixed;
+		top: 16px;
+		right: 16px;
+		z-index: 95;
+		width: 248px;
+		background: rgba(1, 41, 0, 0.94);
+		color: #f4fbe8;
+		border: 1px solid rgba(182, 254, 0, 0.45);
+		border-radius: 10px;
+		padding: 10px 12px;
+		font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+		font-size: 11px;
+		box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+	}
+
+	.headline-hud.is-collapsed {
+		width: auto;
+	}
+
+	.hl-head {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 8px;
+	}
+
+	.hl-toggle {
+		background: none;
+		border: none;
+		color: #b6fe00;
+		font-weight: 700;
+		cursor: pointer;
+		padding: 0;
+		font-size: 12px;
+	}
+
+	.hl-actions {
+		display: flex;
+		gap: 4px;
+	}
+
+	.hl-btn {
+		border: none;
+		border-radius: 6px;
+		padding: 4px 7px;
+		font-size: 10.5px;
+		font-weight: 700;
+		cursor: pointer;
+		background: rgba(255, 255, 255, 0.14);
+		color: #fff;
+	}
+
+	.hl-btn.is-accent {
+		background: #b6fe00;
+		color: #013900;
+	}
+
+	.hl-divider {
+		height: 1px;
+		background: rgba(182, 254, 0, 0.22);
+		margin: 2px 0;
+	}
+
+	.hl-body {
+		margin-top: 8px;
+		display: flex;
+		flex-direction: column;
+		gap: 5px;
+	}
+
+	.hl-row {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		font-size: 10.5px;
+	}
+
+	.hl-row input[type='range'] {
+		width: 100%;
+		accent-color: #b6fe00;
+		cursor: pointer;
+	}
+</style>
