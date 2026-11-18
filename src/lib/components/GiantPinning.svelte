@@ -41,12 +41,12 @@
 	};
 
 	let tagItems = $state<TagItem[]>([
-		{ id: 'r1-a', row: 0, iconId: 'figma', px: 69, py: -24, pw: 14, pr: -6, pp: 0.03, pe: 'sine.inOut' },
-		{ id: 'r1-b', row: 0, iconId: 'claude', px: 53, py: 50, pw: 14, pr: 5, pp: 0.03, pe: 'power1.inOut' },
-		{ id: 'r1-c', row: 0, iconId: 'react', px: 94, py: 46, pw: 14, pr: -14, pp: -0.02, pe: 'power2.inOut' },
-		{ id: 'r2-a', row: 1, iconId: 'vscode', px: -5, py: 47, pw: 14, pr: 12, pp: 0.04, pe: 'sine.inOut' },
-		{ id: 'r3-a', row: 2, iconId: 'nodejs', px: 61, py: -32, pw: 14, pr: 6, pp: -0.02, pe: 'power2.inOut' },
-		{ id: 'r3-b', row: 2, iconId: 'github', px: 43, py: 49, pw: 14, pr: 9, pp: 0.032, pe: 'power1.inOut' }
+		{ id: 'r1-a', row: 0, iconId: 'figma', px: 69, py: -24, pw: 22.71, pr: -6, pp: 0.03, pe: 'sine.inOut' },
+		{ id: 'r1-b', row: 0, iconId: 'claude', px: 53, py: 50, pw: 22.71, pr: 5, pp: 0.03, pe: 'power1.inOut' },
+		{ id: 'r1-c', row: 0, iconId: 'react', px: 94, py: 46, pw: 22.71, pr: -14, pp: -0.02, pe: 'power2.inOut' },
+		{ id: 'r2-a', row: 1, iconId: 'vscode', px: -5, py: 47, pw: 22.71, pr: 12, pp: 0.04, pe: 'sine.inOut' },
+		{ id: 'r3-a', row: 2, iconId: 'nodejs', px: 61, py: -32, pw: 22.71, pr: 6, pp: -0.02, pe: 'power2.inOut' },
+		{ id: 'r3-b', row: 2, iconId: 'github', px: 43, py: 49, pw: 22.71, pr: 9, pp: 0.032, pe: 'power1.inOut' }
 	]);
 
 	let hudOpen = $state(true);
@@ -676,7 +676,7 @@
 					</span>
 				</h2>
 
-				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:98%;--py:-15%;--pw:15vw;--pr:-8deg;--pz:2;--pp:-0.03;--pe:none">
+				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:98%;--py:-15%;--pw:22.71vw;--pr:-8deg;--pz:2;--pp:-0.03;--pe:none">
 					<img src={r1_2Img} alt="" />
 					<span
 						class="peel giant-tape"
@@ -745,7 +745,7 @@
 					</span>
 				</h2>
 
-				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:32%;--py:22%;--pw:21vw;--pr:-5deg;--pz:1;--pp:-0.025;--pe:power1.inOut">
+				<span class="giant-prop giant-prop--shot" aria-hidden="true" style="--px:32%;--py:22%;--pw:22.71vw;--pr:-5deg;--pz:1;--pp:-0.025;--pe:power1.inOut">
 					<img src={r2_2Img} alt="" />
 					<span
 						class="peel giant-tape"
