@@ -841,7 +841,7 @@
 		content: '';
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100% var(--giant-sheet);
-		opacity: 0.25;
+		opacity: 0.55;
 		pointer-events: none;
 		background-position: 0 0;
 		background-repeat: no-repeat;
@@ -859,7 +859,7 @@
 		content: '';
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100% var(--giant-sheet);
-		opacity: 0.25;
+		opacity: 0.55;
 		pointer-events: none;
 		background-position: 0 100%;
 		background-repeat: no-repeat;
@@ -872,7 +872,7 @@
 		height: var(--giant-tail);
 		background: url(/assets/paper-overlay.webp);
 		background-size: 100vw var(--giant-sheet);
-		opacity: 0.25;
+		opacity: 0.55;
 		pointer-events: none;
 		background-repeat: repeat;
 		position: absolute;
