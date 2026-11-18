@@ -54,7 +54,7 @@
 
 		<!-- Orange background below the wave -->
 		<use href="#wave-band-bottom-fill" fill="#fa8005" />
-		<use href="#wave-band-bottom-fill" fill="url(#wave-band-grain)" opacity="0.16" />
+		<use href="#wave-band-bottom-fill" fill="url(#wave-band-grain)" opacity="0.42" style="mix-blend-mode: multiply;" />
 
 		<!-- Lime-green ribbon -->
 		<use href="#wave-band-path" class="band-tape" />
