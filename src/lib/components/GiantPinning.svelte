@@ -999,7 +999,7 @@
 		width: 26vw;
 		height: 17.33vw;
 		color: var(--giant-ink);
-		opacity: 0.75;
+		opacity: 0.92;
 	}
 
 	.diag-down-arrow svg,
@@ -1013,7 +1013,7 @@
 	.diag-up-arrow path {
 		fill: none;
 		stroke: currentColor;
-		stroke-width: 0.5px;
+		stroke-width: 2.2px;
 		stroke-linecap: round;
 		stroke-linejoin: round;
 	}
@@ -1216,7 +1216,7 @@
 		--note-lead-x: 1.667vw;
 		--note-lead-y: 1.319vw;
 		--note-tail: 1.25vw;
-		--note-rule: max(1.2px, 0.087vw);
+		--note-rule: max(2.2px, 0.16vw);
 		--note-stroke: 0.02em;
 		width: var(--hand-w);
 		height: calc(var(--hand-w) * 0.6875);
