@@ -1103,13 +1103,8 @@
 
 	.giant-pinning .char {
 		display: block;
-		transform: translateY(130%);
 		cursor: default;
 		will-change: transform;
-	}
-
-	.giant-pinning[data-reveal='live'] .char {
-		transform: none;
 	}
 
 	.giant-prop {
