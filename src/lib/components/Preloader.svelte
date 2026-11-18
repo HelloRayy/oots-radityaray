@@ -351,8 +351,46 @@
 			}
 		}
 
+		const preloadAllAssets = (): Promise<void> => {
+			const extraSrcs = [
+				'/assets/paper-overlay.webp',
+				'/assets/cardboard.webp',
+				'/assets/gift.webp',
+				'/assets/lemon-painting.webp',
+				'/assets/masking-tape-x2.png',
+				'/assets/opp-tape-x4.png',
+				'/assets/paper-clip-1.webp',
+				'/assets/tape-on-lemon.webp'
+			];
+
+			const decodeImg = (img: HTMLImageElement) =>
+				img.complete
+					? img.decode().catch(() => {})
+					: new Promise<void>((res) => {
+							img.addEventListener('load', () => img.decode().catch(() => {}).finally(res), { once: true });
+							img.addEventListener('error', () => res(), { once: true });
+						});
+
+			const domImgs = Array.from(document.images).map(decodeImg);
+			const bgImgs = extraSrcs.map((src) => {
+				const img = new Image();
+				img.src = src;
+				return decodeImg(img);
+			});
+			const fontsReady = document.fonts ? document.fonts.ready.catch(() => {}) : Promise.resolve();
+
+			const allReady = Promise.all([...domImgs, ...bgImgs, fontsReady]).then(() => {});
+			const timeout = new Promise<void>((res) => setTimeout(res, 4000));
+			return Promise.race([allReady, timeout]);
+		};
+
+		let assetsReady = false;
+		let unrollDone = false;
+		let peeled = false;
+
+		const peelTl = gsap.timeline({ paused: true });
 		const staggered = computeStagger(stack, {
-			at: peelAt,
+			at: 0,
 			step: 0.085,
 			spread: 0.35,
 			duration: 0.95,
@@ -360,7 +398,7 @@
 		});
 
 		for (const item of staggered) {
-			tl.to(
+			peelTl.to(
 				item.el,
 				{
 					yPercent: -100,
@@ -375,18 +413,40 @@
 			);
 		}
 
-		const last = staggered.at(-1) ?? { at: peelAt, duration: 0.95 };
-		tl.call(startSweep, undefined, last.at + 0.33 * last.duration);
-		tl.call(release, undefined, last.at + 0.55 * last.duration);
+		const last = staggered.at(-1) ?? { at: 0, duration: 0.95 };
+		peelTl.call(startSweep, undefined, last.at + 0.33 * last.duration);
+		peelTl.call(release, undefined, last.at + 0.55 * last.duration);
 
 		if (mark) {
-			tl.set(mark, { autoAlpha: 0 });
+			peelTl.set(mark, { autoAlpha: 0 });
 		}
-		tl.set(root, { visibility: 'hidden' });
-		tl.call(() => destroyRig?.());
+		peelTl.set(root, { visibility: 'hidden' });
+		peelTl.call(() => destroyRig?.());
+
+		const tryStartPeel = () => {
+			if (peeled || !assetsReady || !unrollDone) return;
+			peeled = true;
+			peelTl.play(0);
+		};
+
+		preloadAllAssets().then(() => {
+			assetsReady = true;
+			tryStartPeel();
+		});
+
+		tl.call(
+			() => {
+				unrollDone = true;
+				tryStartPeel();
+			},
+			undefined,
+			peelAt
+		);
 
 		return () => {
+			peeled = true;
 			tl.kill();
+			peelTl.kill();
 			stopDraw?.();
 			destroyRig?.();
 			gsap.set(root, { clearProps: 'visibility' });
