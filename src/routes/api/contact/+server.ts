@@ -59,6 +59,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		if (!res.ok) {
 			const errData = await res.json().catch(() => ({}));
+			console.error('[api/contact] Resend error:', res.status, errData);
 			return json(
 				{ ok: false, error: errData?.message || `Resend error (${res.status})` },
 				{ status: res.status }
@@ -66,7 +67,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		}
 
 		return json({ ok: true });
-	} catch {
+	} catch (err) {
+		console.error('[api/contact] Fetch failed:', err);
 		return json({ ok: false, error: 'Gagal menghubungi server Resend.' }, { status: 502 });
 	}
 };
