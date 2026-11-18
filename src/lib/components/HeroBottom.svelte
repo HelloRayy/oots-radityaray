@@ -455,13 +455,13 @@
 			height: 210vw;
 		}
 		.note {
-			top: 2vw;
-			left: -3vw;
-			width: 58vw;
+			top: -1vw;
+			left: -10vw;
+			width: 72vw;
 		}
 		#tape-on-note {
-			top: 4vw;
-			left: 22vw;
+			top: 10.5vw;
+			left: 15vw;
 			width: 24vw;
 		}
 		#paperclip {
