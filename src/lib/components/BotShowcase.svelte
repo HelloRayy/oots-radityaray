@@ -389,8 +389,7 @@
 	}
 
 	.bot-showcase :global(.arc-foot[data-paper]::before) {
-		opacity: 0.42;
-		mix-blend-mode: multiply;
+		opacity: 0.28;
 	}
 
 	.draggable,

@@ -3,12 +3,13 @@
 	import gsap from 'gsap';
 
 	const PHRASE = 'DESIGNED WITH CARE, \u00A0\u00A0\u00A0 ENGINEERED TO PERFORM \u00A0\u00A0\u2726\u00A0\u00A0 ';
-	const REPEATED_TEXT = PHRASE.repeat(8);
+	const REPEATED_TEXT = PHRASE.repeat(5);
 
+	let sectionEl: HTMLElement | null = null;
 	let textPathEl: SVGTextPathElement | null = null;
 
 	onMount(() => {
-		if (!textPathEl) return;
+		if (!textPathEl || !sectionEl) return;
 		if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
 		const tween = gsap.fromTo(
@@ -18,17 +19,28 @@
 				attr: { startOffset: -1600 },
 				duration: 18,
 				ease: 'none',
-				repeat: -1
+				repeat: -1,
+				paused: true
 			}
 		);
 
+		const io = new IntersectionObserver(
+			([entry]) => {
+				if (entry.isIntersecting) tween.play();
+				else tween.pause();
+			},
+			{ rootMargin: '20% 0px' }
+		);
+		io.observe(sectionEl);
+
 		return () => {
+			io.disconnect();
 			tween.kill();
 		};
 	});
 </script>
 
-<section class="wave-band" aria-hidden="true">
+<section class="wave-band" bind:this={sectionEl} aria-hidden="true">
 	<svg viewBox="-80 60 1760 540" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
 		<defs>
 			<path
@@ -54,7 +66,7 @@
 
 		<!-- Orange background below the wave -->
 		<use href="#wave-band-bottom-fill" fill="#fa8005" />
-		<use href="#wave-band-bottom-fill" fill="url(#wave-band-grain)" opacity="0.42" style="mix-blend-mode: multiply;" />
+		<use href="#wave-band-bottom-fill" fill="url(#wave-band-grain)" opacity="0.28" />
 
 		<!-- Lime-green ribbon -->
 		<use href="#wave-band-path" class="band-tape" />

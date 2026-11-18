@@ -54,7 +54,7 @@
 			chars.forEach((c, i) => {
 				cbTl.from(
 					c,
-					{ yPercent: 115, opacity: 0, duration: 0.45, ease: 'power3.out', immediateRender: false },
+					{ yPercent: 115, duration: 0.45, ease: 'power3.out', immediateRender: false },
 					((tops[i] - minTop) / span) * 0.9
 				);
 			});
