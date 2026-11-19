@@ -68,6 +68,8 @@
 
 	let rootEl: HTMLDivElement | null = null;
 	let markEl: HTMLDivElement | null = null;
+	let counterEl: HTMLDivElement | null = null;
+	let progressText = $state('00');
 
 	function computeStagger(
 		elements: HTMLElement[],
@@ -281,7 +283,7 @@
 
 		gsap.ticker.lagSmoothing(0);
 
-		const tl = gsap.timeline();
+		const tl = gsap.timeline({ paused: true });
 		let stopDraw: (() => void) | null = null;
 		let destroyRig: (() => void) | null = null;
 
@@ -351,7 +353,7 @@
 			}
 		}
 
-		const preloadAllAssets = (): Promise<void> => {
+		const preloadAllAssets = (onProgress: (ratio: number) => void): Promise<void> => {
 			const extraSrcs = [
 				'/assets/paper-overlay.webp',
 				'/assets/cardboard.webp',
@@ -360,7 +362,11 @@
 				'/assets/masking-tape-x2.png',
 				'/assets/opp-tape-x4.png',
 				'/assets/paper-clip-1.webp',
-				'/assets/tape-on-lemon.webp'
+				'/assets/tape-on-lemon.webp',
+				'/assets/black-cloth-tape-x4.png',
+				'/assets/index-1.svg',
+				'/assets/index-2.svg',
+				'/assets/index-3.svg'
 			];
 
 			const decodeImg = (img: HTMLImageElement) =>
@@ -371,22 +377,46 @@
 							img.addEventListener('error', () => res(), { once: true });
 						});
 
-			const domImgs = Array.from(document.images).map(decodeImg);
-			const bgImgs = extraSrcs.map((src) => {
-				const img = new Image();
-				img.src = src;
-				return decodeImg(img);
-			});
-			const fontsReady = document.fonts ? document.fonts.ready.catch(() => {}) : Promise.resolve();
+			const tasks: Promise<unknown>[] = [
+				...Array.from(document.images).map(decodeImg),
+				...extraSrcs.map((src) => {
+					const img = new Image();
+					img.src = src;
+					return decodeImg(img);
+				}),
+				document.fonts ? document.fonts.ready.catch(() => {}) : Promise.resolve()
+			];
 
-			const allReady = Promise.all([...domImgs, ...bgImgs, fontsReady]).then(() => {});
-			const timeout = new Promise<void>((res) => setTimeout(res, 4000));
+			const total = Math.max(1, tasks.length);
+			let done = 0;
+			const tracked = tasks.map((p) =>
+				p.finally(() => {
+					done += 1;
+					onProgress(done / total);
+				})
+			);
+
+			const allReady = Promise.all(tracked).then(() => {});
+			const timeout = new Promise<void>((res) => setTimeout(res, 6000));
 			return Promise.race([allReady, timeout]);
 		};
 
-		let assetsReady = false;
-		let unrollDone = false;
 		let peeled = false;
+		const counterState = { val: 0 };
+		let progressTween: gsap.core.Tween | null = null;
+		let counterOutTween: gsap.core.Tween | null = null;
+
+		const updateCounter = (target: number, duration = 0.25) => {
+			progressTween?.kill();
+			progressTween = gsap.to(counterState, {
+				val: target,
+				duration,
+				ease: 'power2.out',
+				onUpdate: () => {
+					progressText = String(Math.round(counterState.val)).padStart(2, '0');
+				}
+			});
+		};
 
 		const peelTl = gsap.timeline({ paused: true });
 		const staggered = computeStagger(stack, {
@@ -423,28 +453,51 @@
 		peelTl.set(root, { visibility: 'hidden' });
 		peelTl.call(() => destroyRig?.());
 
-		const tryStartPeel = () => {
-			if (peeled || !assetsReady || !unrollDone) return;
-			peeled = true;
-			peelTl.play(0);
-		};
-
-		preloadAllAssets().then(() => {
-			assetsReady = true;
-			tryStartPeel();
-		});
-
 		tl.call(
 			() => {
-				unrollDone = true;
-				tryStartPeel();
+				if (peeled) return;
+				peeled = true;
+				peelTl.play(0);
 			},
 			undefined,
 			peelAt
 		);
 
+		preloadAllAssets((ratio) => {
+			updateCounter(Math.min(99, Math.round(ratio * 100)), 0.22);
+		}).then(() => {
+			if (peeled) return;
+			progressTween?.kill();
+			progressTween = gsap.to(counterState, {
+				val: 100,
+				duration: 0.28,
+				ease: 'power2.out',
+				onUpdate: () => {
+					progressText = String(Math.round(counterState.val)).padStart(2, '0');
+				},
+				onComplete: () => {
+					if (counterEl) {
+						counterOutTween = gsap.to(counterEl, {
+							autoAlpha: 0,
+							y: -18,
+							duration: 0.28,
+							delay: 0.14,
+							ease: 'power2.in',
+							onComplete: () => {
+								tl.play(0);
+							}
+						});
+					} else {
+						tl.play(0);
+					}
+				}
+			});
+		});
+
 		return () => {
 			peeled = true;
+			progressTween?.kill();
+			counterOutTween?.kill();
 			tl.kill();
 			peelTl.kill();
 			stopDraw?.();
@@ -478,6 +531,10 @@
 	{/each}
 	<div class="preloader-sheet" style:z-index={TAPE_LAYERS.length + 1}>
 		<div class="preloader-sheet-inner">
+			<div class="preloader-counter" bind:this={counterEl}>
+				<span class="preloader-num">{progressText}<span class="preloader-pct">%</span></span>
+				<span class="preloader-sub">LOADING ASSETS</span>
+			</div>
 			<div
 				class="preloader-mark"
 				bind:this={markEl}
@@ -494,3 +551,38 @@
 		</svg>
 	</div>
 </div>
+
+<style>
+	.preloader-counter {
+		position: absolute;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.4vw;
+		color: #013900;
+		font-family: var(--font-heading);
+		user-select: none;
+		pointer-events: none;
+	}
+
+	.preloader-num {
+		font-size: clamp(64px, 11vw, 170px);
+		font-weight: 900;
+		line-height: 0.85;
+		letter-spacing: -0.04em;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.preloader-pct {
+		font-size: 0.42em;
+		vertical-align: super;
+		margin-left: 0.06em;
+	}
+
+	.preloader-sub {
+		font-size: clamp(11px, 1.05vw, 16px);
+		font-weight: 800;
+		letter-spacing: 0.16em;
+		opacity: 0.72;
+	}
+</style>
